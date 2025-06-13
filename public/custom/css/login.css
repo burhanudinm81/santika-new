@@ -1,0 +1,32 @@
+.login-box {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+.login-box .card-body {
+    width: 100%;
+    text-align: center;
+}
+
+.icheck-primary {
+    text-align: left;
+    margin-bottom: 20px;
+    /* Adding space below Remember Me */
+}
+
+/* Style untuk kotak peringatan merah */
+.alert {
+    display: block;
+    padding: 15px;
+    background-color: #f8d7da;
+    color: #721c24;
+    border-radius: 5px;
+    margin-bottom: 20px;
+    text-align: left;
+}
+
+.alert ul {
+    margin: 0;
+}

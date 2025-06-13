@@ -1,0 +1,49 @@
+<!-- Content Header (Page header) -->
+<div class="content-header">
+    <div class="container-fluid">
+        <div class="row mb-2">
+            <div class="col-sm-6">
+                <h1 class="m-0 font-weight-bold">Panitia Tugas Akhir</h1>
+            </div><!-- /.col -->
+        </div><!-- /.row -->
+    </div><!-- /.container-fluid -->
+</div>
+<!-- /.content-header -->
+
+<!-- Main content -->
+<div class="content">
+    <div class="container-fluid">
+        <div class="card card-default">
+            <form action="{{ route('admin-prodi.panitia-tugas-akhir.update', ['prodi' => $prodi->id]) }}" method="post" id="form-edit-panitia" class="form-panitia">
+                @csrf
+                @method('PUT')
+
+                <div class="card-body">
+                    <h4>Edit Panitia TA {{ $prodi->prodi }}</h4>
+                    
+                    @foreach ($jabatanPanitia as $jabatan)
+                        <div class="mb-3">
+                            <label class="form-label">{{ $jabatan->jabatan }}</label>
+                            <select class="custom-select" name="panitia_dosen[{{ $jabatan->id }}]" required>
+                                <option value="">-- Pilih Dosen --</option>
+                                @foreach ($dosen as $dsn)
+                                    <option value="{{ $dsn->id }}"
+                                        {{ ($panitiaMap[$jabatan->id] ?? null) == $dsn->id ? 'selected' : '' }}
+                                    >
+                                        {{ $dsn->nama }}
+                                    </option>
+                                @endforeach
+                            </select>
+                        </div>
+                    @endforeach
+                </div>
+                <div class="card-footer">
+                    <button type="button" class="btn btn-secondary" id="batal">Batal</button>
+                    <button type="submit" class="btn btn-primary" id="simpan-perubahan">Simpan Perubahan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+<!-- /.content -->
+<script src={{ url("/custom/js/kelola-panitia-ta/ubah-panitia.js") }}></script>

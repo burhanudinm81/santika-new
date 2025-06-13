@@ -14,7 +14,7 @@ return [
     */
 
     'defaults' => [
-        'guard' => env('AUTH_GUARD', 'web'),
+        'guard' => env('AUTH_GUARD', 'admin-prodi'),
         'passwords' => env('AUTH_PASSWORD_BROKER', 'users'),
     ],
 
@@ -36,10 +36,18 @@ return [
     */
 
     'guards' => [
-        'web' => [
+        'mahasiswa' => [
             'driver' => 'session',
-            'provider' => 'users',
+            'provider' => 'mahasiswa'
         ],
+        'dosen' => [
+            'driver' => 'session',
+            'provider' => 'dosen'
+        ],
+        'admin-prodi' => [
+            'driver' => 'session',
+            'provider' => 'admin-prodi'
+        ]
     ],
 
     /*
@@ -60,11 +68,20 @@ return [
     */
 
     'providers' => [
-        'users' => [
+        'mahasiswa' => [
             'driver' => 'eloquent',
-            'model' => env('AUTH_MODEL', App\Models\User::class),
+            'model' => App\Models\Mahasiswa::class,
         ],
 
+        'dosen' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\Dosen::class,
+        ],
+
+        'admin-prodi' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\AdminProdi::class,
+        ]
         // 'users' => [
         //     'driver' => 'database',
         //     'table' => 'users',
