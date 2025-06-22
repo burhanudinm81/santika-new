@@ -32,4 +32,9 @@ class Prodi extends Model
     {
         return $this->hasMany(Panitia::class);
     }
+
+    public function proposals(): HasMany
+    {
+        return $this->hasMany(Proposal::class);
+    }
 }

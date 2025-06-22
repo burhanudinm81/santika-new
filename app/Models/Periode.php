@@ -21,4 +21,9 @@ class Periode extends Model
     {
         return $this->hasMany(Mahasiswa::class);
     }
+
+    public function proposals(): HasMany
+    {
+        return $this->hasMany(Proposal::class);
+    }
 }
