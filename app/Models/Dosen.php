@@ -17,4 +17,9 @@ class Dosen extends Authenticatable
     {
         return $this->hasOne(Panitia::class);
     }
+
+    public function kuotaDosen(): HasOne
+    {
+        return $this->hasOne(KuotaDosen::class);
+    }
 }

@@ -4,6 +4,7 @@ namespace App\Services;
 
 use App\Exceptions\ImportDataException;
 use App\Models\Dosen;
+use App\Models\KuotaDosen;
 use Illuminate\Database\QueryException;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
@@ -24,18 +25,18 @@ class DosenImportService
             $sheet = $spreadsheet->getSheetByName("Sheet1");
             $highestRow = $sheet->getHighestDataRow();
 
-            // Index Kolom NIM, nama, kelas, dan angkatan
+            // Index Kolom NIDN, NIP, dan nama
             $NIDNColumnIndex = 2;
             $NIPColumnIndex = 3;
             $namaColumnIndex = 4;
 
-            $dataToInsert = [];
+            $dataDosenToInsert = [];
             for ($row = 3; $row <= $highestRow; $row++) {
                 $nidn = $sheet->getCell([$NIDNColumnIndex, $row])->getValue();
                 if (empty(trim($nidn)))
                     continue;
 
-                $dataToInsert[] = [
+                $dataDosenToInsert[] = [
                     "nama" => $sheet->getCell([$namaColumnIndex, $row])->getValue(),
                     "password" => Hash::make($nidn),
                     "NIDN" => $sheet->getCell([$NIDNColumnIndex, $row])->getValue(),
@@ -44,13 +45,32 @@ class DosenImportService
             }
 
             // Gunakan DB::transaction untuk memastikan atomicity (All or Nothing)
-            DB::transaction(function () use ($dataToInsert) {
-                if (empty($dataToInsert)) {
+            DB::transaction(function () use ($dataDosenToInsert) {
+                if (empty($dataDosenToInsert)) {
                     throw new ImportDataException("File Excel tidak berisi data untuk diimpor.");
                 }
 
                 // Semua data ini akan di-commit bersamaan, atau di-rollback bersamaan jika gagal.
-                Dosen::insert($dataToInsert);
+                Dosen::insert($dataDosenToInsert);
+
+                // ------- Membuat Data Kuota Dosen -------------
+                // 1. Ambil kembali dosen yang baru saja dibuat untuk mendapatkan ID mereka.
+                // ambil NIDN dari data yang sudah kita siapkan.
+                $insertedNidns = array_column($dataDosenToInsert, 'NIDN');
+                $newDosens = Dosen::whereIn('NIDN', $insertedNidns)->get();
+
+                // 2. Siapkan data untuk tabel kuota_dosen
+                $dataKuotaToInsert = [];
+                foreach ($newDosens as $dosen) {
+                    $dataKuotaToInsert[] = [
+                        'dosen_id' => $dosen->id
+                    ];
+                }
+
+                // Langkah 4: Masukkan semua data kuota dosen ke database
+                if (!empty($dataKuotaToInsert)) {
+                    KuotaDosen::insert($dataKuotaToInsert);
+                }
             });
 
         } catch (QueryException $e) {

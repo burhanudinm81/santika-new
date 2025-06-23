@@ -3,7 +3,9 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Panitia;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\View\View;
 
 class DashboardController extends Controller
@@ -14,13 +16,22 @@ class DashboardController extends Controller
         if ($request->session()->get("role") == "mahasiswa")
             return view("mahasiswa.dashboard");
 
-        // Jika request datang dari user dengan role dosen dan user adalah panitia, tampilkan dashboard panitia
-        // if($request->session()->get("role") == "dosen" && $request->user("dosen")->is_panitia)
-        //     return view("panitia.dashboard");
+        // Jika request datang dari user dengan role dosen, jalankan blok kode berikut
+        if ($request->session()->get("role") == "dosen") {
+            $dosenId = Auth::guard('dosen')->id();
 
-        // Jika request datang dari user dengan role dosen tampilkan dashboard dosen
-        if ($request->session()->get("role") == "dosen")
+            // Lakukan pengecekan ke tabel panitia
+            $isPanitia = Panitia::where('dosen_id', $dosenId)->exists();
+
+            // Jika dosen adalah panitia, tampilkan dashboard panitia
+            if($isPanitia){
+                return view("panitia.dashboard");
+            }
+
+            // Jika Dosen buka panitia,  tampilkan dashboard dosen
             return view("dosen.dashboard");
+        }
+            
 
         // Jika request datang bukan dari user dengan role mahasiswa atau dosen tampilan dashboard admin prodi
         return view("admin-prodi.dashboard");

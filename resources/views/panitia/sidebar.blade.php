@@ -48,8 +48,8 @@
                     </a>
                 </li>
 
-                <li class="nav-item">
-                    <a href="/panitia/kuota-dosen" class="nav-link" id="kuota-dosen-item">
+                <li class="nav-item nav-ajax">
+                    <a href="{{ route("panitia.kuota-dosen.page") }}" class="nav-link" id="kuota-dosen-item">
                         <i class="nav-icon fas fa-solid fa-users"></i>
                         <p>
                             Kuota Dosen
@@ -76,7 +76,7 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item nav-ajax">
-                            <a href="{{ route("panitia.seminar-proposal.list")  }}" class="nav-link">
+                            <a href="#" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Pendaftaran</p>
                             </a>

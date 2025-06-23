@@ -3,13 +3,15 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\Panitia;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\View\View;
 
 class HomePageController extends Controller
 {
-     public function adminProdi(): View
+    public function adminProdi(): View
     {
         return view("admin-prodi.home");
     }
@@ -32,8 +34,16 @@ class HomePageController extends Controller
             $request->user("dosen")->password
         );
 
+        $isPanitia = false; // Defaultnya false
+
+        // Mengambil ID Dosen
+        $dosenId = Auth::guard('dosen')->id();
+        // Cek ke database apakah ID dosen ada di tabel panitia
+        $isPanitia = Panitia::where('dosen_id', $dosenId)->exists();
+
         return view("dosen.home", [
-            "forceChangePassword" => $forceChangePassword
+            "forceChangePassword" => $forceChangePassword,
+            "isPanitia" => $isPanitia
         ]);
     }
 
