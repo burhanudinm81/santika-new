@@ -7,6 +7,7 @@ use App\Http\Requests\PengajuanJudulStoreRequest;
 use App\Models\BidangMinat;
 use App\Models\Dosen;
 use App\Models\JenisJudul;
+use App\Models\KuotaDosen;
 use App\Models\Mahasiswa;
 use App\Models\Prodi;
 use App\Models\Proposal;
@@ -86,7 +87,7 @@ class PengajuanJudulController extends Controller
         ]);
 
         // Pengecekan apakah input mahasiswa 2 ada (berarti D3)
-        if ($request->has('mahasiswa_2_id')) {
+        if ($request->mahasiswa_2_id) {
             // input mahasiswa 2
             ProposalDosenMahasiswa::create([
                 'proposal_id' => $proposal_id,

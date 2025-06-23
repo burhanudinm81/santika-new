@@ -9,6 +9,7 @@ class KuotaDosen extends Model
 {
     protected $table = "kuota_dosen";
     protected $primaryKey = "id";
+    protected $guarded = ['id'];
     protected $keyType = "integer";
     public $incrementing = true;
     public $timestamps = false;
