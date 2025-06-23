@@ -6,6 +6,7 @@ use App\Http\Controllers\DosenController;
 use App\Http\Controllers\HomePageController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
+use App\Http\Controllers\KuotaDosenController;
 use App\Http\Controllers\Dosen\PermohonanJudul\PermohonanJudulController;
 use App\Http\Controllers\Mahasiswa\Ajax\AjaxMahasiswaController;
 use App\Http\Controllers\Mahasiswa\PengajuanJudul\PengajuanJudulController;
@@ -193,5 +194,32 @@ Route::middleware(["auth:dosen", "auth.session", "password.changed"])->group(fun
     });
 });
 
+/**
+ * Route untuk user Panitia
+ */
+Route::middleware(["auth:dosen", "auth.session", "password.changed", "is.panitia"])->group(function () {
+    Route::controller(HomePageController::class)->group(function () {
+        // Route untuk memuat halaman awal user Panitia
+        Route::get("/panitia/home", "panitia")
+            ->name("panitia.home");
+    });
 
-// Route untuk get data by AJAX
+    Route::controller(DashboardController::class)->group(function () {
+        // Route untuk menampilkan Dashboard Panitia
+        Route::get("/panitia/dashboard", "showDashboardPage")
+            ->name("panitia.dashboard");
+    });
+
+    Route::controller(KuotaDosenController::class)->group(function () {
+        // Route untuk menampilkan halaman kuota dosen
+        Route::get("/panitia/kuota-dosen/page", "showKuotaDosenPage")
+            ->name("panitia.kuota-dosen.page");
+
+        // Route untuk mengambil data kuota (dengan filter & search)
+        Route::get('/panitia/kuota-dosen', 'getData');
+
+        // Route untuk mengupdate kuota seorang dosen
+        // {kuota_dosen} adalah ID dari record di tabel kuota_dosen
+        Route::put('/panitia/kuota-dosen/{kuota_dosen}', 'update');
+    });
+});

@@ -32,9 +32,6 @@ class EnsurePasswordIsChanged
             $username = $user->nim;
         }
 
-        Log::info($user->toJson(JSON_PRETTY_PRINT));
-        Log::info($username);
-
         // Jika user ditemukan dan passwordnya masih default
         if ($user && Hash::check($username, $user->password)) {
             

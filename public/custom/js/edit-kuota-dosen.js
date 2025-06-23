@@ -1,214 +1,130 @@
-$("document").ready(function () {
-    // Tampilkan semua dosen di tabel kuota dosen ketika pertama dimuat
-    showAllDosen();
+$(document).ready(function() {
+    let debounceTimer;
 
-    let timeoutId;
+    // Fungsi untuk mengambil data dan merender tabel
+    function fetchData(prodiId, searchQuery, tableBodyId) {
+        const tableBody = $(`#${tableBodyId}`);
+        tableBody.html('<tr><td colspan="4" class="text-center">Memuat data...</td></tr>');
 
-    // Ketika Input Pencarian D3 di ketik, lakukan pencarian dosen
-    $("#search-dosen-d3").keyup(function () {
-        clearTimeout(timeoutId);
+        $.get('/panitia/kuota-dosen', { prodi_id: prodiId, search: searchQuery })
+            .done(function(data) {
+                tableBody.empty();
+                if (data.length > 0) {
+                    $.each(data, function(index, item) {
+                        const row = `
+                            <tr>
+                                <td class="text-center align-middle">${index + 1}</td>
+                                <td class="align-middle">${item.nama}</td>
+                                <td class="text-center align-middle">${item.kuota}</td>
+                                <td class="text-center align-middle">
+                                    <button class="btn btn-sm btn-info edit-btn"
+                                            data-id="${item.id}"
+                                            data-nama="${item.nama}"
+                                            data-kuota="${item.kuota}"
+                                            data-prodi="${prodiId}">
+                                        <i class="fas fa-edit"></i> Edit
+                                    </button>
+                                </td>
+                            </tr>
+                        `;
+                        tableBody.append(row);
+                    });
+                } else {
+                    tableBody.html('<tr><td colspan="4" class="text-center">Data tidak ditemukan.</td></tr>');
+                }
+            })
+            .fail(function() {
+                tableBody.html('<tr><td colspan="4" class="text-center">Gagal memuat data.</td></tr>');
+            });
+    }
 
-        timeoutId = setTimeout(function () {
-            let searchInputText = $.trim($("#search-dosen-d3").val());
-            removeTable("d3");
-            searchDosen(searchInputText, "d3");
-        }, 500)
-    });
+    // Panggil data saat halaman pertama kali dimuat
+    fetchData(1, '', 'kuota-d3-tbody'); // D3 (prodi_id 1)
+    fetchData(2, '', 'kuota-d4-tbody'); // D4 (prodi_id 2)
 
-    // Ketika Input Pencarian D4 di ketik, lakukan pencarian dosen
-    $("#search-dosen-d4").keyup(function () {
-        clearTimeout(timeoutId);
-
-        timeoutId = setTimeout(function () {
-            let searchInputText = $.trim($("#search-dosen-d4").val());
-            removeTable("d4");
-            searchDosen(searchInputText, "d4");
+    // Handler untuk search D3
+    $('#search-dosen-d3').on('keyup', function() {
+        clearTimeout(debounceTimer);
+        const query = $(this).val();
+        debounceTimer = setTimeout(function() {
+            fetchData(1, query, 'kuota-d3-tbody');
         }, 500);
     });
+
+    // Handler untuk search D4
+    $('#search-dosen-d4').on('keyup', function() {
+        clearTimeout(debounceTimer);
+        const query = $(this).val();
+        debounceTimer = setTimeout(function() {
+            fetchData(2, query, 'kuota-d4-tbody');
+        }, 500);
+    });
+
+    // EVENT DELEGATION untuk tombol edit
+    // Kita pasang listener di tabel, tapi hanya bereaksi jika tombol .edit-btn diklik
+    $('#tabel-kuota-dosen-d3, #tabel-kuota-dosen-d4').on('click', '.edit-btn', function() {
+        const button = $(this);
+        const id = button.data('id');
+        const nama = button.data('nama');
+        const kuota = button.data('kuota');
+        const prodiId = button.data('prodi');
+
+        // Isi form di dalam modal
+        $('#edit-kuota-id').val(id);
+        $('#edit-prodi-id').val(prodiId);
+        $('#edit-nama-dosen').text(nama);
+        $('#edit-kuota-value').val(kuota);
+
+        // Tampilkan modal
+        $('#editKuotaModal').modal('show');
+    });
+
+    // Handler untuk submit form edit di modal
+    $('#editKuotaForm').on('submit', function(event) {
+        event.preventDefault();
+        
+        const id = $('#edit-kuota-id').val();
+        const prodiId = $('#edit-prodi-id').val();
+        const kuotaValue = $('#edit-kuota-value').val();
+        
+        // Tentukan nama field berdasarkan prodiId
+        const data = {};
+        if (prodiId == 1) {
+            data.kuota_d3 = kuotaValue;
+        } else {
+            data.kuota_d4 = kuotaValue;
+        }
+
+        $.ajax({
+            url: `/panitia/kuota-dosen/${id}`,
+            method: 'PUT',
+            data: data,
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            success: function(response) {
+                if (response.success) {
+                    $('#editKuotaModal').modal('hide');
+
+                    // Menampilkan pop up sukses
+                    $("#modal-popup-sukses .modal-body").text(response.message);
+                    $("#modal-popup-sukses").modal();
+
+                    // Muat ulang data tabel yang sesuai
+                    if (prodiId == 1) {
+                        fetchData(1, $('#search-dosen-d3').val(), 'kuota-d3-tbody');
+                    } else {
+                        fetchData(2, $('#search-dosen-d4').val(), 'kuota-d4-tbody');
+                    }
+                }
+            },
+            error: function(jqXHR, status, error) {
+                $('#editKuotaModal').modal('hide');
+                const errorMessage = jqXHR.responseJSON.message;
+
+                $("#modal-popup-error .modal-body").text(errorMessage);
+                $("#modal-popup-error").modal();
+            }
+        });
+    });
 });
-
-function showAllDosen() {
-    $.ajax({
-        url: "/panitia/kuota-dosen/all",
-        method: "GET",
-        dataType: "json",
-        success: function (response) {
-            const data = JSON.parse(response.data);
-
-            showKuotaDosenTable(data, "d3");
-            showKuotaDosenTable(data, "d4");
-        }
-    });
-}
-
-function searchDosen(searchInputText, prodi) {
-    // Token CSRF
-    const token = $("meta[name='csrf-token']").attr('content');
-
-    // Data yang akan dikirim ke Server
-    const data = {
-        _token: token,
-        search: searchInputText
-    };
-
-    $.ajax({
-        url: "/panitia/kuota-dosen/search",
-        method: "POST",
-        data: data,
-        dataType: "json",
-        success: function (response) {
-            const data = JSON.parse(response.data);
-            console.log(data);
-            showKuotaDosenTable(data, prodi);
-        }
-    });
-}
-
-function showKuotaDosenTable(data, prodi) {
-    let table;
-
-    if (prodi === "d3")
-        table = $("#tabel-kuota-dosen-d3");
-    else if (prodi === "d4")
-        table = $("#tabel-kuota-dosen-d4");
-
-    const tableBody = table.find("tbody");
-
-    data.forEach(function (dosen, index) {
-        const row = $("<tr></tr>");
-        const nidn = $(`<input type='hidden' id='nidn' name='nidn' value='${dosen.NIDN}'>`);
-        const numberCol = $(`<td class="text-center align-middle">${index + 1}</td>`);
-        const nameCol = $(`<td class="text-center align-middle">${dosen.nama}</td>`);
-
-        let kuotaDosenPembimbing1Col;
-        let editButton;
-
-        // console.log(dosen);
-
-        if (prodi === "d3") {
-            kuotaDosenPembimbing1Col = $(`
-                    <td class="text-center align-middle">
-                        <span class="value">${dosen.kuota_dosen.kuota_pembimbing_1_D3}</span>
-                        <input class="value-edit" type="number" name="kuota_pembimbing_1" value="${dosen.kuota_dosen.kuota_pembimbing_1_D3}" style="display:none;">
-                    </td>
-                `);
-            editButton = $(`
-                    <td class="text-center align-middle">
-                        <button class="btn btn-success btn-sm" onclick="editItem(this, 'd3')">
-                            <i class="fas fa-edit"></i> Edit
-                        </button>
-                    </td>
-                `);
-        }
-        else if (prodi === "d4") {
-            kuotaDosenPembimbing1Col = $(`
-                    <td class="text-center align-middle">
-                        <span class="value">${dosen.kuota_dosen.kuota_pembimbing_1_D4}</span>
-                        <input class="value-edit" type="number" name="kuota_pembimbing_1" value="${dosen.kuota_dosen.kuota_pembimbing_1_D4}" style="display:none;">
-                    </td>
-                `);
-            editButton = $(`
-                    <td class="text-center align-middle">
-                        <button class="btn btn-success btn-sm" onclick="editItem(this, 'd4')">
-                            <i class="fas fa-edit"></i> Edit
-                        </button>
-                    </td>
-                `);
-        }
-
-
-        row.append(nidn);
-        row.append(numberCol);
-        row.append(nameCol);
-        row.append(kuotaDosenPembimbing1Col);
-        row.append(editButton);
-
-        row.appendTo(tableBody);
-    });
-}
-
-function removeTable(prodi) {
-    let table;
-
-    if (prodi === "d3")
-        table = $("#tabel-kuota-dosen-d3");
-    else if (prodi === "d4")
-        table = $("#tabel-kuota-dosen-d4");
-
-    table.find("tbody tr").remove();
-}
-
-function updateKuotaDosen(inputElements, prodi, nidn) {
-    const data = {
-        _token: $("meta[name='csrf-token']").attr('content'),
-        kuota_pembimbing_1: inputElements[0].value,
-        prodi: prodi,
-        nidn: nidn
-    };
-
-    $.ajax({
-        url: "/panitia/kuota-dosen/update",
-        method: "PUT",
-        data: data,
-        dataType: "json",
-        success: function (response) {
-            const message = response.message;
-
-            // Menampilkan pop up sukses
-            $("#modal-popup-sukses .modal-body").text(message);
-            $("#modal-popup-sukses").modal();
-
-            // Memuat ulang halaman Kuota Dosen ketika Modal Popup di sembunyikan
-            $("#modal-popup-sukses").on("hidden.bs.modal", function () {
-                showAllDosen();
-            });
-        },
-        error: function (jqXHR, status, error) {
-            const errorMessage = jqXHR.responseJSON.message;
-
-            // Menutup Modal Ubah Foto Profil
-            $("#modal-ubah-foto-profil").modal('hide');
-
-            // Menampilkan pop up error
-            $("#modal-popup-error .modal-body").text(errorMessage);
-            $("#modal-popup-error").modal();
-        }
-    });
-}
-
-function editItem(button, prodi) {
-    const row = button.closest('tr');  // Ambil baris yang mengandung tombol
-    const valueCells = row.querySelectorAll('td:nth-child(3), td:nth-child(4), td:nth-child(5)');  // Ambil sel dengan angka
-    const inputElements = row.querySelectorAll('.value-edit');  // Ambil input untuk angka
-    const spanElements = row.querySelectorAll('.value');  // Ambil span yang menampilkan angka
-
-    // Jika tombol dalam keadaan "Edit", ubah ke mode edit
-    if (button.classList.contains('btn-success')) {
-        inputElements.forEach((input, index) => {
-            input.style.display = 'inline';  // Tampilkan input
-            spanElements[index].style.display = 'none';  // Sembunyikan nilai yang sedang ditampilkan
-        });
-
-        // Ubah tombol menjadi tombol simpan
-        button.classList.remove('btn-success');
-        button.classList.add('btn-primary');
-        button.innerHTML = '<i class="fas fa-save"></i> Simpan';
-    } else {
-        // Jika tombol dalam keadaan "Simpan", simpan perubahan dan kembali ke mode edit
-        inputElements.forEach((input, index) => {
-            spanElements[index].innerHTML = input.value;  // Simpan nilai yang diubah
-            input.style.display = 'none';  // Sembunyikan input
-            spanElements[index].style.display = 'inline';  // Tampilkan angka yang baru
-        });
-
-        const nidn = row.querySelector("#nidn").value;
-
-        // Mengupdate kuota Dosen
-        updateKuotaDosen(inputElements, prodi, nidn);
-
-        // Kembali ke tombol edit
-        button.classList.remove('btn-primary');
-        button.classList.add('btn-success');
-        button.innerHTML = '<i class="fas fa-edit"></i> Edit';
-    }
-}

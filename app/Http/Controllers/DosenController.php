@@ -32,6 +32,7 @@ class DosenController extends Controller
     {
         $dosen = Dosen::select("NIDN", "NIP", "nama")->get();
 
+        
         return response()->json([
             "success" => true,
             "data" => $dosen->toJson()

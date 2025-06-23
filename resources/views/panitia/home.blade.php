@@ -14,7 +14,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
-    @include('import-required-css')
+    @include('required-css')
 </head>
 
 <body class="hold-transition sidebar-mini">
@@ -90,8 +90,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         </button>
                     </div>
                     <div class="modal-body">
-                        <form id="form-ubah-foto-profil" action="{{ route("dosen.profile.edit-image") }}" method="post"
-                            enctype="multipart/form-data">
+                        <form id="form-ubah-foto-profil" action="#" method="post" enctype="multipart/form-data">
                             @csrf
                             <div class="form-group">
                                 <label for="foto-profil-baru">Upload Foto Profil:</label>
@@ -128,7 +127,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         </button>
                     </div>
                     <div class="modal-body">
-                        <form action="{{ route("dosen.change-password") }}" method="post" id="form-ubah-password">
+                        <form action="#" method="post" id="form-ubah-password">
                             @csrf
                             <div class="form-group">
                                 <label for="current-password">Password Lama</label>
@@ -170,24 +169,48 @@ scratch. This page gets rid of all links and provides the needed markup only.
                 </div>
             </div>
         </div>
+
+        <!-- Modal Edit Kuota Dosen -->
+        <div class="modal fade" id="editKuotaModal" tabindex="-1" role="dialog" aria-labelledby="editKuotaModalLabel"
+            aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="editKuotaModalLabel">Edit Kuota Dosen</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <form id="editKuotaForm">
+                        <div class="modal-body">
+                            <input type="hidden" id="edit-kuota-id" name="kuota_id">
+                            <input type="hidden" id="edit-prodi-id" name="prodi_id">
+                            <div class="form-group">
+                                <label>Nama Dosen</label>
+                                <p id="edit-nama-dosen"></p>
+                            </div>
+                            <div class="form-group">
+                                <label for="edit-kuota-value">Kuota Pembimbing 1</label>
+                                <input type="number" class="form-control" id="edit-kuota-value" min="0" required>
+                            </div>
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                            <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+
     </div>
 
     <!-- REQUIRED SCRIPTS -->
-    @include('import-required-js')
+    @include('required-js')
 
-    <script src="{{ url("/custom/js/home/panitia.js") }}"></script>
+    <script src={{ url("/custom/js/load-content.js") }}></script>
     <script src="{{ url("/custom/js/animate-custom-file-input.js") }}"></script>
     <script src="{{ url("/custom/js/profile/change-password.js") }}"></script>
-
-    @if ($forceChangePassword)
-        <script>
-            $("#modal-ubah-password").modal();
-
-            $("#modal-ubah-password").on("hidden.bs.modal", function () {
-                document.location = "/logout";
-            });
-        </script>
-    @endif
 </body>
 
 </html>

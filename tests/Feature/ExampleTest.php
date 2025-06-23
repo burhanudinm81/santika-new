@@ -3,17 +3,32 @@
 namespace Tests\Feature;
 
 // use Illuminate\Foundation\Testing\RefreshDatabase;
+use App\Models\KuotaDosen;
+use Illuminate\Support\Facades\Log;
 use Tests\TestCase;
 
 class ExampleTest extends TestCase
 {
-    /**
-     * A basic test example.
-     */
-    public function test_the_application_returns_a_successful_response(): void
+    public function testSembarang(): void
     {
-        $response = $this->get('/');
+        $kuotaQuery = KuotaDosen::query()
+            ->whereHas('dosen', function ($dosenQuery) {
 
-        $response->assertStatus(200);
+                // if (!empty($searchQuery)) {
+                //     $dosenQuery->where('nama', 'like', '%' . $searchQuery . '%');
+                // }
+
+                $dosenQuery->whereHas('panitia', function ($panitiaQuery) {
+                    $panitiaQuery->where('prodi_id', 1);
+                });
+
+                // $dosenQuery->where('prodi_id', 1);
+            })
+            ->with('dosen');
+
+        $kuotaCollection = $kuotaQuery->get();
+
+        self::assertTrue(true);
+        Log::info($kuotaCollection->toJson(JSON_PRETTY_PRINT));
     }
 }

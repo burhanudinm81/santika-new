@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Dosen\PermohonanJudul;
 
 use App\Http\Controllers\Controller;
+use App\Models\KuotaDosen;
 use App\Models\Mahasiswa;
 use App\Models\Proposal;
 use App\Models\ProposalDosenMahasiswa;
@@ -44,16 +45,32 @@ class PermohonanJudulController extends Controller
 
         $proposal = Proposal::findOrFail($proposalId);
 
-        if($proposal->prodi_id == 1){
+        if ($proposal->prodi_id == 1) {
             $proposalMahasiswa = ProposalDosenMahasiswa::where('proposal_id', $proposalId)->where('status_proposal_mahasiswa_id', 3)->get();
-            if(count($proposalMahasiswa) > 0){
-                foreach($proposalMahasiswa as $item){
+            if (count($proposalMahasiswa) > 0) {
+                foreach ($proposalMahasiswa as $item) {
                     $item->update(['status_proposal_mahasiswa_id' => $confirmationStatusId]);
                 }
             }
-        }else{
+        } else {
             $proposalMahasiswa = ProposalDosenMahasiswa::where('proposal_id', $proposalId)->where('status_proposal_mahasiswa_id', 3)->first();
-            $proposalMahasiswa->update(['status_proposal_mahasiswa_id' => $confirmationStatusId]);
+            $proposalMahasiswa->update(attributes: ['status_proposal_mahasiswa_id' => $confirmationStatusId]);
+        }
+
+        
+        // Logic Pengurangan Kuota Dosen
+        if ($confirmationStatusId == "1") {
+            $dosenId = $proposalMahasiswa->first()->dosen_id;
+            $kuotaDosen = KuotaDosen::firstWhere("dosen_id", $dosenId);
+
+            // Id Prodi D3 = 1, Prodi D4 = 2
+            if ($proposal->prodi_id == 1) {
+                // Jika Prodi D3, kurangi kuota Pembimbing 1 D3
+                $kuotaDosen->update(['kuota_pembimbing_1_D3'=> $kuotaDosen->kuota_pembimbing_1_D3--]);
+            } else {
+                // Jika Prodi D4, kurangi kuota Pembimbing 1 D4
+                $kuotaDosen->update(['kuota_pembimbing_1_D4'=> $kuotaDosen->kuota_pembimbing_1_D4--]);
+            }
         }
 
         return redirect()->back()->with('success', 'Pengajuan Judul Berhasil Diupdate');

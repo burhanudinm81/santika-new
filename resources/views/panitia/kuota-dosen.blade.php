@@ -49,7 +49,7 @@
                                     <th class="text-center align-middle">Edit</th>
                                 </tr>
                             </thead>
-                            <tbody></tbody>
+                            <tbody id="kuota-d3-tbody"></tbody>
                         </table>
                     </div>
                     <!-- /.card-body -->
@@ -94,7 +94,7 @@
                                     <th class="text-center align-middle">Edit</th>
                                 </tr>
                             </thead>
-                            <tbody></tbody>
+                            <tbody id="kuota-d4-tbody"></tbody>
                         </table>
                     </div>
                     <!-- /.card-body -->
