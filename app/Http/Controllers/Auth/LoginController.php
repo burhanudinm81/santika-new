@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
+use App\Models\Panitia;
 use Illuminate\Http\RedirectResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -27,19 +28,25 @@ class LoginController extends Controller
         $credentials = $request->only(["username", "password"]);
         $rememberMe = $request->boolean("remember_me");
 
-        if($this->loginAsMahasiswa($credentials, $rememberMe)){
+        if ($this->loginAsMahasiswa($credentials, $rememberMe)) {
             $request->session()->regenerate();
             $request->session()->put("role", "mahasiswa");
 
             return redirect()->route("mahasiswa.home");
-        }
-        else if($this->loginAsDosen($credentials, $rememberMe)){
+        } else if ($this->loginAsDosen($credentials, $rememberMe)) {
+            $isPanitia = false; // Defaultnya false
+
+            // Mengambil ID Dosen
+            $dosenId = Auth::guard('dosen')->id();
+            // Cek ke database apakah ID dosen ada di tabel panitia
+            $isPanitia = Panitia::where('dosen_id', $dosenId)->exists();
+
             $request->session()->regenerate();
             $request->session()->put("role", "dosen");
+            $request->session()->put("is_panitia", $isPanitia);
 
             return redirect()->route("dosen.home");
-        }
-        else if($this->loginAsAdminProdi($credentials, $rememberMe)){
+        } else if ($this->loginAsAdminProdi($credentials, $rememberMe)) {
             $request->session()->regenerate();
             $request->session()->put("role", "admin-prodi");
 

@@ -181,6 +181,17 @@ Route::middleware(["auth:dosen", "auth.session", "password.changed"])->group(fun
         Route::get("/dosen/home", "dosen")
             ->name("dosen.home");
     });
+
+    Route::controller(PrivateFileController::class)->group(function () {
+        Route::get('/blok-diagram/{id}', 'serveBlokDiagramSistem')
+            ->name('blok.diagram.show');
+    });
+
+    Route::controller(PermohonanJudulController::class)->group(function () {
+        Route::get('/dosen/permohonan-judul', 'showPermohonanPage')->name('dosen.permohonan-judul');
+        Route::get('/dosen/permohonan-judul/{proposalId}/detail', 'showDetailPermohonanPage')->name('dosen.permohonan-judul-detail');
+        Route::post('/dosen/permohonan-judul/update-status', 'updatePermohonan')->name('dosen.permohonan-judul-update');
+    });
 });
 
 /**
@@ -193,7 +204,7 @@ Route::middleware(["auth:dosen", "auth.session", "password.changed", "is.panitia
             ->name("panitia.home");
     });
 
-    Route::controller(DashboardController::class)->group(function(){
+    Route::controller(DashboardController::class)->group(function () {
         // Route untuk menampilkan Dashboard Panitia
         Route::get("/panitia/dashboard", "showDashboardPage")
             ->name("panitia.dashboard");
@@ -211,16 +222,4 @@ Route::middleware(["auth:dosen", "auth.session", "password.changed", "is.panitia
         // {kuota_dosen} adalah ID dari record di tabel kuota_dosen
         Route::put('/panitia/kuota-dosen/{kuota_dosen}', 'update');
     });
-
-        Route::controller(PrivateFileController::class)->group(function () {
-        Route::get('/blok-diagram/{id}', 'serveBlokDiagramSistem')
-            ->name('blok.diagram.show');
-    });
-
-    Route::controller(PermohonanJudulController::class)->group(function () {
-        Route::get('/dosen/permohonan-judul', 'showPermohonanPage')->name('dosen.permohonan-judul');
-        Route::get('/dosen/permohonan-judul/{proposalId}/detail', 'showDetailPermohonanPage')->name('dosen.permohonan-judul-detail');
-        Route::post('/dosen/permohonan-judul/update-status', 'updatePermohonan')->name('dosen.permohonan-judul-update');
-    });
-
 });

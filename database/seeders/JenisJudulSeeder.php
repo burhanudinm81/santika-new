@@ -15,13 +15,13 @@ class JenisJudulSeeder extends Seeder
     public function run(): void
     {
        JenisJudul::create([
-           "jenis" => "WSN,IoT,Teknologi Pintar"
+           "jenis" => "Mandiri"
        ]);
        JenisJudul::create([
-           "jenis" => "Protokol,Media, dan Teori Telekomunikasi"
+           "jenis" => "Mitra"
        ]);
        JenisJudul::create([
-           "jenis" => "Manajemen dan Keamanan Jaringan"
+           "jenis" => "Rekomendasi"
        ]);
     }
 }

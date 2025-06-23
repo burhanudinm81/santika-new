@@ -42,7 +42,7 @@
                 </li>
 
 
-                @if($isPanitia)
+                @if(session("is_panitia"))
                     <li class="nav-item">
                         <a href="/panitia/home" class="nav-link">
                             <i class="nav-icon fas fa-user-tie"></i>

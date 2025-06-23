@@ -22,6 +22,7 @@ class DatabaseSeeder extends Seeder
             TahapSeeder::class,
             PeriodeSeeder::class,
             DosenSeeder::class,
+            KuotaDosenSeeder::class,
             AdminProdiSeeder::class,
             MahasiswaSeeder::class,
             PanitiaSeeder::class
