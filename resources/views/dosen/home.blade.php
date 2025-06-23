@@ -18,13 +18,14 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
 <body class="hold-transition sidebar-mini">
     <div class="wrapper">
-
         @include('dosen.navbar')
-
         @include('dosen.sidebar')
 
-        <!-- Content Wrapper. Contains page content -->
-        <div class="content-wrapper"></div>
+        {{-- Main content --}}
+        <div class="content-wrapper">
+            @yield('content')
+        </div>
+        {{-- End Main Content --}}
 
         <!-- Control Sidebar -->
         <aside class="control-sidebar control-sidebar-dark">
@@ -91,8 +92,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     </div>
                     <div class="modal-body">
                         <!-- route("dosen.profile.edit-image") -->
-                        <form id="form-ubah-foto-profil" action="#" method="post"
-                            enctype="multipart/form-data">
+                        <form id="form-ubah-foto-profil" action="#" method="post" enctype="multipart/form-data">
                             @csrf
                             <div class="form-group">
                                 <label for="foto-profil-baru">Upload Foto Profil:</label>
@@ -146,8 +146,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             <div class="form-group">
                                 <label for="new-password">Password Baru</label>
                                 <div class="input-group">
-                                    <input type="password" class="form-control" id="new-password" name="new_password"
-                                        placeholder="Masukkan password baru">
+                                    <input type="password" class="form-control" id="new-password"
+                                        name="new_password" placeholder="Masukkan password baru">
                                     <div class="input-group-append" id="show-new-password">
                                         <span class="input-group-text"><i class="fas fa-eye"></i></span>
                                     </div>
@@ -177,19 +177,19 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <!-- REQUIRED SCRIPTS -->
     @include('required-js')
 
-    <script src="{{ url("/custom/js/home/dosen.js") }}"></script>
-    <script src="{{ url("/custom/js/animate-custom-file-input.js") }}"></script>
-    <script src="{{ url("/custom/js/profile/change-password.js") }}"></script>
+    <script src="{{ url('/custom/js/home/dosen.js') }}"></script>
+    <script src="{{ url('/custom/js/animate-custom-file-input.js') }}"></script>
+    <script src="{{ url('/custom/js/profile/change-password.js') }}"></script>
 
-    @if ($forceChangePassword)
+    {{-- @if ($forceChangePassword)
         <script>
             $("#modal-ubah-password").modal();
 
-            $("#modal-ubah-password").on("hidden.bs.modal", function(){
+            $("#modal-ubah-password").on("hidden.bs.modal", function() {
                 document.location = "/logout";
             });
         </script>
-    @endif
+    @endif --}}
 </body>
 
 </html>

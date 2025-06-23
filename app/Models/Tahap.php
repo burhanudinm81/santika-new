@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Tahap extends Model
 {
@@ -15,4 +16,9 @@ class Tahap extends Model
     protected $fillable = [
         "tahap"
     ];
+
+    public function proposals(): HasMany
+    {
+        return $this->hasMany(Proposal::class);
+    }
 }

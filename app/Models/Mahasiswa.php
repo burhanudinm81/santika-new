@@ -3,6 +3,8 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class Mahasiswa extends Authenticatable
@@ -21,5 +23,10 @@ class Mahasiswa extends Authenticatable
     public function periode(): BelongsTo
     {
         return $this->belongsTo(Periode::class);
+    }
+
+    public function proposalMahasiswas(): HasMany
+    {
+        return $this->hasMany(ProposalDosenMahasiswa::class);
     }
 }

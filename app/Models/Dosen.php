@@ -2,6 +2,8 @@
 
 namespace App\Models;
 
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\HasOne;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 
@@ -18,8 +20,14 @@ class Dosen extends Authenticatable
         return $this->hasOne(Panitia::class);
     }
 
+<<<<<<< HEAD
     public function kuotaDosen(): HasOne
     {
         return $this->hasOne(KuotaDosen::class);
+=======
+    public function proposalMahasiswas(): HasMany
+    {
+        return $this->hasMany(ProposalDosenMahasiswa::class);
+>>>>>>> master
     }
 }

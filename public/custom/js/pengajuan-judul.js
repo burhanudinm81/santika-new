@@ -1,4 +1,10 @@
 $("document").ready(function () {
+    $('#nama-mahasiswa-2').on('change', function () {
+        let selectedNIM = $(this).find(':selected').data('nim');
+        $('#nim-mahasiswa-2').val(selectedNIM);
+        console.log(selectedNIM);
+    })
+
     $("#bidang").on("change", function () {
         const bidangKeahlian = $("#bidang").val();
         console.log(`Bidang Keahlian: ${bidangKeahlian}`);
@@ -104,6 +110,8 @@ $("document").ready(function () {
         konfirmasiPermohonanJudul($("#form-konfirmasi-permohonan-judul"), $(this));
     });
 });
+
+
 
 function konfirmasiPermohonanJudul(form, buttonClicked) {
     const data = {

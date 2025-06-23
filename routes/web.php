@@ -7,9 +7,13 @@ use App\Http\Controllers\HomePageController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\KuotaDosenController;
+use App\Http\Controllers\Dosen\PermohonanJudul\PermohonanJudulController;
+use App\Http\Controllers\Mahasiswa\Ajax\AjaxMahasiswaController;
+use App\Http\Controllers\Mahasiswa\PengajuanJudul\PengajuanJudulController;
 use App\Http\Controllers\MahasiswaD3Controller;
 use App\Http\Controllers\MahasiswaD4Controller;
 use App\Http\Controllers\PanitiaController;
+use App\Http\Controllers\PrivateFileController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -155,6 +159,17 @@ Route::middleware(["auth:mahasiswa", "auth.session", "password.changed"])->group
         Route::get("/mahasiswa/home", "mahasiswa")
             ->name("mahasiswa.home");
     });
+
+    Route::controller(PengajuanJudulController::class)->group(function () {
+        Route::get('/mahasiswa/pengajuan-judul', 'showPengajuanPage')->name('mahasiswa.pengajuan-judul');
+        Route::post('/mahasiswa/pengajuan-judul/store', 'storePengajuanJudul')->name('mahasiswa.pengajuan-judul-store');
+        Route::get('/mahasiswa/pengajuan-judul/riwayat', 'showRiwayatPengajuanPage')->name('mahasiswa.pengajuan-judul-riwayat');
+    });
+
+    Route::controller(AjaxMahasiswaController::class)->group(function () {
+        Route::get('/mahasiswa/ajax/search-mahasiswa', 'searchMahasiswa');
+        Route::get('/mahasiswa/ajax/search-calonDosen', 'searchCalonDosenPembimbing');
+    });
 });
 
 /**
@@ -196,4 +211,16 @@ Route::middleware(["auth:dosen", "auth.session", "password.changed", "is.panitia
         // {kuota_dosen} adalah ID dari record di tabel kuota_dosen
         Route::put('/panitia/kuota-dosen/{kuota_dosen}', 'update');
     });
+
+        Route::controller(PrivateFileController::class)->group(function () {
+        Route::get('/blok-diagram/{id}', 'serveBlokDiagramSistem')
+            ->name('blok.diagram.show');
+    });
+
+    Route::controller(PermohonanJudulController::class)->group(function () {
+        Route::get('/dosen/permohonan-judul', 'showPermohonanPage')->name('dosen.permohonan-judul');
+        Route::get('/dosen/permohonan-judul/{proposalId}/detail', 'showDetailPermohonanPage')->name('dosen.permohonan-judul-detail');
+        Route::post('/dosen/permohonan-judul/update-status', 'updatePermohonan')->name('dosen.permohonan-judul-update');
+    });
+
 });
