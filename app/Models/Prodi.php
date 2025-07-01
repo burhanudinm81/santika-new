@@ -10,6 +10,7 @@ class Prodi extends Model
 {
     protected $table = "prodi";
     protected $primaryKey = "id";
+    protected $guarded = ["id"];
     protected $keyType = "integer";
     public $incrementing = true;
     public $timestamps = false;

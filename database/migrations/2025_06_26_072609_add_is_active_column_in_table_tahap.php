@@ -11,9 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('periode', function (Blueprint $table) {
-            $table->id();
-            $table->string("tahun");
+        Schema::table('tahap', function (Blueprint $table) {
+            $table->boolean('is_active')->default(false);
         });
     }
 
@@ -22,6 +21,8 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('periode');
+        Schema::table('tahap', function (Blueprint $table) {
+            $table->dropColumn('is_active');
+        });
     }
 };

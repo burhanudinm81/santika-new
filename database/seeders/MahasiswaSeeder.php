@@ -24,7 +24,7 @@ class MahasiswaSeeder extends Seeder
         Mahasiswa::create([
             "nim" => "2141160140",
             "nama" => "Muhammad Burhanudin",
-            "password" => Hash::make("secreto1"),
+            "password" => Hash::make("burhan123"),
             "prodi_id" => $prodiD4->id,
             "periode_id" => $periode2025->id,
             "kelas" => "4G",
@@ -34,7 +34,7 @@ class MahasiswaSeeder extends Seeder
         Mahasiswa::create([
             "nim" => "2141160091",
             "nama" => "Dwiki Raditya Krisdyanto",
-            "password" => Hash::make("secreto2"),
+            "password" => Hash::make("dwiki123"),
             "prodi_id" => $prodiD4->id,
             "periode_id" => $periode2025->id,
             "kelas" => "4D",
@@ -44,7 +44,7 @@ class MahasiswaSeeder extends Seeder
         Mahasiswa::create([
             "nim" => "2141160016",
             "nama" => "Tapta Arif Saputra",
-            "password" => Hash::make("secreto3"),
+            "password" => Hash::make("tapta123"),
             "prodi_id" => $prodiD4->id,
             "periode_id" => $periode2025->id,
             "kelas" => "4F",
@@ -54,7 +54,7 @@ class MahasiswaSeeder extends Seeder
         Mahasiswa::create([
             "nim" => "2141160041",
             "nama" => "Dewi Vista Oktaviani Napitupulu",
-            "password" => Hash::make("secreto4"),
+            "password" => Hash::make("dewi1234"),
             "prodi_id" => $prodiD4->id,
             "periode_id" => $periode2025->id,
             "kelas" => "4C",
@@ -64,7 +64,7 @@ class MahasiswaSeeder extends Seeder
         Mahasiswa::create([
             "nim" => "2141160111",
             "nama" => "Bafian Atha Fiddin",
-            "password" => Hash::make("secreto5"),
+            "password" => Hash::make("bafian123"),
             "prodi_id" => $prodiD4->id,
             "periode_id" => $periode2025->id,
             "kelas" => "4C",
@@ -73,13 +73,63 @@ class MahasiswaSeeder extends Seeder
 
         // Mahasiswa D3
         Mahasiswa::create([
-            "nim" => "2241140140",
-            "nama" => "Albert Grudzewski",
-            "password" => Hash::make("rahasia1"),
+            "nim" => "2141720091",
+            "nama" => "Samsul Kopling",
+            "password" => Hash::make("samsul123"),
             "prodi_id" => $prodiD3->id,
             "periode_id" => $periode2025->id,
             "kelas" => "3G",
             "angkatan" => 2022
+        ]);
+
+        Mahasiswa::create([
+            "nim" => "2141720092",
+            "nama" => "Udin Perseneleng",
+            "password" => Hash::make("udin123"),
+            "prodi_id" => $prodiD3->id,
+            "periode_id" => $periode2025->id,
+            "kelas" => "3G",
+            "angkatan" => 2022
+        ]);
+
+        Mahasiswa::create([
+            "nim" => "2141720093",
+            "nama" => "Marc Marquez",
+            "password" => Hash::make("marc1234"),
+            "prodi_id" => $prodiD4->id,
+            "periode_id" => $periode2025->id,
+            "kelas" => "4H",
+            "angkatan" => 2021
+        ]);
+
+        Mahasiswa::create([
+            "nim" => "2141720094",
+            "nama" => "Pecco Bagnaia",
+            "password" => Hash::make("pecco123"),
+            "prodi_id" => $prodiD4->id,
+            "periode_id" => $periode2025->id,
+            "kelas" => "4H",
+            "angkatan" => 2021
+        ]);
+
+        Mahasiswa::create([
+            "nim" => "2141720095",
+            "nama" => "Jorge Martin",
+            "password" => Hash::make("jorge123"),
+            "prodi_id" => $prodiD4->id,
+            "periode_id" => $periode2025->id,
+            "kelas" => "4H",
+            "angkatan" => 2021
+        ]);
+
+        Mahasiswa::create([
+            "nim" => "2141720095",
+            "nama" => "Alex Marques",
+            "password" => Hash::make("alex1234"),
+            "prodi_id" => $prodiD4->id,
+            "periode_id" => $periode2025->id,
+            "kelas" => "4H",
+            "angkatan" => 2021
         ]);
 
         Mahasiswa::create([

@@ -47,6 +47,18 @@ class PengajuanJudulController extends Controller
     {
         $validated = $request->validated();
 
+        // pengecekan kuota dosen yang direquest
+        $kuotaDosenPembimbing = KuotaDosen::where('dosen_id', $validated['calon_dosen_id'])->first();
+        if($validated['prodi_id'] == "1"){
+            if($kuotaDosenPembimbing->kuota_pembimbing_1_D3 <= 0){
+                return redirect()->back()->with('error', 'Dosen pembimbing sudah tidak available');
+            }
+        }else if($validated['prodi_id'] == "2"){
+            if($kuotaDosenPembimbing->kuota_pembimbing_1_D4 <= 0){
+                return redirect()->back()->with('error', 'Dosen pembimbing sudah tidak available');
+            }
+        }
+
         $path = null;
         if ($request->hasFile('blok_diagram')) {
             $file = $request->file('blok_diagram');

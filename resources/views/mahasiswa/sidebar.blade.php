@@ -111,7 +111,7 @@
                     <ul class="nav nav-treeview">
                         <li class="nav-item" id="pendaftaran-sempro-item">
                             <!-- route("mahasiswa.seminar-proposal.form-daftar") -->
-                            <a href="#" class="nav-link">
+                            <a href="{{ route('mahasiswa.seminar-proposal.pendaftaran') }}" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Pendaftaran Sempro</p>
                             </a>

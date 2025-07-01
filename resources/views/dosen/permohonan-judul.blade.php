@@ -73,8 +73,11 @@
 
                                                 </td>
                                                 <td>
-                                                    <a href="{{ route('dosen.permohonan-judul-detail', $proposalId) }}"
-                                                        class="btn btn-primary">Buka</a>
+                                                    <a href="{{ route('dosen.permohonan-judul-detail', $permohonan->proposal_id) }}"
+                                                        class="
+                                                            btn btn-primary
+                                                            @if ($kuotaPembimbing->kuota_pembimbing_1_D3 <= 0) disabled @endif
+                                                        ">Buka</a>
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -86,7 +89,7 @@
                                 </tbody>
                             </table>
                         </div>
-                        <p id="kuota-dosen-d3"><b>Sisa Kuota: </b>4</p>
+                        <p id="kuota-dosen-d3"><b>Sisa Kuota: </b>{{ $kuotaPembimbing->kuota_pembimbing_1_D3 }}</p>
                     </div>
 
                     <div class="card-body" id="Permohonan-Judul-D4JTD">
@@ -137,7 +140,10 @@
                                                 </td>
                                                 <td>
                                                     <a href="{{ route('dosen.permohonan-judul-detail', $permohonan->proposal_id) }}"
-                                                        class="btn btn-primary">Buka</a>
+                                                        class="
+                                                            btn btn-primary
+                                                            @if ($kuotaPembimbing->kuota_pembimbing_1_D4 <= 0) disabled @endif
+                                                        ">Buka</a>
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -149,7 +155,7 @@
                                 </tbody>
                             </table>
                         </div>
-                        <p id="kuota-dosen-d4"><b>Sisa Kuota: </b> 5</p>
+                        <p id="kuota-dosen-d4"><b>Sisa Kuota: </b>{{ $kuotaPembimbing->kuota_pembimbing_1_D4 }}</p>
                     </div>
                     <!--end::Body-->
 

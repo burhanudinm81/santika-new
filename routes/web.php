@@ -10,6 +10,7 @@ use App\Http\Controllers\KuotaDosenController;
 use App\Http\Controllers\Dosen\PermohonanJudul\PermohonanJudulController;
 use App\Http\Controllers\Mahasiswa\Ajax\AjaxMahasiswaController;
 use App\Http\Controllers\Mahasiswa\PengajuanJudul\PengajuanJudulController;
+use App\Http\Controllers\Mahasiswa\SeminarProposal\SeminarProposalController;
 use App\Http\Controllers\MahasiswaD3Controller;
 use App\Http\Controllers\MahasiswaD4Controller;
 use App\Http\Controllers\PanitiaController;
@@ -165,6 +166,12 @@ Route::middleware(["auth:mahasiswa", "auth.session", "password.changed"])->group
         Route::post('/mahasiswa/pengajuan-judul/store', 'storePengajuanJudul')->name('mahasiswa.pengajuan-judul-store');
         Route::get('/mahasiswa/pengajuan-judul/riwayat', 'showRiwayatPengajuanPage')->name('mahasiswa.pengajuan-judul-riwayat');
     });
+
+    Route::controller(SeminarProposalController::class)->group(function () {
+        Route::get('/mahasiswa/seminar-proposal/pendaftaran', 'showPendaftaranPage')->name('mahasiswa.seminar-proposal.pendaftaran');
+        Route::post('/mahasiswa/seminar-proposal/pendaftaran-store', 'storePendaftaran')->name('mahasiswa.seminar-proposal.pendaftaran-store');
+    });
+
 
     Route::controller(AjaxMahasiswaController::class)->group(function () {
         Route::get('/mahasiswa/ajax/search-mahasiswa', 'searchMahasiswa');
