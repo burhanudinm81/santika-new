@@ -35,6 +35,12 @@
         </div>
     @endif
 
+    @if (session('error'))
+        <div class="alert alert-danger">
+            <strong>Gagal!</strong> {{ session('error') }}
+        </div>
+    @endif
+
     @if ($errors->any())
         <div class="alert alert-danger">
             <ul>

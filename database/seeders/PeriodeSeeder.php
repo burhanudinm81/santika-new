@@ -14,11 +14,11 @@ class PeriodeSeeder extends Seeder
     public function run(): void
     {
         Periode::create([
-            "tahun" => 2025
+            "tahun" => "2024/2025"
         ]);
 
         Periode::create([
-            "tahun" => 2026
+            "tahun" => "2025/2026"
         ]);
     }
 }

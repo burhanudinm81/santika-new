@@ -48,5 +48,40 @@ class DosenSeeder extends Seeder
             "nip" => "001122334455667003",
             "password" => Hash::make("password123")
         ]);
+
+        Dosen::create([
+            "nidn" => "20021001006",
+            "nama" => "Samsul Hadi Cahyono",
+            "nip" => "001122334455667004",
+            "password" => Hash::make("password123")
+        ]);
+
+        Dosen::create([
+            "nidn" => "20021001007",
+            "nama" => "Kurniawan Agus",
+            "nip" => "001122334455667005",
+            "password" => Hash::make("password123")
+        ]);
+
+        Dosen::create([
+            "nidn" => "20021001008",
+            "nama" => "Joko Susanto",
+            "nip" => "001122334455667006",
+            "password" => Hash::make("password123")
+        ]);
+
+        Dosen::create([
+            "nidn" => "20021001009",
+            "nama" => "Budi Aryawan",
+            "nip" => "001122334455667007",
+            "password" => Hash::make("password123")
+        ]);
+
+        Dosen::create([
+            "nidn" => "20021001010",
+            "nama" => "Mangtab Pangalilo",
+            "nip" => "001122334455667008",
+            "password" => Hash::make("password123")
+        ]);
     }
 }
