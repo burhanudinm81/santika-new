@@ -21,12 +21,20 @@ class DatabaseSeeder extends Seeder
             JenisJudulSeeder::class,
             TahapSeeder::class,
             PeriodeSeeder::class,
+            StatusProposalSeeder::class,
             StatusProposalMahasiswaSeeder::class,
+            StatusPendaftaranSeminarProposalSeeder::class,
+            StatusDosenBidangMinatSeeder::class,
+            DosenForJadwalSeeder::class,
             DosenSeeder::class,
             KuotaDosenSeeder::class,
+            DosenBidangMinatSeeder::class,
             AdminProdiSeeder::class,
+            MahasiswaD3ForJadwalSeeder::class,
+            MahasiswaD4ForJadwalSeeder::class,
             MahasiswaSeeder::class,
-            PanitiaSeeder::class
+            PanitiaSeeder::class,
+            ProposalD3Seeder::class
         ]);
     }
 }

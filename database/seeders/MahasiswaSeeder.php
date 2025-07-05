@@ -123,7 +123,7 @@ class MahasiswaSeeder extends Seeder
         ]);
 
         Mahasiswa::create([
-            "nim" => "2141720095",
+            "nim" => "2141720096",
             "nama" => "Alex Marques",
             "password" => Hash::make("alex1234"),
             "prodi_id" => $prodiD4->id,

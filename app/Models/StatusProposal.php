@@ -7,6 +7,6 @@ use Illuminate\Database\Eloquent\Model;
 
 class StatusProposal extends Model
 {
-    /** @use HasFactory<\Database\Factories\StatusProposalFactory> */
-    use HasFactory;
+    protected $table = "status_proposal";
+    protected $guarded = ["id"];
 }
