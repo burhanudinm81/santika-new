@@ -20,8 +20,12 @@ class PengajuanJudulController extends Controller
     {
         $prodi = Prodi::all();
 
+        // mengambil data dari table jenis judul
         $jenisJudul = JenisJudul::all();
+
+        // mengambil data dari table bidang minat
         $bidangMinat = BidangMinat::all();
+
         // $dosen = Dosen::all();
 
         $isHavePendingPengajuan = false;
@@ -114,7 +118,8 @@ class PengajuanJudulController extends Controller
 
     public function showRiwayatPengajuanPage()
     {
-        $currentRiwayatPengajuan = ProposalDosenMahasiswa::with(['proposal', 'statusProposalMahasiswa'])->where('mahasiswa_id', auth('mahasiswa')->user()->id)
+        $currentRiwayatPengajuan = ProposalDosenMahasiswa::with(['proposal', 'statusProposalMahasiswa'])
+            ->where('mahasiswa_id', auth('mahasiswa')->user()->id)
             ->whereRelation('proposal', 'pendaftaran_sempro_id', null)->get();
 
 

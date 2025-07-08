@@ -20,13 +20,16 @@ class PermohonanJudulController extends Controller
             // ->where('status_proposal_mahasiswa_id', 3)
             ->get();
 
-        // ambil list data permohonan dari mahasiswa D3
-        $listPermohonanD3 = ProposalDosenMahasiswa::with(['mahasiswa', 'proposal', 'statusProposalMahasiswa'])
+
+            // ambil list data permohonan dari mahasiswa D3
+            $listPermohonanD3 = ProposalDosenMahasiswa::with(['mahasiswa', 'proposal', 'statusProposalMahasiswa'])
             ->where('dosen_id', auth('dosen')->user()->id)
             ->whereRelation('mahasiswa', 'prodi_id', 1)
             ->get();
-        // meng-group data permohonan D3 sesuai proposal_id
-        $groupedPermohonanD3 = $listPermohonanD3->groupBy('proposal_id');
+            // meng-group data permohonan D3 sesuai proposal_id
+            $groupedPermohonanD3 = $listPermohonanD3->groupBy('proposal_id');
+
+            // dd($groupedPermohonanD3);
 
         // ambil kuota pembimbing dari dosen
         $kuotaPembimbing = KuotaDosen::where('dosen_id', auth('dosen')->user()->id)->first();

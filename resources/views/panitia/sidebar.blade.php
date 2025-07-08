@@ -2,7 +2,7 @@
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
     <!-- Brand Logo -->
     <a href="index3.html" class="brand-link">
-        <img src="{{ url("/adminlte/dist/img/AdminLTELogo.png") }}" alt="AdminLTE Logo"
+        <img src="{{ url('/adminlte/dist/img/AdminLTELogo.png') }}" alt="AdminLTE Logo"
             class="brand-image img-circle elevation-3" style="opacity: .8">
         <span class="brand-text font-weight-light">S A N T I K A</span>
     </a>
@@ -12,22 +12,23 @@
         <!-- Sidebar user panel (optional) -->
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
             <div class="image">
-                @if (is_null(auth("dosen")->user()->foto_profil))
-                    <img src={{ url("/images/blank-profile-128x128.png") }} class="img-circle elevation-2" alt="User Image"
-                        id="user-image">
+                @if (is_null(auth('dosen')->user()->foto_profil))
+                    <img src={{ url('/images/blank-profile-128x128.png') }} class="img-circle elevation-2"
+                        alt="User Image" id="user-image">
                 @else
-                    <img src={{ asset("/storage/" . auth("dosen")->user()->foto_profil) }} class="img-circle elevation-2"
-                        alt="User Image" id="user-image" width="30px" height="30px">
+                    <img src={{ asset('/storage/' . auth('dosen')->user()->foto_profil) }}
+                        class="img-circle elevation-2" alt="User Image" id="user-image" width="30px" height="30px">
                 @endif
             </div>
             <div class="info">
-                <a href="#" class="d-block" id="profile-link">{{ auth("dosen")->user()->nama }}</a>
+                <a href="#" class="d-block" id="profile-link">{{ auth('dosen')->user()->nama }}</a>
             </div>
         </div>
 
         <!-- Sidebar Menu -->
         <nav class="mt-2">
-            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
+                data-accordion="false">
                 <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
                 <li class="nav-item nav-ajax">
@@ -49,7 +50,7 @@
                 </li>
 
                 <li class="nav-item nav-ajax">
-                    <a href="{{ route("panitia.kuota-dosen.page") }}" class="nav-link" id="kuota-dosen-item">
+                    <a href="{{ route('panitia.kuota-dosen.page') }}" class="nav-link" id="kuota-dosen-item">
                         <i class="nav-icon fas fa-solid fa-users"></i>
                         <p>
                             Kuota Dosen
@@ -75,8 +76,8 @@
                         </p>
                     </a>
                     <ul class="nav nav-treeview">
-                        <li class="nav-item nav-ajax">
-                            <a href="#" class="nav-link">
+                        <li class="nav-item">
+                            <a href="{{ route('panitia.seminar-proposal.pendaftaran') }}" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Pendaftaran</p>
                             </a>
@@ -127,7 +128,7 @@
                 </li>
 
                 <li class="nav-item">
-                    <a href="{{ route("logout") }}" class="nav-link">
+                    <a href="{{ route('logout') }}" class="nav-link">
                         <i class="nav-icon fas fa-sign-out-alt"></i>
                         <p>
                             Logout

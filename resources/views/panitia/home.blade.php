@@ -25,7 +25,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
         @include('panitia.sidebar')
 
         <!-- Content Wrapper. Contains page content -->
-        <div class="content-wrapper"></div>
+        <div class="content-wrapper">
+            @yield('content-panitia')
+        </div>
 
         <!-- Control Sidebar -->
         <aside class="control-sidebar control-sidebar-dark">
@@ -143,8 +145,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             <div class="form-group">
                                 <label for="new-password">Password Baru</label>
                                 <div class="input-group">
-                                    <input type="password" class="form-control" id="new-password" name="new_password"
-                                        placeholder="Masukkan password baru">
+                                    <input type="password" class="form-control" id="new-password"
+                                        name="new_password" placeholder="Masukkan password baru">
                                     <div class="input-group-append" id="show-new-password">
                                         <span class="input-group-text"><i class="fas fa-eye"></i></span>
                                     </div>
@@ -171,8 +173,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
         </div>
 
         <!-- Modal Edit Kuota Dosen -->
-        <div class="modal fade" id="editKuotaModal" tabindex="-1" role="dialog" aria-labelledby="editKuotaModalLabel"
-            aria-hidden="true">
+        <div class="modal fade" id="editKuotaModal" tabindex="-1" role="dialog"
+            aria-labelledby="editKuotaModalLabel" aria-hidden="true">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
@@ -191,7 +193,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
                             </div>
                             <div class="form-group">
                                 <label for="edit-kuota-value">Kuota Pembimbing 1</label>
-                                <input type="number" class="form-control" id="edit-kuota-value" min="0" required>
+                                <input type="number" class="form-control" id="edit-kuota-value" min="0"
+                                    required>
                             </div>
                         </div>
                         <div class="modal-footer">
@@ -207,10 +210,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
     <!-- REQUIRED SCRIPTS -->
     @include('required-js')
-
-    <script src={{ url("/custom/js/load-content.js") }}></script>
-    <script src="{{ url("/custom/js/animate-custom-file-input.js") }}"></script>
-    <script src="{{ url("/custom/js/profile/change-password.js") }}"></script>
+    <script src="{{ asset('/custom-assets/js/seminar-proposal.js') }}"></script>
+    <script src={{ url('/custom/js/load-content.js') }}></script>
+    <script src="{{ url('/custom/js/animate-custom-file-input.js') }}"></script>
+    <script src="{{ url('/custom/js/profile/change-password.js') }}"></script>
 </body>
 
 </html>

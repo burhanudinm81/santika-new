@@ -29,6 +29,11 @@ class Dosen extends Authenticatable
         return $this->hasMany(ProposalDosenMahasiswa::class);
     }
 
+    public function listDataDosen()
+    {
+        return $this->proposalMahasiswas()->get();
+    }
+
     public function bidangMinats(): BelongsToMany
     {
         return $this->belongsToMany(BidangMinat::class, 'dosen_bidang_minat', 'dosen_id', 'bidang_minat_id')

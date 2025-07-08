@@ -13,6 +13,8 @@ use App\Http\Controllers\Mahasiswa\PengajuanJudul\PengajuanJudulController;
 use App\Http\Controllers\Mahasiswa\SeminarProposal\SeminarProposalController;
 use App\Http\Controllers\MahasiswaD3Controller;
 use App\Http\Controllers\MahasiswaD4Controller;
+use App\Http\Controllers\Panitia\Ajax\AjaxPendaftaranSemproController;
+use App\Http\Controllers\Panitia\SeminarProposal\SeminarProposalController as SeminarProposalPanitiaController;
 use App\Http\Controllers\PanitiaController;
 use App\Http\Controllers\PrivateFileController;
 use Illuminate\Http\Request;
@@ -36,6 +38,9 @@ Route::get("/", function () {
  * Route yang hanya bisa diakses oleh Guest (Pengguna yang tidak terautentikasi)
  */
 Route::middleware("guest:admin-prodi,mahasiswa,dosen")->group(function () {
+
+
+
     Route::controller(LoginController::class)->group(function () {
         // Route untuk menampilkan halaman login
         Route::get("/login", "showLoginPage")->name("login");
@@ -155,6 +160,8 @@ Route::middleware(["auth:admin-prodi", "auth.session"])->group(function () {
  * Route untuk user yang terautentikasi sebagai Mahasiswa
  */
 Route::middleware(["auth:mahasiswa", "auth.session", "password.changed"])->group(function () {
+
+
     Route::controller(HomePageController::class)->group(function () {
         // Route untuk memuat halaman awal user Mahasiswa
         Route::get("/mahasiswa/home", "mahasiswa")
@@ -228,5 +235,27 @@ Route::middleware(["auth:dosen", "auth.session", "password.changed", "is.panitia
         // Route untuk mengupdate kuota seorang dosen
         // {kuota_dosen} adalah ID dari record di tabel kuota_dosen
         Route::put('/panitia/kuota-dosen/{kuota_dosen}', 'update');
+    });
+
+    Route::controller(SeminarProposalPanitiaController::class)->group(function () {
+        Route::get('/panitia/seminar-proposal/pendaftaran', 'showBerandaPendaftaranPage')->name('panitia.seminar-proposal.pendaftaran');
+        Route::get('/panitia/seminar-proposal/pendaftaran/{tahapId}/detail', 'showDetailPendaftaranPage')->name('panitia.seminar-proposal.pendaftaran-detail');
+        Route::get('/panitia/seminar-proposal/pendaftaran/{pendaftaranId}/verifikasi', 'showVerifikasiPendaftaran')->name('panitia.seminar-proposal.verifikasi-daftar');
+        Route::put('/panitia/seminar-proposal/pendaftaran/{pendaftaranId}/update-verifikasi', 'updateVerifikasiPendaftaran')->name('panitia.seminar-proposal.update-verifikasi');
+    });
+
+    Route::controller(AjaxPendaftaranSemproController::class)->group(function () {
+        Route::get('/panitia/ajax/list-pendaftaran-sempro', 'listPendaftaranSempro')->name('panitia.ajax.list-pendaftaran-sempro');
+    });
+
+    Route::controller(PrivateFileController::class)->group(function () {
+        Route::get('/proposal-sempro/{id}', 'serveProposalSemproFile')
+            ->name('proposal-sempro.show');
+        Route::get('/lembar-konsul/{id}', 'serveLembarKonsulSemproFile')
+            ->name('lembar-konsul.show');
+        Route::get('/lembar-kerjasama-mitra/{id}', 'serveLembarKerjsamaMitraSemproFile')
+            ->name('lembar-kerjasama-mitra.show');
+        Route::get('/bukti-cek-plagiasi/{id}', 'serveBuktiCekPlagiasiSemproFile')
+            ->name('bukti-cek-plagiasi.show');
     });
 });
