@@ -73,7 +73,7 @@
 
                                                 </td>
                                                 <td>
-                                                    <a href="{{ route('dosen.permohonan-judul-detail', $permohonan->proposal_id) }}"
+                                                    <a href="{{ route('dosen.permohonan-judul-detail', $permohonan->first()->proposal_id) }}"
                                                         class="
                                                             btn btn-primary
                                                             @if ($kuotaPembimbing->kuota_pembimbing_1_D3 <= 0) disabled @endif

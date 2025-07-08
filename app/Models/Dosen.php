@@ -28,4 +28,9 @@ class Dosen extends Authenticatable
     {
         return $this->hasMany(ProposalDosenMahasiswa::class);
     }
+
+    public function listDataDosen()
+    {
+        return $this->proposalMahasiswas()->get();
+    }
 }

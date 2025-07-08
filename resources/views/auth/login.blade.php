@@ -44,7 +44,7 @@
                     </div>
                 @endif
 
-                <form id="loginForm" action={{route("login.auth")}} method="post">
+               <form  id="loginForm" action={{route("login.auth")}} method="post">
                     @csrf
                     <div class="input-group mb-3">
                         <input type="text" id="username" class="form-control" name="username"

@@ -63,7 +63,7 @@ class DosenSeeder extends Seeder
             "password" => Hash::make("password123")
         ]);
 
-        Dosen::create([
+    Dosen::create([
             "nidn" => "20021001008",
             "nama" => "Joko Susanto",
             "nip" => "001122334455667006",
