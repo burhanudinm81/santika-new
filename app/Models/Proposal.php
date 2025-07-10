@@ -77,4 +77,26 @@ class Proposal extends Model
     {
         return $this->hasMany(JadwalSeminarProposal::class, 'proposal_id');
     }
+
+    public function jadwalSeminarProposal()
+    {
+        return $this->hasOne(JadwalSeminarProposal::class, 'proposal_id');
+    }
+
+    public function dosenPembimbing1(): BelongsTo
+    {
+        return $this->belongsTo(Dosen::class, 'dosen_pembimbing_1_id');
+    }
+    public function dosenPembimbing2(): BelongsTo
+    {
+        return $this->belongsTo(Dosen::class, 'dosen_pembimbing_2_id');
+    }
+    public function dosenPengujiSempro1(): BelongsTo
+    {
+        return $this->belongsTo(Dosen::class, 'penguji_sempro_1_id');
+    }
+    public function dosenPengujiSempro2(): BelongsTo
+    {
+        return $this->belongsTo(Dosen::class, 'penguji_sempro_2_id');
+    }
 }

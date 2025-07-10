@@ -14,6 +14,7 @@ use App\Http\Controllers\Mahasiswa\SeminarProposal\SeminarProposalController;
 use App\Http\Controllers\MahasiswaD3Controller;
 use App\Http\Controllers\MahasiswaD4Controller;
 use App\Http\Controllers\Panitia\Ajax\AjaxPendaftaranSemproController;
+use App\Http\Controllers\Panitia\SeminarProposal\JadwalSemproController;
 use App\Http\Controllers\Panitia\SeminarProposal\SeminarProposalController as SeminarProposalPanitiaController;
 use App\Http\Controllers\PanitiaController;
 use App\Http\Controllers\PrivateFileController;
@@ -29,8 +30,19 @@ Route::get("/info-session", function (Request $request) {
     dd($request->session()->all());
 });
 
-// Route untuk me-redirect request ke path "/" ke halaman login
+// Route untuk me-redirect request ke path "/"
 Route::get("/", function () {
+    // Jika ada session "role", redirect ke halaman sesuai role
+    if(session()->has("role")) {
+        if(session()->get("role") === "admin-prodi") {
+            return redirect()->route("admin-prodi.home");
+        } elseif (session()->get("role") === "mahasiswa") {
+            return redirect()->route("mahasiswa.home");
+        } elseif (session()->get("role") === "dosen") {
+            return redirect()->route("dosen.home");
+        }
+    }
+
     return redirect("/login");
 });
 
@@ -258,4 +270,17 @@ Route::middleware(["auth:dosen", "auth.session", "password.changed", "is.panitia
         Route::get('/bukti-cek-plagiasi/{id}', 'serveBuktiCekPlagiasiSemproFile')
             ->name('bukti-cek-plagiasi.show');
     });
+
+    Route::controller(JadwalSemproController::class)
+        ->prefix('/panitia/jadwal-sempro')
+        ->name('jadwal-sempro.')
+        ->group(function () {
+            Route::get('/', 'index')->name('index');
+            Route::get('/create', 'create')->name('create');
+            Route::post('/store', 'store')->name('store');
+            // Route::get('/edit/{id}', 'edit')->name('edit');
+            // Route::put('/update/{id}', 'update')->name('update');
+            // Route::delete('/delete/{id}', 'delete')->name('delete');
+            Route::get('/detail/{tahap_id}/{periode_id}', 'detail')->name('detail');
+        });
 });

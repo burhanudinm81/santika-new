@@ -83,7 +83,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="sempro4.php" class="nav-link">
+                            <a href="{{ route('jadwal-sempro.index') }}" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Jadwal</p>
                             </a>

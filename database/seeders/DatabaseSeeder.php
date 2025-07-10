@@ -34,7 +34,10 @@ class DatabaseSeeder extends Seeder
             MahasiswaD4ForJadwalSeeder::class,
             MahasiswaSeeder::class,
             PanitiaSeeder::class,
-            ProposalD3Seeder::class
+            ProposalD3Seeder::class,
+            ProposalD4Seeder::class,
+            ProposalDosenMahasiswaSeeder::class,
+            PendaftaranSeminarProposalSeeder::class
         ]);
     }
 }
