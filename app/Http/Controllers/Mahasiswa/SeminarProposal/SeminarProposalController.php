@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Mahasiswa\SeminarProposal;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePendaftaranSemproRequest;
 use App\Models\PendaftaranSeminarProposal;
+use App\Models\Proposal;
 use App\Models\ProposalDosenMahasiswa;
 use Illuminate\Http\Request;
 
@@ -56,6 +57,8 @@ class SeminarProposalController extends Controller
         $pathLembarKerjaSamaMitra = null;
         $pathBuktiCekPlagiasi = null;
 
+        $infoProposal = Proposal::find($validated['proposal_id']);
+
         $fileProposal = $request->file('file_proposal');
         $fileLembarKonsultasi = $request->file('lembar_konsultasi');
         $fileLembarKerjaSamaMitra = $request->file('lembar_kerja_sama_mitra');
@@ -89,7 +92,7 @@ class SeminarProposalController extends Controller
             'local'
         );
 
-        PendaftaranSeminarProposal::create([
+        $newPendaftaranSempro = PendaftaranSeminarProposal::create([
             'proposal_id' => $validated['proposal_id'],
             'status_daftar_sempro_id' => 3,
             'file_proposal' => $pathFileProposal,
@@ -101,6 +104,11 @@ class SeminarProposalController extends Controller
             'status_lembar_kerjasama_mitra' => false,
             'status_bukti_cek_plagiasi' => false,
         ]);
+
+        $infoProposal->update([
+            'pendaftaran_sempro_id' => $newPendaftaranSempro->id,
+        ]);
+
 
         return redirect()->back()->with('success', 'Pendaftaran Sempro Berhasil Dibuat');
     }

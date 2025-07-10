@@ -77,4 +77,6 @@ class Proposal extends Model
     {
         return $this->hasMany(JadwalSeminarProposal::class, 'proposal_id');
     }
+
+    
 }
