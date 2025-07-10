@@ -15,10 +15,11 @@ class JadwalSeminarProposal extends Model
         'sesi',
         'waktu_mulai',
         'waktu_selesai',
+        "prodi_id"
     ];
     public $timestamps = false;
 
-    public function proposal(): BelongsTo
+    public function proposal()
     {
         return $this->belongsTo(Proposal::class, 'proposal_id');
     }

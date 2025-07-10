@@ -13,6 +13,8 @@ class Panitia extends Model
     public $incrementing = true;
     public $timestamps = false;
 
+    protected $guarded = ["id"];
+
     public function jabatanPanitia(): BelongsTo
     {
         return $this->belongsTo(JabatanPanitia::class);
