@@ -75,7 +75,7 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="jadwalsempro.php" class="nav-link">
+                            <a href="{{ route('dosen.seminar-proposal.beranda-jadwal') }}" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Jadwal</p>
                             </a>
