@@ -62,9 +62,9 @@
                                         <td>{{ $index + 1 }}</td>
                                         <td>{{ $jadwal->ruang }}</td>
                                         @if (empty($printed[$key]))
-                                            <td rowspan="{{ $rowspanMap[$key] }}">{{ $jadwal->tanggal }}</td>
+                                            <td rowspan="{{ $rowspanMap[$key] }}">{{ $jadwal->tanggal->isoFormat("dddd, DD-MM-YYYY") }}</td>
                                             <td rowspan="{{ $rowspanMap[$key] }}">{{ $jadwal->sesi }}</td>
-                                            <td rowspan="{{ $rowspanMap[$key] }}">{{ $jadwal->waktu_mulai . ' - ' . $jadwal->waktu_selesai }}</td>
+                                            <td rowspan="{{ $rowspanMap[$key] }}">{{ $jadwal->waktu_mulai->isoFormat("HH:mm") . ' - ' . $jadwal->waktu_selesai->isoFormat("HH:mm") }}</td>
                                             @php $printed[$key] = true; @endphp
                                         @endif
                                         <td>{{ $jadwal->proposal->judul }}</td>

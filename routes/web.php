@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Auth\ChangePasswordController;
 use App\Http\Controllers\DashboardController;
+use App\Http\Controllers\Dosen\SeminarProposal\JadwalSemproController as JadwalSemproDosenController;
 use App\Http\Controllers\DosenController;
 use App\Http\Controllers\HomePageController;
 use App\Http\Controllers\Auth\LoginController;
@@ -11,10 +12,11 @@ use App\Http\Controllers\Dosen\PermohonanJudul\PermohonanJudulController;
 use App\Http\Controllers\Mahasiswa\Ajax\AjaxMahasiswaController;
 use App\Http\Controllers\Mahasiswa\PengajuanJudul\PengajuanJudulController;
 use App\Http\Controllers\Mahasiswa\SeminarProposal\SeminarProposalController;
+use App\Http\Controllers\Mahasiswa\SeminarProposal\JadwalSemproController as JadwalSemproMahasiswaController;
 use App\Http\Controllers\MahasiswaD3Controller;
 use App\Http\Controllers\MahasiswaD4Controller;
 use App\Http\Controllers\Panitia\Ajax\AjaxPendaftaranSemproController;
-use App\Http\Controllers\Panitia\SeminarProposal\JadwalSemproController;
+use App\Http\Controllers\Panitia\SeminarProposal\JadwalSemproController as JadwalSemproPanitiaController;
 use App\Http\Controllers\Panitia\SeminarProposal\SeminarProposalController as SeminarProposalPanitiaController;
 use App\Http\Controllers\PanitiaController;
 use App\Http\Controllers\PrivateFileController;
@@ -73,6 +75,10 @@ Route::middleware('auth:admin-prodi,mahasiswa,dosen')->group(function () {
     // Route untuk menampilkan form ganti password
     Route::get('/change-password', [ChangePasswordController::class, 'showChangePasswordForm'])
         ->name('password.change.form');
+
+    // Route untuk ganti password
+    Route::post('/change-password', [ChangePasswordController::class, 'changePassword'])
+        ->name('password.change.submit');
 });
 
 /**
@@ -196,6 +202,10 @@ Route::middleware(["auth:mahasiswa", "auth.session", "password.changed"])->group
         Route::get('/mahasiswa/ajax/search-mahasiswa', 'searchMahasiswa');
         Route::get('/mahasiswa/ajax/search-calonDosen', 'searchCalonDosenPembimbing');
     });
+
+    Route::controller(JadwalSemproMahasiswaController::class)->group(function () {
+        Route::get('/mahasiswa/seminar-proposal/jadwal', 'showJadwalPage')->name('mahasiswa.seminar-proposal.jadwal');
+    });
 });
 
 /**
@@ -217,6 +227,15 @@ Route::middleware(["auth:dosen", "auth.session", "password.changed"])->group(fun
         Route::get('/dosen/permohonan-judul', 'showPermohonanPage')->name('dosen.permohonan-judul');
         Route::get('/dosen/permohonan-judul/{proposalId}/detail', 'showDetailPermohonanPage')->name('dosen.permohonan-judul-detail');
         Route::post('/dosen/permohonan-judul/update-status', 'updatePermohonan')->name('dosen.permohonan-judul-update');
+    });
+
+    Route::controller(JadwalSemproDosenController::class)->group(function(){
+        // Route untuk menampilkan halaman beranda jadwal seminar proposal
+        Route::get('/dosen/seminar-proposal/jadwal', 'showBerandaJadwalPage')->name('dosen.seminar-proposal.beranda-jadwal');
+
+        // Route untuk menampilkan halaman jadwal seminar proposal
+        Route::get("/dosen/seminar-proposal/jadwal/{tahapId}", "showJadwalPage")
+            ->name("dosen.seminar-proposal.jadwal");
     });
 });
 
@@ -271,7 +290,7 @@ Route::middleware(["auth:dosen", "auth.session", "password.changed", "is.panitia
             ->name('bukti-cek-plagiasi.show');
     });
 
-    Route::controller(JadwalSemproController::class)
+    Route::controller(JadwalSemproPanitiaController::class)
         ->prefix('/panitia/jadwal-sempro')
         ->name('jadwal-sempro.')
         ->group(function () {

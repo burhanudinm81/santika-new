@@ -3,7 +3,10 @@
 namespace Tests\Feature;
 
 // use Illuminate\Foundation\Testing\RefreshDatabase;
+use App\Models\JadwalSeminarProposal;
 use App\Models\KuotaDosen;
+use App\Models\Proposal;
+use App\Models\ProposalDosenMahasiswa;
 use Illuminate\Support\Facades\Log;
 use Tests\TestCase;
 
@@ -11,24 +14,27 @@ class ExampleTest extends TestCase
 {
     public function testSembarang(): void
     {
-        $kuotaQuery = KuotaDosen::query()
-            ->whereHas('dosen', function ($dosenQuery) {
+    //    $proposal = Proposal::orWhere([
+    //         ["dosen_pembimbing_1_id", 1],
+    //         ["penguji_sempro_1_id", 1],
+    //         ["penguji_sempro_2_id", 1],
+    //    ])->get();
 
-                // if (!empty($searchQuery)) {
-                //     $dosenQuery->where('nama', 'like', '%' . $searchQuery . '%');
-                // }
-
-                $dosenQuery->whereHas('panitia', function ($panitiaQuery) {
-                    $panitiaQuery->where('prodi_id', 1);
-                });
-
-                // $dosenQuery->where('prodi_id', 1);
+        $jadwalSeminarProposal = JadwalSeminarProposal::whereHas('proposal', function ($query) {
+            $query->where(function($q){
+                $q->where('dosen_pembimbing_1_id', 1)
+                    ->orWhere('penguji_sempro_1_id', 1)
+                    ->orWhere('penguji_sempro_2_id', 1);
             })
-            ->with('dosen');
-
-        $kuotaCollection = $kuotaQuery->get();
+                ->where('tahap_id', 2)
+                ->where('periode_id', 1)
+                ->where('prodi_id', 1);
+        })
+            ->with('proposal')
+            ->get();
 
         self::assertTrue(true);
-        Log::info($kuotaCollection->toJson(JSON_PRETTY_PRINT));
+        Log::info("Jadwal Seminar Proposal:");
+        Log::info(json_encode($jadwalSeminarProposal, JSON_PRETTY_PRINT));
     }
 }
