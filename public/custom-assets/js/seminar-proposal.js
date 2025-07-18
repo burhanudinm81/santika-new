@@ -11,13 +11,12 @@ $(document).ready(function () {
         }
 
         $.ajax({
-            url: '/panitia/ajax/list-pendaftaran-sempro', // Ganti sesuai rute kamu
+            url: '/panitia/ajax/list-pendaftaran-sempro',
             method: 'GET',
             data: {
                 periode_id: periodeId,
                 tahap_id: tahapId,
                 prodi_panitia_id: prodiPanitiaId
-
             },
             success: function (response) {
                 let tbody = '';
@@ -57,16 +56,16 @@ $(document).ready(function () {
                             `;
                         } else if (prodiPanitiaId == 2) {
                             tbody += `
-                                <tr>
+                                 <tr>
                                     <td class="text-center align-middle">${index + 1}</td>
-                                    <td class="text-center align-middle">${item.proposal_id ?? '-'}</td>
-                                    <td class="text-center align-middle">${item.proposal.prodi_id ?? '-'}</td>
+                                    <td class="text-center align-middle">${item.proposal.proposal_mahasiswas[0].mahasiswa.nama ?? '-'}</td>
+                                    <td class="text-center align-middle">${item.proposal.proposal_mahasiswas[0].mahasiswa.nim ?? '-'}</td>
                                     <td class="text-center align-middle">${item.proposal.judul ?? '-'}</td>
                                     <td class="text-center align-middle">
-                                        <span class="badge badge-success">Telah di Verifikasi</span>
+                                        ${badge}
                                     </td>
                                     <td class="text-center align-middle">
-                                        <a href="/detail/${item.id}" class="btn btn-primary btn-sm">View</a>
+                                        <a href="/panitia/seminar-proposal/pendaftaran/${item.id}/verifikasi" class="btn btn-primary btn-sm">View</a>
                                     </td>
                                 </tr>
                             `;

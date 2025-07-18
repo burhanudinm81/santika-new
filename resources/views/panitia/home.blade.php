@@ -214,6 +214,8 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <script src={{ url('/custom/js/load-content.js') }}></script>
     <script src="{{ url('/custom/js/animate-custom-file-input.js') }}"></script>
     <script src="{{ url('/custom/js/profile/change-password.js') }}"></script>
+
+    @yield('scripts-panitia')
 </body>
 
 </html>

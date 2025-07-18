@@ -39,4 +39,24 @@ class Dosen extends Authenticatable
         return $this->belongsToMany(BidangMinat::class, 'dosen_bidang_minat', 'dosen_id', 'bidang_minat_id')
             ->withPivot('status_dosen_bidang_minat_id');
     }
+
+    public function proposalPembimbing1(): HasMany
+    {
+        return $this->hasMany(Proposal::class, 'dosen_pembimbing_1_id');
+    }
+
+    public function proposalPembimbing2(): HasMany
+    {
+        return $this->hasMany(Proposal::class, 'dosen_pembimbing_2_id');
+    }
+
+    public function proposalPengujiSempro1(): HasMany
+    {
+        return $this->hasMany(JadwalSeminarProposal::class, 'penguji_sempro_1_id');
+    }
+
+    public function proposalPengujiSempro2(): HasMany
+    {
+        return $this->hasMany(JadwalSeminarProposal::class, 'penguji_sempro_2_id');
+    }
 }

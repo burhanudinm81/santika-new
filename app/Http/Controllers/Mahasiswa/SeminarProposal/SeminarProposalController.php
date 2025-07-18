@@ -107,6 +107,7 @@ class SeminarProposalController extends Controller
 
         $infoProposal->update([
             'pendaftaran_sempro_id' => $newPendaftaranSempro->id,
+            
         ]);
 
 

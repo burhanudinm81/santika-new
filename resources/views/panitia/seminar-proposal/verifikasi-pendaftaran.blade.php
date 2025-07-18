@@ -36,9 +36,9 @@
 
                                 <label class="form-label mb-1">Nama Mahasiswa 2</label>
                                 <p>{{ $pendaftaranSemproInfo->proposal->proposalMahasiswas[1]->mahasiswa->nama }}</p>
-                            @elseif(pendaftaranSemproInfo->proposal->prodi_id == 2)
+                            @elseif($pendaftaranSemproInfo->proposal->prodi_id == 2)
                                 <label class="form-label mb-1">Nama Mahasiswa</label>
-                                <p>{{ $pendaftaranSemproInfo->proposal->proposalMahasiswas[0]->mahasiswa->nama }}</p>
+                                <p>{{ $pendaftaranSemproInfo->proposal->proposalMahasiswas->first()->mahasiswa->nama }}</p>
                             @endif
 
                             <label class="form-label mb-1">Judul Proposal</label>

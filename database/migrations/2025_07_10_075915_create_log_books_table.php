@@ -30,6 +30,10 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('log_books');
+        Schema::table('log_book_skripsi', function (Blueprint $table) {
+            $table->dropForeign(['jenis_kegiatan_id']);
+            // $table->dropColumn(['dosen_pembimbing_1_id', 'dosen_pembimbing_2_id']);
+        });
+        Schema::dropIfExists('log_book_skripsi');
     }
 };

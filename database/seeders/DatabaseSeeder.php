@@ -23,7 +23,7 @@ class DatabaseSeeder extends Seeder
             PeriodeSeeder::class,
             StatusProposalSeeder::class,
             StatusProposalMahasiswaSeeder::class,
-            StatusPendaftaranSeminarProposalSeeder::class,
+            StatusPendaftaranSeminarSeeder::class,
             StatusDosenBidangMinatSeeder::class,
             DosenForJadwalSeeder::class,
             DosenSeeder::class,
@@ -34,7 +34,10 @@ class DatabaseSeeder extends Seeder
             MahasiswaD4ForJadwalSeeder::class,
             MahasiswaSeeder::class,
             PanitiaSeeder::class,
-            ProposalD3Seeder::class
+            ProposalD3Seeder::class,
+            ProposalD4Seeder::class,
+            ProposalDosenMahasiswaSeeder::class,
+            PendaftaranSeminarProposalSeeder::class
         ]);
     }
 }
