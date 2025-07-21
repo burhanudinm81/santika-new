@@ -11,9 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('status_pendaftaran_seminar', function (Blueprint $table) {
+        Schema::create('jenis_kegiatan_logbook', function (Blueprint $table) {
             $table->id();
-            $table->string("status", 255)->nullable(false);
+            $table->string('nama_kegiatan');
             $table->timestamps();
         });
     }
@@ -23,6 +23,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('status_pendaftaran_seminar');
+        Schema::dropIfExists('jenis_kegiatan_logbook');
     }
 };

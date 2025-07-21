@@ -120,7 +120,8 @@ class PengajuanJudulController extends Controller
     {
         $currentRiwayatPengajuan = ProposalDosenMahasiswa::with(['proposal', 'statusProposalMahasiswa'])
             ->where('mahasiswa_id', auth('mahasiswa')->user()->id)
-            ->whereRelation('proposal', 'pendaftaran_sempro_id', null)->get();
+            // ->whereRelation('proposal', 'pendaftaran_sempro_id', null)
+            ->get();
 
 
         return view('mahasiswa.pengajuan-judul.riwayat', compact('currentRiwayatPengajuan'));

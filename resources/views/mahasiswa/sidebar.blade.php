@@ -142,6 +142,7 @@
                             </a>
                         </li>
                     </ul>
+                </li>
 
                 <li class="nav-item menu-close">
                     <a href="#" class="nav-link">
@@ -164,6 +165,7 @@
                                 <p>Dosen Pembimbing 2</p>
                             </a>
                         </li>
+                    </ul>
                 </li>
                 <li class="nav-item menu-close">
                     <a href="#" class="nav-link">
@@ -175,7 +177,7 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a href="{{ route('mahasiswa.seminar-hasil.daftar-semhas') }}" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Pendaftaran Sidang</p>
                             </a>

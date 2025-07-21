@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\PendaftaranSemhas;
 use App\Models\PendaftaranSeminarProposal;
 use App\Models\Proposal;
 use Illuminate\Http\Request;
@@ -32,6 +33,7 @@ class PrivateFileController extends Controller
         ]);
     }
 
+    // UNTUK SEMPRO
     public function serveProposalSemproFile($id)
     {
         $pendaftaranSempro = PendaftaranSeminarProposal::findOrFail($id);
@@ -110,6 +112,145 @@ class PrivateFileController extends Controller
         }
 
         $filepath = $pendaftaranSempro->bukti_cek_plagiasi;
+
+        if (!Storage::disk('local')->exists($filepath)) {
+            abort(404, 'Blok diagram sistem tidak ditemukan');
+        }
+
+        $file = Storage::disk('local')->get($filepath);
+        $mimeType = Storage::disk('local')->mimeType($filepath);
+
+        return response($file, 200, [
+            'Content-Type' => $mimeType,
+            'Cache-Control' => 'public, max-age=3600',
+        ]);
+    }
+
+    // UNTUK SEMHAS
+    public function serveSuratRekomDospemFile($id)
+    {
+        $pendaftaranSemhas = PendaftaranSemhas::findOrFail($id);
+
+        if (!$pendaftaranSemhas->file_rekom_dospem) {
+            abort(404, 'Blok diagram sistem tidak ditemukan');
+        }
+
+        $filepath = $pendaftaranSemhas->file_rekom_dospem;
+
+        if (!Storage::disk('local')->exists($filepath)) {
+            abort(404, 'Blok diagram sistem tidak ditemukan');
+        }
+
+        $file = Storage::disk('local')->get($filepath);
+        $mimeType = Storage::disk('local')->mimeType($filepath);
+
+        return response($file, 200, [
+            'Content-Type' => $mimeType,
+            'Cache-Control' => 'public, max-age=3600',
+        ]);
+    }
+
+    public function serveProposalSemhasFile($id)
+    {
+        $pendaftaranSemhas = PendaftaranSemhas::findOrFail($id);
+
+        if (!$pendaftaranSemhas->file_rekom_dospem) {
+            abort(404, 'Blok diagram sistem tidak ditemukan');
+        }
+
+        $filepath = $pendaftaranSemhas->file_rekom_dospem;
+
+        if (!Storage::disk('local')->exists($filepath)) {
+            abort(404, 'Blok diagram sistem tidak ditemukan');
+        }
+
+        $file = Storage::disk('local')->get($filepath);
+        $mimeType = Storage::disk('local')->mimeType($filepath);
+
+        return response($file, 200, [
+            'Content-Type' => $mimeType,
+            'Cache-Control' => 'public, max-age=3600',
+        ]);
+    }
+
+    public function serveDraftJurnalFile($id)
+    {
+        $pendaftaranSemhas = PendaftaranSemhas::findOrFail($id);
+
+        if (!$pendaftaranSemhas->file_draft_jurnal) {
+            abort(404, 'Blok diagram sistem tidak ditemukan');
+        }
+
+        $filepath = $pendaftaranSemhas->file_draft_jurnal;
+
+        if (!Storage::disk('local')->exists($filepath)) {
+            abort(404, 'Blok diagram sistem tidak ditemukan');
+        }
+
+        $file = Storage::disk('local')->get($filepath);
+        $mimeType = Storage::disk('local')->mimeType($filepath);
+
+        return response($file, 200, [
+            'Content-Type' => $mimeType,
+            'Cache-Control' => 'public, max-age=3600',
+        ]);
+    }
+
+    public function serveIAMitraFile($id)
+    {
+        $pendaftaranSemhas = PendaftaranSemhas::findOrFail($id);
+
+        if (!$pendaftaranSemhas->file_IA_mitra) {
+            abort(404, 'Blok diagram sistem tidak ditemukan');
+        }
+
+        $filepath = $pendaftaranSemhas->file_IA_mitra;
+
+        if (!Storage::disk('local')->exists($filepath)) {
+            abort(404, 'Blok diagram sistem tidak ditemukan');
+        }
+
+        $file = Storage::disk('local')->get($filepath);
+        $mimeType = Storage::disk('local')->mimeType($filepath);
+
+        return response($file, 200, [
+            'Content-Type' => $mimeType,
+            'Cache-Control' => 'public, max-age=3600',
+        ]);
+    }
+
+    public function serveBebasTanggunganPklFile($id)
+    {
+        $pendaftaranSemhas = PendaftaranSemhas::findOrFail($id);
+
+        if (!$pendaftaranSemhas->file_bebas_tanggungan_pkl) {
+            abort(404, 'Blok diagram sistem tidak ditemukan');
+        }
+
+        $filepath = $pendaftaranSemhas->file_bebas_tanggungan_pkl;
+
+        if (!Storage::disk('local')->exists($filepath)) {
+            abort(404, 'Blok diagram sistem tidak ditemukan');
+        }
+
+        $file = Storage::disk('local')->get($filepath);
+        $mimeType = Storage::disk('local')->mimeType($filepath);
+
+        return response($file, 200, [
+            'Content-Type' => $mimeType,
+            'Cache-Control' => 'public, max-age=3600',
+        ]);
+    }
+
+    public function serveSKLAFile($id)
+    {
+        $pendaftaranSemhas = PendaftaranSemhas::findOrFail($id);
+
+        if (!$pendaftaranSemhas->file_skla) {
+            abort(404, 'Blok diagram sistem tidak ditemukan');
+        }
+
+        $filepath = $pendaftaranSemhas->file_skla;
 
         if (!Storage::disk('local')->exists($filepath)) {
             abort(404, 'Blok diagram sistem tidak ditemukan');

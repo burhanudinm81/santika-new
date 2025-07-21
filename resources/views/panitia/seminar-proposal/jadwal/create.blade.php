@@ -18,14 +18,14 @@
         <div>
             {{-- modal popup success --}}
             <div style="
-                                                                                                                                    position: fixed;
-                                                                                                                                    top: 30px;
-                                                                                                                                    left: 60%;
-                                                                                                                                    transform: translateX(-50%);
-                                                                                                                                    z-index: 1050;
-                                                                                                                                    width: 50%;
-                                                                                                                                    transition: all 0.2s ease-in-out;
-                                                                                                                                "
+                    position: fixed;
+                    top: 30px;
+                    left: 60%;
+                    transform: translateX(-50%);
+                    z-index: 1050;
+                    width: 50%;
+                    transition: all 0.2s ease-in-out;
+                "
                 class="bg-white border-bottom-0 border-right-0 border-left-0 py-4 border-success shadow shadow-md mx-auto alert alert-dismissible fade show relative"
                 role="alert">
                 <strong class="text-success">{{ session('success') }}</strong>
@@ -90,7 +90,8 @@
                                         <tr>
                                             <td>1</td>
                                             <td>
-                                                <input type="text" class="form-control" id="ruang" name="ruang[]" required>
+                                                <input type="text" class="form-control" id="ruang" name="ruang[]"
+                                                    required>
                                             </td>
                                         </tr>
                                     </tbody>
@@ -119,8 +120,8 @@
                                 </table>
                                 <div class="form-group">
                                     <label for="jumlah-sesi">Jumlah Sesi</label>
-                                    <input type="number" class="form-control" id="jumlah-sesi" name="jumlah_sesi" value="1"
-                                        required>
+                                    <input type="number" class="form-control" id="jumlah-sesi" name="jumlah_sesi"
+                                        value="1" required>
                                 </div>
                                 <table class="table table-striped table-bordered" id="input-sesi">
                                     <thead>

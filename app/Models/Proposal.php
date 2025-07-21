@@ -73,6 +73,11 @@ class Proposal extends Model
         return $this->hasOne(PendaftaranSeminarProposal::class);
     }
 
+    public function pendaftaranSemhas(): HasOne
+    {
+        return $this->hasOne(PendaftaranSemhas::class);
+    }
+
     public function jadwalSeminarProposals(): HasMany
     {
         return $this->hasMany(JadwalSeminarProposal::class, 'proposal_id');

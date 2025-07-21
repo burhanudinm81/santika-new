@@ -11,11 +11,13 @@ use App\Http\Controllers\KuotaDosenController;
 use App\Http\Controllers\Dosen\PermohonanJudul\PermohonanJudulController;
 use App\Http\Controllers\Mahasiswa\Ajax\AjaxMahasiswaController;
 use App\Http\Controllers\Mahasiswa\PengajuanJudul\PengajuanJudulController;
+use App\Http\Controllers\Mahasiswa\SeminarHasil\SeminarHasilController;
 use App\Http\Controllers\Mahasiswa\SeminarProposal\SeminarProposalController;
 use App\Http\Controllers\Mahasiswa\SeminarProposal\JadwalSemproController as JadwalSemproMahasiswaController;
 use App\Http\Controllers\MahasiswaD3Controller;
 use App\Http\Controllers\MahasiswaD4Controller;
 use App\Http\Controllers\Panitia\Ajax\AjaxPendaftaranSemproController;
+use App\Http\Controllers\Panitia\SeminarHasil\SeminarHasilPanitiaController;
 use App\Http\Controllers\Panitia\SeminarProposal\JadwalSemproController as JadwalSemproPanitiaController;
 use App\Http\Controllers\Panitia\SeminarProposal\SeminarProposalController as SeminarProposalPanitiaController;
 use App\Http\Controllers\PanitiaController;
@@ -35,8 +37,8 @@ Route::get("/info-session", function (Request $request) {
 // Route untuk me-redirect request ke path "/"
 Route::get("/", function () {
     // Jika ada session "role", redirect ke halaman sesuai role
-    if(session()->has("role")) {
-        if(session()->get("role") === "admin-prodi") {
+    if (session()->has("role")) {
+        if (session()->get("role") === "admin-prodi") {
             return redirect()->route("admin-prodi.home");
         } elseif (session()->get("role") === "mahasiswa") {
             return redirect()->route("mahasiswa.home");
@@ -197,6 +199,11 @@ Route::middleware(["auth:mahasiswa", "auth.session", "password.changed"])->group
         Route::post('/mahasiswa/seminar-proposal/pendaftaran-store', 'storePendaftaran')->name('mahasiswa.seminar-proposal.pendaftaran-store');
     });
 
+    Route::controller(SeminarHasilController::class)->group(function () {
+        Route::get('/mahasiswa/seminar-hasil/daftar-semhas', 'showPendaftaranPage')->name('mahasiswa.seminar-hasil.daftar-semhas');
+        Route::post('/mahasiswa/seminar-hasil/daftar-semhas-store', 'storePendaftaran')->name('mahasiswa.seminar-hasil.daftar-semhas-store');
+    });
+
 
     Route::controller(AjaxMahasiswaController::class)->group(function () {
         Route::get('/mahasiswa/ajax/search-mahasiswa', 'searchMahasiswa');
@@ -229,7 +236,7 @@ Route::middleware(["auth:dosen", "auth.session", "password.changed"])->group(fun
         Route::post('/dosen/permohonan-judul/update-status', 'updatePermohonan')->name('dosen.permohonan-judul-update');
     });
 
-    Route::controller(JadwalSemproDosenController::class)->group(function(){
+    Route::controller(JadwalSemproDosenController::class)->group(function () {
         // Route untuk menampilkan halaman beranda jadwal seminar proposal
         Route::get('/dosen/seminar-proposal/jadwal', 'showBerandaJadwalPage')->name('dosen.seminar-proposal.beranda-jadwal');
 
@@ -275,11 +282,20 @@ Route::middleware(["auth:dosen", "auth.session", "password.changed", "is.panitia
         Route::put('/panitia/seminar-proposal/pendaftaran/{pendaftaranId}/update-verifikasi', 'updateVerifikasiPendaftaran')->name('panitia.seminar-proposal.update-verifikasi');
     });
 
+    Route::controller(SeminarHasilPanitiaController::class)->group(function () {
+        Route::get('/panitia/seminar-hasil/pendaftaran', 'showBerandaPendaftaranPage')->name('panitia.seminar-hasil.pendaftaran');
+        Route::get('/panitia/seminar-hasil/pendaftaran/{tahapId}/detail', 'showDetailPendaftaranPage')->name('panitia.seminar-hasil.pendaftaran-detail');
+        Route::get('/panitia/seminar-hasil/pendaftaran/{pendaftaranId}/verifikasi', 'showVerifikasiPendaftaran')->name('panitia.seminar-hasil.verifikasi-daftar');
+         Route::put('/panitia/seminar-hasil/pendaftaran/{pendaftaranId}/update-verifikasi', 'updateVerifikasiPendaftaran')->name('panitia.seminar-hasil.update-verifikasi');
+    });
+
     Route::controller(AjaxPendaftaranSemproController::class)->group(function () {
         Route::get('/panitia/ajax/list-pendaftaran-sempro', 'listPendaftaranSempro')->name('panitia.ajax.list-pendaftaran-sempro');
+        Route::get('/panitia/ajax/list-pendaftaran-semhas', 'listPendaftaranSemhas')->name('panitia.ajax.list-pendaftaran-semhas');
     });
 
     Route::controller(PrivateFileController::class)->group(function () {
+        // sempro
         Route::get('/proposal-sempro/{id}', 'serveProposalSemproFile')
             ->name('proposal-sempro.show');
         Route::get('/lembar-konsul/{id}', 'serveLembarKonsulSemproFile')
@@ -288,6 +304,20 @@ Route::middleware(["auth:dosen", "auth.session", "password.changed", "is.panitia
             ->name('lembar-kerjasama-mitra.show');
         Route::get('/bukti-cek-plagiasi/{id}', 'serveBuktiCekPlagiasiSemproFile')
             ->name('bukti-cek-plagiasi.show');
+
+        // semhas
+        Route::get('/surat-rekom-dosen/{id}', 'serveSuratRekomDospemFile')
+            ->name('surat-rekom.show');
+        Route::get('/proposal-semhas/{id}', 'serveProposalSemhasFile')
+            ->name('proposal-semhas.show');
+        Route::get('/draft-jurnal/{id}', 'serveDraftJurnalFile')
+            ->name('draft-jurnal.show');
+        Route::get('/ia-mitra/{id}', 'serveIAMitraFile')
+            ->name('ia-mitra.show');
+        Route::get('/bebas-pkl/{id}', 'serveBebasTanggunganPklFile')
+            ->name('bebas-pkl.show');
+        Route::get('/skla/{id}', 'serveSKLAFile')
+            ->name('skla.show');
     });
 
     Route::controller(JadwalSemproPanitiaController::class)

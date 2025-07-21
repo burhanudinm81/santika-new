@@ -1,6 +1,6 @@
 $(document).ready(function () {
 
-    $('#buttonTampilByPeriode').click(function () {
+    $('#buttonTampilByPeriodeSemhas').click(function () {
         const periodeId = $('#periode_id').val();
         const tahapId = $('#tahap_id').val();
         const prodiPanitiaId = $('#prodi_panitia_id').val();
@@ -11,7 +11,7 @@ $(document).ready(function () {
         }
 
         $.ajax({
-            url: '/panitia/ajax/list-pendaftaran-sempro',
+            url: '/panitia/ajax/list-pendaftaran-semhas',
             method: 'GET',
             data: {
                 periode_id: periodeId,
@@ -28,7 +28,7 @@ $(document).ready(function () {
                         const test = item.proposal.proposal_mahasiswas[0].mahasiswa;
 
                         let badge = '';
-                        const statusPendaftaranSempro = item.status_daftar_sempro_id;
+                        const statusPendaftaranSempro = item.status_daftar_semhas_id;
                         if (statusPendaftaranSempro == 1) {
                             badge = `<span class="badge badge-success">Diterima</span>`;
                         } else if (statusPendaftaranSempro == 2) {
@@ -50,7 +50,7 @@ $(document).ready(function () {
                                         ${badge}
                                     </td>
                                     <td class="text-center align-middle">
-                                        <a href="/panitia/seminar-proposal/pendaftaran/${item.id}/verifikasi" class="btn btn-primary btn-sm">View</a>
+                                        <a href="/panitia/seminar-hasil/pendaftaran/${item.id}/verifikasi" class="btn btn-primary btn-sm">View</a>
                                     </td>
                                 </tr>
                             `;
