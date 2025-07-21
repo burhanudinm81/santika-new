@@ -24,7 +24,7 @@
                     </div>
 
                     {{-- Form menunjuk ke route yang akan memproses perubahan password --}}
-                    <form action="#{{-- route('password.change.process') --}}" method="post" id="form-ubah-password">
+                    <form action="{{ route('password.change.submit') }}" method="post" id="form-ubah-password">
                         @csrf
                         <div class="card-body">
 

@@ -17,8 +17,8 @@
         @include('notifications.success-alert', ['message' => session('success')])
     @endif
 
-    <!-- Main content -->
-    <div class="content">
+    <!-- Main con
+    <div class="content">tent -->
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12">

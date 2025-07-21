@@ -17,7 +17,13 @@ class JadwalSeminarProposal extends Model
         'waktu_selesai',
         "prodi_id"
     ];
-    public $timestamps = false;
+    protected $casts = [
+        'tanggal' => 'date',
+        'waktu_mulai' => 'datetime',
+        'waktu_selesai' => 'datetime',
+    ];
+
+    public $timestamps = true;
 
     public function proposal()
     {

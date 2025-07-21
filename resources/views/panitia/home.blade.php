@@ -211,6 +211,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <!-- REQUIRED SCRIPTS -->
     @include('required-js')
     <script src="{{ asset('/custom-assets/js/seminar-proposal.js') }}"></script>
+    <script src="{{ asset('/custom-assets/js/seminar-hasil.js') }}"></script>
     <script src={{ url('/custom/js/load-content.js') }}></script>
     <script src="{{ url('/custom/js/animate-custom-file-input.js') }}"></script>
     <script src="{{ url('/custom/js/profile/change-password.js') }}"></script>
