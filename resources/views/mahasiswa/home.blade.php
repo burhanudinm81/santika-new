@@ -29,6 +29,10 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
         <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">
+            @if (session('error'))
+                @include('notifications.error-alert', ['message' => session('error')])
+            @endif
+
             @yield('content')
         </div>
 

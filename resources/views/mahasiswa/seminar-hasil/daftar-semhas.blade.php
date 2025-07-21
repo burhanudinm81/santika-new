@@ -16,6 +16,14 @@
     <!-- Main content -->
     <div class="content">
         <div class="container-fluid">
+
+            @if ($infoPendaftaranSemhas == null)
+                <div class="alert alert-warning" role="alert">
+                    <h4 class="alert-heading"><strong>Maaf, anda belum bisa mendaftar seminar proposal</strong></h4>
+                    <p>Anda memiliki proposal yang masih belum dikonfirmasi dosen YBS</p>
+                </div>
+            @endif
+
             @if ($errors->any())
                 <div class="alert alert-danger">
                     <ul>
@@ -42,7 +50,8 @@
                         <!--begin::Body-->
                         <div class="card-body">
                             <div class="form-group">
-                                <label for="JudulProposal" class="form-label" style="font-size: 22px">Status Pendaftaran Seminar</label>
+                                <label for="JudulProposal" class="form-label" style="font-size: 22px">Status Pendaftaran
+                                    Seminar</label>
                                 <input type="text"
                                     class="
                                 form-control

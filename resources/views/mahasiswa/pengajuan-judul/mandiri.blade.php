@@ -65,18 +65,15 @@
                         <div class="card-body">
                             @if ($isHavePendingPengajuan && $statusProposalId != 0)
                                 <div class="alert
-                                    @if ($statusProposalId == 3)
-                                        alert-warning
+                                    @if ($statusProposalId == 3) alert-warning
                                     @elseif($statusProposalId == 1)
-                                        alert-success
-                                    @endif
+                                        alert-success @endif
                                     "
-
                                     role="alert">
                                     @if ($statusProposalId == 1)
                                         Pengajuan judul anda diterima dosen YBS
                                     @elseif($statusProposalId == 3)
-                                        Anda memiliki pengajuan judul yang telah dikonfirmasi dosen YBS
+                                        Anda memiliki pengajuan judul menunggu dikonfirmasi dosen YBS
                                     @endif
                                 </div>
                             @endif
@@ -136,7 +133,8 @@
                                         @if ($isHavePendingPengajuan) disabled @endif
                                         aria-describedby="Nama Mahasiswa 1" value="{{ auth('mahasiswa')->user()->nama }}"
                                         readonly />
-                                    <input type="hidden" name="mahasiswa_1_id" value="{{ auth('mahasiswa')->user()->id }}">
+                                    <input type="hidden" name="mahasiswa_1_id"
+                                        value="{{ auth('mahasiswa')->user()->id }}">
                                     <input type="hidden" name="prodi_id"
                                         value="{{ auth('mahasiswa')->user()->prodi_id }}">
                                     <input type="hidden" name="periode_id"

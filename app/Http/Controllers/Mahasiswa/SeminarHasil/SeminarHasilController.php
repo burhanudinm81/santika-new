@@ -17,6 +17,11 @@ class SeminarHasilController extends Controller
         $infoProposal = Proposal::with(['proposalMahasiswas', 'dosenPembimbing1', 'dosenPembimbing2', 'bidangMinat'])
             ->whereRelation('proposalMahasiswas', 'mahasiswa_id', auth('mahasiswa')->user()->id)
             ->first();
+
+        if ($infoProposal == null) {
+            return redirect()->back()->with('error', 'anda belum eligible');
+        }
+
         $infoMahasiswaAll = ProposalDosenMahasiswa::with(['dosen', 'mahasiswa'])
             ->where('proposal_id', $infoProposal->id)
             ->get();
