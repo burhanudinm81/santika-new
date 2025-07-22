@@ -26,7 +26,7 @@ class StorePendaftaranSemhasRequest extends FormRequest
             'file_rekom_dospem' => 'required|file|mimes:pdf|max:10240',
             'file_proposal_semhas' => 'required|file|mimes:pdf|max:10240',
             'file_draft_jurnal' => 'required|file|mimes:pdf|max:10240',
-            'file_IA_mitra' => 'optional|file|mimes:pdf|max:10240',
+            'file_IA_mitra' => 'nullable|file|mimes:pdf|max:10240',
             'file_bebas_tanggungan_pkl' => 'required|file|mimes:pdf|max:10240',
             'file_skla' => 'required|file|mimes:pdf|max:10240',
         ];
