@@ -213,6 +213,11 @@ Route::middleware(["auth:mahasiswa", "auth.session", "password.changed"])->group
     Route::controller(JadwalSemproMahasiswaController::class)->group(function () {
         Route::get('/mahasiswa/seminar-proposal/jadwal', 'showJadwalPage')->name('mahasiswa.seminar-proposal.jadwal');
     });
+
+    Route::controller(DosenController::class)->group(function () {
+        Route::get('/mahasiswa/informasi-dosen/daftar-dosen', 'daftarDosen')->name('mahasiswa.informasi-dosen.daftar-dosen');
+        Route::get('/mahasiswa/informasi-dosen/profil-dosen/{id}', 'profilDosen')->name('mahasiswa.informasi-dosen.profil-dosen');
+    });
 });
 
 /**
@@ -286,7 +291,7 @@ Route::middleware(["auth:dosen", "auth.session", "password.changed", "is.panitia
         Route::get('/panitia/seminar-hasil/pendaftaran', 'showBerandaPendaftaranPage')->name('panitia.seminar-hasil.pendaftaran');
         Route::get('/panitia/seminar-hasil/pendaftaran/{tahapId}/detail', 'showDetailPendaftaranPage')->name('panitia.seminar-hasil.pendaftaran-detail');
         Route::get('/panitia/seminar-hasil/pendaftaran/{pendaftaranId}/verifikasi', 'showVerifikasiPendaftaran')->name('panitia.seminar-hasil.verifikasi-daftar');
-         Route::put('/panitia/seminar-hasil/pendaftaran/{pendaftaranId}/update-verifikasi', 'updateVerifikasiPendaftaran')->name('panitia.seminar-hasil.update-verifikasi');
+        Route::put('/panitia/seminar-hasil/pendaftaran/{pendaftaranId}/update-verifikasi', 'updateVerifikasiPendaftaran')->name('panitia.seminar-hasil.update-verifikasi');
     });
 
     Route::controller(AjaxPendaftaranSemproController::class)->group(function () {

@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Exceptions\ImportDataException;
 use App\Http\Controllers\Controller;
 use App\Models\Dosen;
+use App\Models\BidangMinat;
 use App\Services\DosenImportService;
 use Exception;
 use Illuminate\Database\Eloquent\Builder;
@@ -19,7 +20,8 @@ class DosenController extends Controller
     private string $excelFilePath = "/impor-data/dosen/";
     private DosenImportService $dosenImportService;
 
-    public function __construct(DosenImportService $dosenImportService) {
+    public function __construct(DosenImportService $dosenImportService)
+    {
         $this->dosenImportService = $dosenImportService;
     }
 
@@ -32,7 +34,7 @@ class DosenController extends Controller
     {
         $dosen = Dosen::select("NIDN", "NIP", "nama")->get();
 
-        
+
         return response()->json([
             "success" => true,
             "data" => $dosen->toJson()
@@ -86,7 +88,7 @@ class DosenController extends Controller
             $filename
         );
 
-         try {
+        try {
             // Panggil mahasiswaImportService
             $this->dosenImportService->import(
                 $this->excelFilePath,
@@ -97,7 +99,6 @@ class DosenController extends Controller
                 "success" => true,
                 "message" => "Data Dosen berhasil diimpor!"
             ]);
-
         } catch (ImportDataException $e) {
             // Tangkap error spesifik dari dosenImportService
             return response()->json([
@@ -113,5 +114,38 @@ class DosenController extends Controller
                 "message" => "Terjadi kesalahan server saat mengimpor file."
             ], 500);
         }
+    }
+
+    public function daftarDosen(Request $request)
+    {
+        $bidangMinatId = $request->query('bidang_minat');
+
+        $dosenQuery = Dosen::query();
+
+        if ($bidangMinatId) {
+            $dosenQuery->whereHas('bidangMinats', function ($query) use ($bidangMinatId) {
+                $query->where('bidang_minat.id', $bidangMinatId);
+            })->with(['bidangMinats' => function ($query) use ($bidangMinatId) {
+                $query->where('bidang_minat.id', $bidangMinatId);
+            }]);
+        } else {
+            $dosenQuery->with('bidangMinats');
+        }
+
+        $dosen = $dosenQuery->paginate(10)->withQueryString();
+        $bidangMinatList = BidangMinat::all();
+
+        return view(
+            'mahasiswa.informasi-dosen.daftar-dosen',
+            compact('dosen', 'bidangMinatList', 'bidangMinatId')
+        );
+    }
+
+    public function profilDosen($id)
+    {
+        $dosen      = Dosen::with(['bidangMinats', 'kuotaDosen'])->find($id);
+        $userProdi  = data_get(auth('mahasiswa')->user(), 'prodi.prodi');
+
+        return view('mahasiswa.informasi-dosen.profil-dosen', compact('dosen', 'userProdi'));
     }
 }

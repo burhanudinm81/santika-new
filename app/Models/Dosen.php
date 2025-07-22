@@ -10,6 +10,27 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 class Dosen extends Authenticatable
 {
     protected $table = "dosen";
+
+    protected $fillable = [
+        'nidn',
+        'nip',
+        'nama',
+        'email',
+        'no_handphone',
+        'foto_profil',
+        'deskripsi_profil',
+        'gambar_peminatan_riset',
+        'deskripsi_peminatan_riset',
+        'publikasi',
+        'link_google_scholar',
+        'penghargaan'
+    ];
+    
+    protected $hidden = [
+        'password',
+        'remember_token',
+    ];
+
     protected $primaryKey = "id";
     protected $keyType = "integer";
     public $incrementing = true;
