@@ -88,6 +88,11 @@ class PermohonanJudulController extends Controller
                 // Jika Prodi D4, kurangi kuota Pembimbing 1 D4
                 $kuotaDosen->update(['kuota_pembimbing_1_D4' => $kuotaDosen->kuota_pembimbing_1_D4 - 1]);
             }
+
+            $proposal->update([
+                'dosen_pembimbing_1_id' => $dosenId,
+                'dosen_pembimbing_2_id' => $dosenId // <- masih hardcode, nanti diganti sesuai plotting dosen 2
+            ]);
         }
 
         return redirect()->back()->with('success', 'Pengajuan Judul Berhasil Diupdate');

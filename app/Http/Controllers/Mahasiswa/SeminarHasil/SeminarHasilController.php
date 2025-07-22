@@ -14,23 +14,30 @@ class SeminarHasilController extends Controller
 {
     public function showPendaftaranPage()
     {
+        $infoMahasiswaAll = null;
+        $infoDospem1 = null;
+        $infoDospem2 = null;
+        $infoBidangMinat = null;
+        $infoPendaftaranSemhas = null;
+
         $infoProposal = Proposal::with(['proposalMahasiswas', 'dosenPembimbing1', 'dosenPembimbing2', 'bidangMinat'])
             ->whereRelation('proposalMahasiswas', 'mahasiswa_id', auth('mahasiswa')->user()->id)
+            ->whereRelation('proposalMahasiswas', 'status_proposal_mahasiswa_id', 1)
+            ->where('pendaftaran_sempro_id', '!=', null)
             ->first();
 
-        if ($infoProposal == null) {
-            return redirect()->back()->with('error', 'anda belum eligible');
+
+        if ($infoProposal != null) {
+            $infoMahasiswaAll = ProposalDosenMahasiswa::with(['dosen', 'mahasiswa'])
+                ->where('proposal_id', $infoProposal->id)
+                ->get();
+            $infoDospem1 = $infoProposal->dosenPembimbing1()->first();
+            $infoDospem2 = $infoProposal->dosenPembimbing2()->first();
+
+            $infoBidangMinat = BidangMinat::all();
+
+            $infoPendaftaranSemhas = PendaftaranSemhas::with('statusDaftarSeminar')->where('proposal_id', $infoProposal->id)->first();
         }
-
-        $infoMahasiswaAll = ProposalDosenMahasiswa::with(['dosen', 'mahasiswa'])
-            ->where('proposal_id', $infoProposal->id)
-            ->get();
-        $infoDospem1 = $infoProposal->dosenPembimbing1()->first();
-        $infoDospem2 = $infoProposal->dosenPembimbing2()->first();
-
-        $infoBidangMinat = BidangMinat::all();
-
-        $infoPendaftaranSemhas = PendaftaranSemhas::with('statusDaftarSeminar')->where('proposal_id', $infoProposal->id)->first();
 
         return view('mahasiswa.seminar-hasil.daftar-semhas', compact([
             'infoProposal',

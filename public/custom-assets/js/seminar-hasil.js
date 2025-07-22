@@ -65,7 +65,7 @@ $(document).ready(function () {
                                         ${badge}
                                     </td>
                                     <td class="text-center align-middle">
-                                        <a href="/panitia/seminar-proposal/pendaftaran/${item.id}/verifikasi" class="btn btn-primary btn-sm">View</a>
+                                        <a href="/panitia/seminar-hasil/pendaftaran/${item.id}/verifikasi" class="btn btn-primary btn-sm">View</a>
                                     </td>
                                 </tr>
                             `;
