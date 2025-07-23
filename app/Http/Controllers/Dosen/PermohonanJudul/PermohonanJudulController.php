@@ -67,17 +67,16 @@ class PermohonanJudulController extends Controller
                     $item->update(['status_proposal_mahasiswa_id' => $confirmationStatusId]);
                 }
             }
-        } else {
+        } else if ($proposal->prodi_id == 2) {
             // jika prodi_id = 2, cari dan ambil proposal mahasiswa D4 berdasarkan proposal_id
             $proposalMahasiswa = ProposalDosenMahasiswa::where('proposal_id', $proposalId)->where('status_proposal_mahasiswa_id', 3)->first();
             // update status_proposal_mahasiswa_id (di mahasiswa D4)
             $proposalMahasiswa->update(attributes: ['status_proposal_mahasiswa_id' => $confirmationStatusId]);
         }
 
-
         // Logic Pengurangan Kuota Dosen
         if ($confirmationStatusId == "1") {
-            $dosenId = $proposalMahasiswa->first()->dosen_id;
+            $dosenId = $proposalMahasiswa->dosen->id;
             $kuotaDosen = KuotaDosen::firstWhere("dosen_id", $dosenId);
 
             // Id Prodi D3 = 1, Prodi D4 = 2
