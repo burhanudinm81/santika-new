@@ -74,7 +74,8 @@
                         </tbody>
                     </table>
 
-                    <a href="{{ route('jadwal-sempro.create') }}" class="btn btn-success">Buat Jadwal</a>
+                    <a href="{{ route('jadwal-sempro.create') }}" class="btn btn-success">Generate Jadwal Otomatis</a>
+                    <a href="{{ route('jadwal-sempro.create-manual') }}" class="btn btn-primary">Buat Jadwal Manual</a>
                 </div>
             </div><!-- /.container-fluid -->
         </div>

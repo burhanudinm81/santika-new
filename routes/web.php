@@ -294,12 +294,31 @@ Route::middleware(["auth:dosen", "auth.session", "password.changed", "is.panitia
         ->prefix('/panitia/jadwal-sempro')
         ->name('jadwal-sempro.')
         ->group(function () {
+            // -- Generate Jadwal Otomatis
+            // Route untuk mengakses halaman beranda jadwal sempro
             Route::get('/', 'index')->name('index');
+
+            // Route untuk Membuka Halaman Generate Jadwal Otomatis
             Route::get('/create', 'create')->name('create');
+
+            // Route untuk generate jadwal otomatis
             Route::post('/store', 'store')->name('store');
+
             // Route::get('/edit/{id}', 'edit')->name('edit');
             // Route::put('/update/{id}', 'update')->name('update');
             // Route::delete('/delete/{id}', 'delete')->name('delete');
+
+            //  Route untuk melihat detail jadwal sempro
             Route::get('/detail/{tahap_id}/{periode_id}', 'detail')->name('detail');
+
+            // -- Buat Jadwal Manual --
+            // Route untuk membuka halaman generate jadwal manual
+            Route::get('/create-manual', 'showCreateManualPage')->name('create-manual');
+
+            // Route untuk mendapatkan daftar calon peserta sempro
+            Route::get("/calon-peserta", 'getCalonPesertaSempro')->name('calon-peserta');
+
+            // Route untuk mengirim data jadwal manual
+            Route::post("/store-manual", "storeManual")->name("store-manual");
         });
 });

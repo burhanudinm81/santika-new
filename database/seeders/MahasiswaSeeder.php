@@ -18,7 +18,7 @@ class MahasiswaSeeder extends Seeder
     {
         $prodiD3 = Prodi::firstWhere("prodi", "D3 Teknik Telekomunikasi");
         $prodiD4 = Prodi::firstWhere("prodi", "D4 Jaringan Telekomunikasi Digital");
-        $periode2025 = Periode::firstWhere("tahun", 2025);
+        $periode2025 = Periode::firstWhere("tahun", "2024/2025");
 
         // Mahasiswa D4
         Mahasiswa::create([
