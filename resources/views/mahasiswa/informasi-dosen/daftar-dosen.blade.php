@@ -1,3 +1,6 @@
+@extends("mahasiswa.home")
+
+@section('content')
 <!-- Content Header (Page header) -->
 <div class="content-header">
     <div class="container-fluid">
@@ -11,50 +14,46 @@
 <!-- /.content-header -->
 
 <!-- Main content -->
-<div class="content">
+<div class="content" style="padding-bottom: 120px;">
     <div class="container-fluid">
-
-        <!-- Default box -->
-        <div class="card card-solid">
-            <div class="card-body pb-0">
-                <div class="row">
+        <div class="row mb-3 justify-content-end">
+            <div class="col-auto">
+                <form method="GET" action="{{ route('mahasiswa.informasi-dosen.daftar-dosen') }}">
+                    <div class="input-group">
+                        <select name="bidang_minat" class="form-control" onchange="this.form.submit()">
+                            <option value="">Semua Bidang Minat</option>
+                            @foreach ($bidangMinatList as $bm)
+                                <option value="{{ $bm->id }}" {{ ($bidangMinatId == $bm->id) ? 'selected' : '' }}>{{ $bm->bidang_minat }}</option>
+                            @endforeach
+                        </select>
+                    </div>
+                </form>
+            </div>
+        </div>
+        <!-- End Filter Bidang Minat -->
+        <div class="card card-solid border-0" style="background-color: transparent;">
+            <div class="card-body pb-3">
+                <div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-5">
                     @foreach ($dosen as $dsn)
-                        <div class="col-12 col-sm-6 col-md-4 d-flex align-items-stretch flex-column">
-                            <div class="card bg-light d-flex flex-fill">
-                                <div class="card-header text-muted border-bottom-0">
-                                    {{ $dsn->bidang_minat_1 }}
+                        <div class="col d-flex align-items-stretch mb-4">
+                            <div class="card bg-light d-flex flex-fill shadow-sm">
+                                <div class="card-body py-2 text-center">
+                                    @if (is_null($dsn->foto_profil))
+                                        <img src="{{ url('/images/blank-profile-64x64.png') }}" alt="user-avatar"
+                                            class="img-circle img-fluid mx-auto d-block mb-2" style="width: 64px; height: 64px;">
+                                    @else
+                                        <img src="{{ $dsn->foto_profil }}" alt="user-avatar"
+                                            class="img-circle img-fluid mx-auto d-block mb-2" style="width: 64px; height: 64px;">
+                                    @endif
+                                    <h2 class="h6 mt-1 mb-1"><b>{{ \Illuminate\Support\Str::limit($dsn->nama ?? 'Nama Dosen', 20) }}</b></h2>
+                                    <p class="text-muted text-sm mb-1" style="line-height: 1.2; height: 2.4em; overflow: hidden;">
+                                        {{ $dsn->bidangMinats->pluck('bidang_minat')->implode(', ') ?: 'Bidang Keahlian' }}
+                                    </p>
                                 </div>
-                                <div class="card-body pt-0">
-                                    <div class="row">
-                                        <div class="col-7">
-                                            <h2 class="lead"><b>{{ $dsn->nama }}</b></h2>
-                                        </div>
-                                        <div class="col-5 text-center">
-                                            @if (is_null($dsn->foto_profil))
-                                                <img src="{{ url("/images/blank-profile-64x64.png") }}" alt="user-avatar"
-                                                    class="img-circle img-fluid">
-                                            @else
-                                                <img src="{{ asset("/storage/" . $dsn->foto_profil) }}" alt="user-avatar"
-                                                    class="img-circle img-fluid">
-                                            @endif
-                                        </div>
-                                    </div>
-                                </div>
-                                <div class="card-footer container">
-                                    <div class="row justify-content-between">
-                                        <div class="col">
-                                            @if (auth("mahasiswa")->user()->prodi == App\Enum\Prodi::D3TT)
-                                                <p><b>Sisa Kuota Pembimbing 1: </b>{{ $dsn->kuotaDosen->kuota_pembimbing_1_D3 }}</p>
-                                            @elseif (auth("mahasiswa")->user()->prodi == App\Enum\Prodi::D4JTD)
-                                                <p><b>Sisa Kuota Pembimbing 1: </b>{{ $dsn->kuotaDosen->kuota_pembimbing_1_D4 }}</p>
-                                            @endif
-                                        </div>
-                                        <div class="col text-right">
-                                            <a href="{{ route("mahasiswa.informasi-dosen.profil-dosen", ["id" => $dsn->id]) }}" class="btn btn-sm btn-primary view-profile-btn">
-                                                <i class="fas fa-user"></i> Lihat Profil
-                                            </a>
-                                        </div>
-                                    </div>
+                                <div class="card-footer text-center py-1">
+                                    <a href="{{ route('mahasiswa.informasi-dosen.profil-dosen', ['id' => $dsn->id]) }}" class="btn btn-link btn-sm text-secondary">
+                                        Detail Dosen
+                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -62,24 +61,14 @@
                 </div>
             </div>
             <!-- /.card-body -->
-            <div class="card-footer">
-                <nav aria-label="Contacts Page Navigation">
-                    <ul class="pagination justify-content-center m-0">
-                        <li class="page-item active"><a class="page-link" href="#">1</a></li>
-                        <li class="page-item"><a class="page-link" href="#">2</a></li>
-                        <li class="page-item"><a class="page-link" href="#">3</a></li>
-                        <li class="page-item"><a class="page-link" href="#">4</a></li>
-                        <li class="page-item"><a class="page-link" href="#">5</a></li>
-                        <li class="page-item"><a class="page-link" href="#">6</a></li>
-                        <li class="page-item"><a class="page-link" href="#">7</a></li>
-                        <li class="page-item"><a class="page-link" href="#">8</a></li>
-                    </ul>
-                </nav>
+            <div class="card-footer d-flex justify-content-center border-0 mb-5">
+                {{ $dosen->links('pagination::bootstrap-4') }}
             </div>
             <!-- /.card-footer -->
         </div>
 
     </div><!-- /.container-fluid -->
 </div>
+@endsection
 <!-- /.content -->
  <script src="{{ url("/custom/js/open-detail-page.js") }}"></script>

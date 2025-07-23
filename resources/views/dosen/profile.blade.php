@@ -30,18 +30,18 @@
                         @endisset
                     </div>
 
-                    <h3 class="profile-username text-center">{{ auth("dosen")->user()->nama }}</h3>
+                    <h3 class="profile-username text-center">{{ auth("dosen")->user()->nama ?? "-"}}</h3>
                     <p class="text-muted text-center">Jurusan Teknik Elektro</p>
 
                     <ul class="list-group list-group-unbordered mb-3">
                         <div class="list-group-item mb-3">
                             <div>
                                 <label for="" class="form-label mb-1">NIDN</label>
-                                <p>{{ auth("dosen")->user()->NIDN  }}</p>
+                                <p>{{ auth("dosen")->user()->NIDN ?? "-" }}</p>
                             </div>
                             <div>
                                 <label for="" class="form-label mb-1">NIP</label>
-                                <p>{{ auth("dosen")->user()->NIP  }}</p>
+                                <p>{{ auth("dosen")->user()->NIP ?? "-" }}</p>
                             </div>
                             <div>
                                 <label for="" class="form-label mb-1">Email</label>
