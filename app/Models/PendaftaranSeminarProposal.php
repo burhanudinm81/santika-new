@@ -13,7 +13,7 @@ class PendaftaranSeminarProposal extends Model
 
     public function statusDaftarSempro(): BelongsTo
     {
-        return $this->belongsTo(StatusPendaftaranSeminarProposal::class, 'status_daftar_sempro_id');
+        return $this->belongsTo(StatusPendaftaranSeminar::class, 'status_daftar_sempro_id');
     }
 
     public function hasProposalFile()

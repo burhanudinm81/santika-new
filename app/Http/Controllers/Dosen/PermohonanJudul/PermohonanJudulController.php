@@ -21,15 +21,15 @@ class PermohonanJudulController extends Controller
             ->get();
 
 
-            // ambil list data permohonan dari mahasiswa D3
-            $listPermohonanD3 = ProposalDosenMahasiswa::with(['mahasiswa', 'proposal', 'statusProposalMahasiswa'])
+        // ambil list data permohonan dari mahasiswa D3
+        $listPermohonanD3 = ProposalDosenMahasiswa::with(['mahasiswa', 'proposal', 'statusProposalMahasiswa'])
             ->where('dosen_id', auth('dosen')->user()->id)
             ->whereRelation('mahasiswa', 'prodi_id', 1)
             ->get();
-            // meng-group data permohonan D3 sesuai proposal_id
-            $groupedPermohonanD3 = $listPermohonanD3->groupBy('proposal_id');
+        // meng-group data permohonan D3 sesuai proposal_id
+        $groupedPermohonanD3 = $listPermohonanD3->groupBy('proposal_id');
 
-            // dd($groupedPermohonanD3);
+        // dd($groupedPermohonanD3);
 
         // ambil kuota pembimbing dari dosen
         $kuotaPembimbing = KuotaDosen::where('dosen_id', auth('dosen')->user()->id)->first();
@@ -43,7 +43,6 @@ class PermohonanJudulController extends Controller
         $permohonanProposalMahasiswa = ProposalDosenMahasiswa::with(['proposal', 'mahasiswa', 'statusProposalMahasiswa'])
             ->where('proposal_id', $proposalId)
             ->get();
-
 
         return view('dosen.detail-permohonan-judul', compact('permohonanProposalMahasiswa'));
     }
@@ -89,6 +88,11 @@ class PermohonanJudulController extends Controller
                 // Jika Prodi D4, kurangi kuota Pembimbing 1 D4
                 $kuotaDosen->update(['kuota_pembimbing_1_D4' => $kuotaDosen->kuota_pembimbing_1_D4 - 1]);
             }
+
+            $proposal->update([
+                'dosen_pembimbing_1_id' => $dosenId,
+                'dosen_pembimbing_2_id' => $dosenId // <- masih hardcode, nanti diganti sesuai plotting dosen 2
+            ]);
         }
 
         return redirect()->back()->with('success', 'Pengajuan Judul Berhasil Diupdate');

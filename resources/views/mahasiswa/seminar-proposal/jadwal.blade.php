@@ -25,7 +25,7 @@
                         <div class="card-body">
                             <div class="mb-3">
                                 <label for="TanggalSempro" class="form-label">Tanggal</label>
-                                <input type="text" class="form-control" id="TanggalSempro" value="{{ $jadwalSeminarProposal->tanggal->isoFormat('dddd, D MMMM YYYY') }}"
+                                <input type="text" class="form-control" id="TanggalSempro" value="{{ $jadwalSeminarProposal->tanggal->isoFormat('dddd, D MMMM YYYY') ?? '-' }}"
                                     aria-describedby="TanggalSempro" aria-label="readonly input example" readonly>
                             </div>
                             <div class="mb-3">

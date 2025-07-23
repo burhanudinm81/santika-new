@@ -117,7 +117,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ route("mahasiswa.seminar-proposal.jadwal") }}" class="nav-link">
+                            <a href="{{ route('mahasiswa.seminar-proposal.jadwal') }}" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Jadwal Sempro</p>
                             </a>
@@ -142,6 +142,7 @@
                             </a>
                         </li>
                     </ul>
+                </li>
 
                 <li class="nav-item menu-close">
                     <a href="#" class="nav-link">
@@ -153,17 +154,18 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a href="{{ route('mahasiswa.logbook.beranda', 1) }}" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Dosen Pembimbing 1</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a href="{{ route('mahasiswa.logbook.beranda', 2) }}" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Dosen Pembimbing 2</p>
                             </a>
                         </li>
+                    </ul>
                 </li>
                 <li class="nav-item menu-close">
                     <a href="#" class="nav-link">
@@ -175,7 +177,7 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a href="{{ route('mahasiswa.seminar-hasil.daftar-semhas') }}" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Pendaftaran Sidang</p>
                             </a>

@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('pendaftaran_seminar_proposal', function (Blueprint $table) {
             $table->id();
             $table->foreignId('proposal_id')->constrained('proposal', 'id')->onDelete('cascade');
-            $table->foreignId('status_daftar_sempro_id')->constrained('status_pendaftaran_seminar_proposal', 'id')->onDelete('cascade');
+            $table->foreignId('status_daftar_sempro_id')->constrained('status_pendaftaran_seminar', 'id')->onDelete('cascade');
             $table->string('file_proposal', 255)->nullable(false);
             $table->string('lembar_konsultasi', 255)->nullable(false);
             $table->string('lembar_kerjasama_mitra', 255)->nullable(false);
