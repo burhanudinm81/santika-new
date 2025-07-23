@@ -12,8 +12,11 @@ use App\Models\Prodi;
 use App\Models\Proposal;
 use App\Models\Tahap;
 use App\Services\SemproSchedulerService;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\View\View;
 
 class JadwalSemproController extends Controller
 {
@@ -24,8 +27,8 @@ class JadwalSemproController extends Controller
 
         // Ambil pasangan unik tahap dan periode dari jadwal sempro
         $pasangan = JadwalSeminarProposal::whereHas('proposal', function ($query) use ($prodiPanita) {
-                $query->where('prodi_id', $prodiPanita);
-            })
+            $query->where('prodi_id', $prodiPanita);
+        })
             ->with(['proposal.tahap', 'proposal.periode'])
             ->get()
             ->map(function ($item) {
@@ -53,7 +56,7 @@ class JadwalSemproController extends Controller
         $dosens = Dosen::select(['id', 'nama'])->get(); // Ambil dosen untuk opsi
         $prodiPanitia = Panitia::firstWhere('dosen_id', auth('dosen')->id())->prodi_id;
         $prodi = Prodi::findOrFail($prodiPanitia);
-        
+
         return view('panitia.seminar-proposal.jadwal.create', compact('periodes', 'tahaps', 'dosens', 'prodi'));
     }
 
@@ -107,7 +110,7 @@ class JadwalSemproController extends Controller
         $jadwal = $scheduler->generate($proposals, $ruangs, $tanggals, $sesis, $dosenKuota, $waktuBerhalangan);
 
         // Urutkan jadwal berdasarkan tanggal dan waktu mulai (agar sesi 1 adalah waktu paling awal)
-        usort($jadwal, function($a, $b) {
+        usort($jadwal, function ($a, $b) {
             if ($a['tanggal'] === $b['tanggal']) {
                 return strcmp($a['sesi']['waktu_mulai'], $b['sesi']['waktu_mulai']);
             }
@@ -153,7 +156,9 @@ class JadwalSemproController extends Controller
             'jadwal' => $jadwal
         ]);
 
-        return redirect()->route('jadwal-sempro.index')->with('success', 'Jadwal seminar proposal berhasil digenerate!');
+        return redirect()
+            ->route('jadwal-sempro.index')
+            ->with('success', 'Jadwal seminar proposal berhasil digenerate!');
     }
 
     public function detail($tahap_id, $periode_id)
@@ -176,5 +181,146 @@ class JadwalSemproController extends Controller
         $periode = Periode::findOrFail($periode_id);
         $prodi = Prodi::findOrFail($prodiPanitia);
         return view('panitia.seminar-proposal.jadwal.detail', compact('jadwalSempro', 'tahap', 'periode', 'prodi'));
+    }
+
+    public function showCreateManualPage(): View
+    {
+        $listPeriode = Periode::all();
+        $listTahap = Tahap::all();
+        $prodiIdPanitia = Panitia::firstWhere("dosen_id", auth("dosen")->id())->prodi_id;
+
+        return view(
+            'panitia.seminar-proposal.jadwal.create-manual',
+            compact('listPeriode', 'listTahap', 'prodiIdPanitia')
+        );
+    }
+
+    public function getCalonPesertaSempro(Request $request): JsonResponse
+    {
+        // Validasi Input
+        $validator = Validator::make(
+            $request->all(),
+            [
+                "periode_id" => "exists:periode,id",
+                "tahap_id" => "exists:tahap,id"
+            ],
+            [
+                "periode_id.exists" => "Periode tidak valid",
+                "tahap_id.exists" => "Tahap tidak valid",
+            ]
+        );
+
+        if ($validator->fails()) {
+            return response()->json([
+                "success" => false,
+                "message" => $validator->errors()->first()
+            ]);
+        }
+
+        // Ambil data yang sudah divalidasi
+        $validated = $validator->validated();
+
+        // Ambil data proposal calon peserta sempro dengan periode, tahap, dan prodi yang sesuai
+        $periode = $validated["periode_id"];
+        $tahap = $validated["tahap_id"];
+        $prodiPanitia = Panitia::firstWhere('dosen_id', auth('dosen')->id())->prodi_id;
+
+        $listDosenPenguji1 = Dosen::whereHas('kuotaDosen', function($query) use ($prodiPanitia){
+            if($prodiPanitia == 1){
+                $query->where("kuota_penguji_sempro_1_D3", ">", 0);
+            } else if($prodiPanitia == 1){
+                $query->where("kuota_penguji_sempro_1_D4", ">", 0);
+            }
+        })->get();
+
+        $listDosenPenguji2 = Dosen::whereHas('kuotaDosen', function($query) use ($prodiPanitia){
+            if($prodiPanitia == 1){
+                $query->where("kuota_penguji_sempro_2_D3", ">", 0);
+            } else if($prodiPanitia == 1){
+                $query->where("kuota_penguji_sempro_2_D4", ">", 0);
+            }
+        })->get();
+
+        $listProposal = Proposal::whereHas('proposalMahasiswas', function ($query) {
+            $query->where("status_proposal_mahasiswa_id", 1);
+        })
+            ->where("periode_id", $periode)
+            ->where("tahap_id", $tahap)
+            ->where("prodi_id", $prodiPanitia)
+            ->with(['proposalMahasiswas' => ['mahasiswa', 'dosen']])
+            ->get();
+
+        return response()->json([
+            'status' => true,
+            'data' => [
+                'listProposal' => $listProposal,
+                'prodi' => $prodiPanitia,
+                'listDosenPenguji1' => $listDosenPenguji1,
+                'listDosenPenguji2' => $listDosenPenguji2
+            ]
+        ]);
+    }
+
+    public function storeManual(Request $request)
+    {
+        $rules = [
+            // Validasi input utama
+            'proposal_id' => 'required|array',
+            'ruang' => 'required|array',
+            'tanggal' => 'required|array',
+            'sesi' => 'required|array',
+            'waktu_mulai' => 'required|array',
+            'waktu_selesai' => 'required|array',
+            'dosen_penguji_1_id' => 'required|array',
+            'dosen_penguji_2_id' => 'required|array',
+
+            // Validasi setiap elemen di dalam array menggunakan '*'
+            'proposal_id.*' => 'required|integer|exists:proposal,id',
+            'ruang.*' => 'required|string|max:100',
+            'tanggal.*' => 'required|date',
+            'sesi.*' => 'required|integer|min:1',
+            'waktu_mulai.*' => 'required|date_format:H:i',
+            'waktu_selesai.*' => 'required|date_format:H:i|after:waktu_mulai.*',
+            'dosen_penguji_1_id.*' => 'required|integer|exists:dosen,id',
+            'dosen_penguji_2_id.*' => 'required|integer|exists:dosen,id',
+        ];
+
+        $messages = [
+            'waktu_selesai.*.after' => 'Waktu selesai harus setelah waktu mulai pada baris yang sama.',
+            'tanggal.*.date_format' => 'Format tanggal pada salah satu baris harus DD/MM/YYYY.',
+        ];
+
+        $request->validate($rules, $messages);
+
+        $listProposalId = $request->proposal_id;
+        $listRuang = $request->ruang;
+        $listTanggal = $request->tanggal;
+        $listSesi = $request->sesi;
+        $listWaktuMulai = $request->waktu_mulai;
+        $listWaktuSelesai = $request->waktu_selesai;
+        $listDosenPenguji1Id = $request->dosen_penguji_1_id;
+        $listDosenPenguji2Id = $request->dosen_penguji_2_id;
+
+        $rowCount = count($listProposalId);
+        
+        for($i = 0; $i < $rowCount; $i++){
+            JadwalSeminarProposal::create([
+                'proposal_id'  => $listProposalId[$i],
+                'ruang' => $listRuang[$i],
+                'tanggal' => $listTanggal[$i],
+                'sesi' => $listSesi[$i],
+                'waktu_mulai' => $listWaktuMulai[$i],
+                'waktu_selesai' => $listWaktuSelesai[$i]
+            ]);
+
+            $proposal = Proposal::findOrFail($listProposalId[$i]);
+            $proposal->penguji_sempro_1_id = $listDosenPenguji1Id[$i];
+            $proposal->penguji_sempro_2_id = $listDosenPenguji2Id[$i];
+            $proposal->save();
+        }
+
+        return redirect()
+            ->route('jadwal-sempro.index')
+            ->with('success', 'Jadwal seminar proposal berhasil dibuat!');
     }
 }

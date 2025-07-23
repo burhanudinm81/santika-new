@@ -14,27 +14,22 @@ class ExampleTest extends TestCase
 {
     public function testSembarang(): void
     {
-    //    $proposal = Proposal::orWhere([
-    //         ["dosen_pembimbing_1_id", 1],
-    //         ["penguji_sempro_1_id", 1],
-    //         ["penguji_sempro_2_id", 1],
-    //    ])->get();
-
-        $jadwalSeminarProposal = JadwalSeminarProposal::whereHas('proposal', function ($query) {
-            $query->where(function($q){
-                $q->where('dosen_pembimbing_1_id', 1)
-                    ->orWhere('penguji_sempro_1_id', 1)
-                    ->orWhere('penguji_sempro_2_id', 1);
-            })
-                ->where('tahap_id', 2)
-                ->where('periode_id', 1)
-                ->where('prodi_id', 1);
+        $listProposal = Proposal::whereHas('proposalMahasiswas', function ($query) {
+            $query->where("status_proposal_mahasiswa_id", 1);
         })
-            ->with('proposal')
+            ->where("periode_id", 1)
+            ->where("tahap_id", 1)
+            ->where("prodi_id", 1)
+            ->with([
+                'proposalMahasiswas' => [
+                    'mahasiswa',
+                    'dosen'
+                ]
+            ])
             ->get();
 
         self::assertTrue(true);
-        Log::info("Jadwal Seminar Proposal:");
-        Log::info(json_encode($jadwalSeminarProposal, JSON_PRETTY_PRINT));
+        Log::info("List Proposal:");
+        Log::info(json_encode($listProposal, JSON_PRETTY_PRINT));
     }
 }
