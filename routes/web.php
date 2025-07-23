@@ -7,9 +7,11 @@ use App\Http\Controllers\DosenController;
 use App\Http\Controllers\HomePageController;
 use App\Http\Controllers\Auth\LoginController;
 use App\Http\Controllers\Auth\LogoutController;
+use App\Http\Controllers\Dosen\Bimbingan\BimbinganController;
 use App\Http\Controllers\KuotaDosenController;
 use App\Http\Controllers\Dosen\PermohonanJudul\PermohonanJudulController;
 use App\Http\Controllers\Mahasiswa\Ajax\AjaxMahasiswaController;
+use App\Http\Controllers\Mahasiswa\Logbook\LogbookController;
 use App\Http\Controllers\Mahasiswa\PengajuanJudul\PengajuanJudulController;
 use App\Http\Controllers\Mahasiswa\SeminarHasil\SeminarHasilController;
 use App\Http\Controllers\Mahasiswa\SeminarProposal\SeminarProposalController;
@@ -204,6 +206,13 @@ Route::middleware(["auth:mahasiswa", "auth.session", "password.changed"])->group
         Route::post('/mahasiswa/seminar-hasil/daftar-semhas-store', 'storePendaftaran')->name('mahasiswa.seminar-hasil.daftar-semhas-store');
     });
 
+    Route::controller(LogbookController::class)->group(function () {
+        Route::get('/mahasiswa/logbook/beranda/{roleDospem}', 'showBeranda')->name('mahasiswa.logbook.beranda');
+        Route::get('/mahasiswa/logbook/tambah-baru/{roleDospem}', 'showTambahLogbookPage')->name('mahasiswa.logbook.tambah-baru');
+        Route::get('/mahasiswa/logbook/detail/{logbook}', 'showDetailLogbook')->name('mahasiswa.logbook.detail');
+        Route::post('/mahasiswa/logbook/store', 'storeLogbook')->name('mahasiswa.logbook.store');
+        Route::delete('/mahasiswa/logbook/{logbook}/delete', 'deleteLogbook')->name('mahasiswa.logbook.delete');
+    });
 
     Route::controller(AjaxMahasiswaController::class)->group(function () {
         Route::get('/mahasiswa/ajax/search-mahasiswa', 'searchMahasiswa');
@@ -243,6 +252,10 @@ Route::middleware(["auth:dosen", "auth.session", "password.changed"])->group(fun
         // Route untuk menampilkan halaman jadwal seminar proposal
         Route::get("/dosen/seminar-proposal/jadwal/{tahapId}", "showJadwalPage")
             ->name("dosen.seminar-proposal.jadwal");
+    });
+
+    Route::controller(BimbinganController::class)->group(function () {
+        Route::get('/dosen/bimbingan/daftar-bimbingan', 'showDaftarBimbingan')->name('dosen.bimbingan.daftar-bimbingan');
     });
 });
 
@@ -286,7 +299,7 @@ Route::middleware(["auth:dosen", "auth.session", "password.changed", "is.panitia
         Route::get('/panitia/seminar-hasil/pendaftaran', 'showBerandaPendaftaranPage')->name('panitia.seminar-hasil.pendaftaran');
         Route::get('/panitia/seminar-hasil/pendaftaran/{tahapId}/detail', 'showDetailPendaftaranPage')->name('panitia.seminar-hasil.pendaftaran-detail');
         Route::get('/panitia/seminar-hasil/pendaftaran/{pendaftaranId}/verifikasi', 'showVerifikasiPendaftaran')->name('panitia.seminar-hasil.verifikasi-daftar');
-         Route::put('/panitia/seminar-hasil/pendaftaran/{pendaftaranId}/update-verifikasi', 'updateVerifikasiPendaftaran')->name('panitia.seminar-hasil.update-verifikasi');
+        Route::put('/panitia/seminar-hasil/pendaftaran/{pendaftaranId}/update-verifikasi', 'updateVerifikasiPendaftaran')->name('panitia.seminar-hasil.update-verifikasi');
     });
 
     Route::controller(AjaxPendaftaranSemproController::class)->group(function () {

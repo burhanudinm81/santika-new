@@ -42,7 +42,7 @@
                 </li>
 
 
-                @if(session("is_panitia"))
+                @if (session('is_panitia'))
                     <li class="nav-item">
                         <a href="{{ route('panitia.home') }}" class="nav-link">
                             <i class="nav-icon fas fa-user-tie"></i>
@@ -89,7 +89,7 @@
                     </ul>
 
                 <li class="nav-item">
-                    <a href="bimbingan.php" class="nav-link">
+                    <a href="{{ route('dosen.bimbingan.daftar-bimbingan') }}" class="nav-link">
                         <i class="nav-icon fas fa-th-large"></i>
                         <p>Bimbingan</p>
                     </a>
