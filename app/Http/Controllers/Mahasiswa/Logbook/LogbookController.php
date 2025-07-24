@@ -61,7 +61,6 @@ class LogbookController extends Controller
         $dospem1Info = null;
         $dospem2Info = null;
 
-
         // ambil data proposal yang sudah di acc dosen ketika pengajuan judul
         $proposalInfo = Proposal::with('proposalMahasiswas')
             // cari proposal yang sesuai dengan mahasiswa yang login

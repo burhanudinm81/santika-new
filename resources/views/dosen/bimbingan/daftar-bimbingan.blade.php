@@ -47,8 +47,8 @@
                                                 <tr>
                                                     <td>{{ $loop->iteration }}</td>
                                                     {{-- <td>{{ $proposalId }}</td> --}}
-                                                    <td>{{ $kelompok[0]->mahasiswa->nama }}</td>
-                                                    <td>{{ $kelompok[1]->mahasiswa->nama ?? "-" }}</td>
+                                                    <td>{{ $kelompok[0]->mahasiswa->nama ?? '-' }}</td>
+                                                    <td>{{ $kelompok[1]->mahasiswa->nama ?? '-' }}</td>
                                                     <td>{{ $kelompok->first()->proposal->judul }}</td>
                                                     <td>
                                                         @if ($kelompok->first()->proposal->dosen_pembimbing_1_id == auth('dosen')->user()->id)
@@ -59,7 +59,8 @@
                                                     </td>
                                                     <td>
                                                         <a href=""class="aksi-button btn btn-primary">Detail</a>
-                                                        <a href="" class="aksi-button btn btn-primary">Logbook</a>
+                                                        <a href="{{ route('dosen.bimbingan.logbook-mahasiswa', $kelompok[0]->mahasiswa->id) }}"
+                                                            class="aksi-button btn btn-primary">Logbook</a>
                                                     </td>
                                                 </tr>
                                             @endforeach
@@ -100,7 +101,8 @@
                                                     </td>
                                                     <td>
                                                         <a href=""class="aksi-button btn btn-primary">Detail</a>
-                                                        <a href="" class="aksi-button btn btn-primary">Logbook</a>
+                                                        <a href="{{ route('dosen.bimbingan.logbook-mahasiswa', $item->mahasiswa->id) }}"
+                                                            class="aksi-button btn btn-primary">Logbook</a>
                                                     </td>
                                                 </tr>
                                             @endforeach
