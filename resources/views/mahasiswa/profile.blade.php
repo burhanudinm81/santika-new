@@ -1,3 +1,6 @@
+@extends('mahasiswa.home')
+
+@section('content')
 <!-- Content Header (Page header) -->
 <div class="content-header">
     <div class="container-fluid">
@@ -37,11 +40,11 @@
                         <div class="list-group-item mb-3">
                             <div>
                                 <label for="" class="form-label mb-1">NIM</label>
-                                <p>{{ auth("mahasiswa")->user()->NIM  }}</p>
+                                <p>{{ auth("mahasiswa")->user()->nim  }}</p>
                             </div>
                             <div>
                                 <label for="" class="form-label mb-1">Program Studi</label>
-                                <p>{{ auth("mahasiswa")->user()->prodi  }}</p>
+                                <p>{{ auth("mahasiswa")->user()->prodi->prodi  }}</p>
                             </div>
                             <div>
                                 <label for="" class="form-label mb-1">Angkatan</label>
@@ -52,7 +55,7 @@
                                 <p>{{ auth("mahasiswa")->user()->kelas  }}</p>
                             </div>
                         </div>
-                        <form action="{{ route("mahasiswa.profile.edit-email") }}" method="post" id="edit-email-form">
+                        <form action="{{ route('mahasiswa.profile.edit-email') }}" method="post" id="edit-email-form">
                             @csrf
                             <div class="mb-3">
                                 <label for="email-input" class="form-label">Email address</label>
@@ -83,14 +86,56 @@
 </div>
 <!-- /.content -->
 
-<script src={{ url("/custom/js/profile/edit-email.js") }}></script>
-<script src={{ url("/custom/js/profile/edit-profile-image.js") }}></script>
-<script>
-    $("document").ready(function () {
-        $(".profile-user-img").tooltip();
+{{-- Modal Pop-up Berhasil --}}
+<div class="modal fade" id="modal-popup-sukses">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Sukses</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Data berhasil diperbarui</p>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-primary" data-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
 
-        $(".profile-user-img").click(function () {
-            $("#modal-ubah-foto-profil").modal();
+{{-- Modal Pop-up Gagal --}}
+<div class="modal fade" id="modal-popup-error">
+    <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title">Gagal</h4>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <p>Terjadi kesalahan saat memperbarui data.</p>
+            </div>
+            <div class="modal-footer justify-content-between">
+                <button type="button" class="btn btn-danger" data-dismiss="modal">OK</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+@endsection
+
+@push('page-scripts')
+<script src="{{ asset('/custom/js/profile/edit-email.js') }}"></script>
+<script src="{{ asset('/custom/js/profile/edit-profile-image.js') }}"></script>
+<script>
+    $(function () {
+        $('.profile-user-img').tooltip().on('click', function () {
+            $('#modal-ubah-foto-profil').modal('show');
         });
     });
 </script>
+@endpush

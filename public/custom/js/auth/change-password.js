@@ -23,49 +23,7 @@ $(document).ready(function() {
         }
     });
 
-
-    // --- LOGIKA UNTUK SUBMIT FORM VIA AJAX ---
-    // $('#form-ubah-password').on('submit', function(event) {
-    //     event.preventDefault();
-
-    //     const form = $(this);
-    //     const submitButton = form.find('#save-password-btn');
-    //     const formData = form.serialize();
-    //     const url = form.attr('action');
-
-    //     // Bersihkan error validasi sebelumnya
-    //     $('.error-text').text('');
-    //     $('.form-control').removeClass('is-invalid');
-    //     $('#validation-errors').hide().empty();
-
-    //     $.ajax({
-    //         url: url,
-    //         method: 'POST',
-    //         data: formData,
-    //         beforeSend: function() {
-    //             submitButton.prop('disabled', true).text('Menyimpan...');
-    //         },
-    //         success: function(response) {
-    //             // Jika berhasil, arahkan ke halaman home
-    //             alert('Password berhasil diubah! Anda akan diarahkan ke halaman utama.');
-    //             window.location.href = response.redirect_url; // Controller harus mengirim URL redirect
-    //         },
-    //         error: function(jqXHR) {
-    //             if (jqXHR.status === 422) { // Error validasi
-    //                 const errors = jqXHR.responseJSON.errors;
-    //                 $.each(errors, function(key, value) {
-    //                     $('#' + key + '_error').text(value[0]);
-    //                     $('#' + key.replace('_confirmation', '')).addClass('is-invalid');
-    //                 });
-    //             } else { // Error lain
-    //                 const message = jqXHR.responseJSON.message || 'Terjadi kesalahan pada server.';
-    //                 $('#validation-errors').text(message).show();
-    //             }
-    //         },
-    //         complete: function() {
-    //             submitButton.prop('disabled', false).text('Simpan Password Baru');
-    //         }
-    //     });
-    // });
-
+    $('#save-password-btn').on('click', function () {
+        $('#form-ubah-password').trigger('submit');
+    });
 });

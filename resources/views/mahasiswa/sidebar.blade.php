@@ -13,22 +13,21 @@
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
             <div class="image">
                 @if (is_null(auth('mahasiswa')->user()->foto_profil))
-                    <img src={{ url('/images/blank-profile-128x128.png') }} class="img-circle elevation-2"
-                        alt="User Image" id="user-image">
+                    <img src={{ url('/images/blank-profile-128x128.png') }} class="img-circle elevation-2" alt="User Image"
+                        id="user-image">
                 @else
                     <img src={{ asset('/storage/' . auth('mahasiswa')->user()->foto_profil) }}
                         class="img-circle elevation-2" alt="User Image" id="user-image" width="30px" height="30px">
                 @endif
             </div>
-            <div class="info">
-                <a href="#" id="profile-link" class="d-block">{{ auth('mahasiswa')->user()->nama }}</a>
-            </div>
+            <a href="{{ route('mahasiswa.profile') }}" id="profile-link" class="info">
+                <span class="d-block">{{ auth('mahasiswa')->user()->nama }}</span>
+            </a>
         </div>
 
         <!-- Sidebar Menu -->
         <nav class="mt-2">
-            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
-                data-accordion="false">
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                 <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
                 <li id="dashboard-item" class="nav-item">
