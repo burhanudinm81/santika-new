@@ -29,4 +29,9 @@ class Mahasiswa extends Authenticatable
     {
         return $this->hasMany(ProposalDosenMahasiswa::class);
     }
+
+    public function logbooks(): HasMany
+    {
+        return $this->hasMany(LogBook::class, 'mahasiswa_id');
+    }
 }
