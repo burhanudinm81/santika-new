@@ -85,4 +85,92 @@ class KuotaDosenController extends Controller
             'message' => 'Kuota dosen berhasil diperbarui!'
         ]);
     }
+
+    public function resetKuotaDosen(Request $request)
+    {
+        $request->validate([
+            "prodi_id" => "required|integer|exists:prodi,id",
+            "jenis_kuota" => "required|integer|between:1,6",
+            "kuota" => "required|integer|min:1|max:255"
+        ]);
+
+        $allKuotaDosen = KuotaDosen::all();
+        $prodiId = $request->prodi_id;
+        $jenisKuota = $request->jenis_kuota;
+        $kuota = $request->kuota;
+
+        if ($prodiId == 1) {
+            $allKuotaDosen->each(function (KuotaDosen $kuotaDosen, $key) use ($jenisKuota, $kuota) {
+                switch ($jenisKuota) {
+                    case 1:
+                        // Reset Kuota Pembimbing 1 D3
+                        $kuotaDosen->kuota_pembimbing_1_D3 = $kuota;
+                        $kuotaDosen->save();
+                        break;
+                    case 2:
+                        // Reset Kuota Pembimbing 2 D3
+                        $kuotaDosen->kuota_pembimbing_2_D3 = $kuota;
+                        $kuotaDosen->save();
+                        break;
+                    case 3:
+                        // Reset Kuota Penguji Sempro 1 D3
+                        $kuotaDosen->kuota_penguji_sempro_1_D3 = $kuota;
+                        $kuotaDosen->save();
+                        break;
+                    case 4:
+                        // Reset Kuota Penguji Sempro 2 D3
+                        $kuotaDosen->kuota_penguji_sempro_2_D3 = $kuota;
+                        $kuotaDosen->save();
+                        break;
+                    case 5:
+                        // Reset Kuota Penguji Sidang TA 1 D3
+                        $kuotaDosen->kuota_penguji_sidang_TA_1_D3 = $kuota;
+                        $kuotaDosen->save();
+                        break;
+                    case 6:
+                        // Reset Kuota Penguji Sidang TA 2 D3
+                        $kuotaDosen->kuota_penguji_sidang_TA_2_D3 = $kuota;
+                        $kuotaDosen->save();
+                        break;
+                }
+            });
+        } else {
+            $allKuotaDosen->each(function (KuotaDosen $kuotaDosen, $key) use ($jenisKuota, $kuota) {
+                switch ($jenisKuota) {
+                    case 1:
+                        // Reset Kuota Pembimbing 1 D4
+                        $kuotaDosen->kuota_pembimbing_1_D4 = $kuota;
+                        $kuotaDosen->save();
+                        break;
+                    case 2:
+                        // Reset Kuota Pembimbing 2 D4
+                        $kuotaDosen->kuota_pembimbing_2_D4 = $kuota;
+                        $kuotaDosen->save();
+                        break;
+                    case 3:
+                        // Reset Kuota Penguji Sempro 1 D4
+                        $kuotaDosen->kuota_penguji_sempro_1_D4 = $kuota;
+                        $kuotaDosen->save();
+                        break;
+                    case 4:
+                        // Reset Kuota Penguji Sempro 2 D4
+                        $kuotaDosen->kuota_penguji_sempro_2_D4 = $kuota;
+                        $kuotaDosen->save();
+                        break;
+                    case 5:
+                        // Reset Kuota Penguji Sidang TA 1 D4
+                        $kuotaDosen->kuota_penguji_sidang_TA_1_D4 = $kuota;
+                        $kuotaDosen->save();
+                        break;
+                    case 6:
+                        // Reset Kuota Penguji Sidang TA 2 D4
+                        $kuotaDosen->kuota_penguji_sidang_TA_2_D4 = $kuota;
+                        $kuotaDosen->save();
+                        break;
+                }
+            });
+        }
+
+        return redirect()->back()->with(["success" => "Berhasil Mereset Kuota Dosen"]);
+    }
 }

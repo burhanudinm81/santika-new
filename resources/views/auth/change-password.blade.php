@@ -36,7 +36,15 @@
                             @endif
 
                             {{-- Placeholder untuk menampilkan error validasi umum --}}
-                            <div id="validation-errors" class="alert alert-danger" style="display: none;"></div>
+                            @if($errors->any())
+                                <div id="validation-errors" class="alert alert-danger">
+                                    <ul>
+                                        @foreach ($errors->all() as $error)
+                                            <li>{{ $error }}</li>
+                                        @endforeach
+                                    </ul>
+                                </div>
+                            @endif
 
                             <div class="form-group">
                                 <label for="current-password">Password Lama</label>

@@ -1,3 +1,6 @@
+@extends('dosen.home')
+
+@section('content')
 <!-- Content Header (Page header) -->
 <div class="content-header">
     <div class="container-fluid">
@@ -37,11 +40,11 @@
                         <div class="list-group-item mb-3">
                             <div>
                                 <label for="" class="form-label mb-1">NIDN</label>
-                                <p>{{ auth("dosen")->user()->NIDN ?? "-" }}</p>
+                                <p>{{ auth("dosen")->user()->nidn ?? "-" }}</p>
                             </div>
                             <div>
                                 <label for="" class="form-label mb-1">NIP</label>
-                                <p>{{ auth("dosen")->user()->NIP ?? "-" }}</p>
+                                <p>{{ auth("dosen")->user()->nip ?? "-" }}</p>
                             </div>
                             <div>
                                 <label for="" class="form-label mb-1">Email</label>
@@ -51,22 +54,21 @@
                                 <label for="" class="form-label mb-1">Nomor Handphone</label>
                                 <p>{{ auth("dosen")->user()->no_handphone ?? "-" }}</p>
                             </div>
+                            @php
+                                $keahlian = $dosen->bidangMinats->pluck('bidang_minat')->values();
+                            @endphp
                             <div>
-                                <label for="" class="form-label mb-1">Bidang Keahlian 1</label>
-                                <p>{{ auth("dosen")->user()->bidang_minat_1 ?? "-" }}</p>
+                                <label class="form-label mb-1">Bidang Keahlian 1</label>
+                                <p>{{ $keahlian->get(0) ?? '-' }}</p>
                             </div>
-                            @isset(auth("dosen")->user()->bidang_minat_2)
-                                <div>
-                                    <label for="" class="form-label mb-1">Bidang Keahlian 2</label>
-                                    <p>{{ auth("dosen")->user()->bidang_minat_2  }}</p>
-                                </div>
-                            @endisset
-                            @isset(auth("dosen")->user()->bidang_minat_3)
-                                <div>
-                                    <label for="" class="form-label mb-1">Bidang Keahlian 3</label>
-                                    <p>{{ auth("dosen")->user()->bidang_minat_3  }}</p>
-                                </div>
-                            @endisset
+                            <div>
+                                <label class="form-label mb-1">Bidang Keahlian 2</label>
+                                <p>{{ $keahlian->get(1) ?? '-' }}</p>
+                            </div>
+                            <div>
+                                <label class="form-label mb-1">Bidang Keahlian 3</label>
+                                <p>{{ $keahlian->get(2) ?? '-' }}</p>
+                            </div>
                             <div>
                                 <label for="" class="form-label mb-1">Profil</label>
                                 <p>{{ auth("dosen")->user()->deskripsi_profil ?? "-" }}</p>
@@ -115,15 +117,17 @@
     </div><!-- /.container-fluid -->
 </div>
 <!-- /.content -->
+@endsection
 
-<script src={{ url("/custom/js/profile/edit-profile-image.js") }}></script>
-<script src="{{ url("/custom/js/profile/edit-dosen-profile.js") }}"></script>
-<script>
-    $("document").ready(function () {
-        $(".profile-user-img").tooltip();
-
-        $(".profile-user-img").click(function () {
-            $("#modal-ubah-foto-profil").modal();
+@push('page-scripts')
+    <script src="{{ asset('/custom/js/profile/edit-profile-image.js') }}"></script>
+    <script src="{{ asset('/custom/js/profile/edit-dosen-profile.js') }}"></script>
+    <script>
+        $(document).ready(function () {
+            $(".profile-user-img").tooltip();
+            $(".profile-user-img").click(function () {
+                $("#modal-ubah-foto-profil").modal();
+            });
         });
-    });
-</script>
+    </script>
+@endpush

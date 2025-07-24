@@ -26,5 +26,19 @@ class MahasiswaD3ForJadwalSeeder extends Seeder
                 'angkatan' => 2022,
             ]);
         }
+
+        // Mahasiswa Untuk Tahap 4
+        for ($id = 301; $id <= 316; $id++) {
+            Mahasiswa::create([
+                'id' => $id,
+                'nim' => strval(20220000 + $id),
+                'nama' => 'Mahasiswa ' . $id,
+                'password' => Hash::make('password123'),
+                'prodi_id' => 1,
+                'periode_id' => 1,
+                'kelas' => $kelasList[array_rand($kelasList)],
+                'angkatan' => 2022,
+            ]);
+        }
     }
 }

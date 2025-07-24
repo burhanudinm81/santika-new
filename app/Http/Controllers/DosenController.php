@@ -32,7 +32,7 @@ class DosenController extends Controller
 
     public function showAllDataDosen(): JsonResponse
     {
-        $dosen = Dosen::select("NIDN", "NIP", "nama")->get();
+        $dosen = Dosen::select("nidn as NIDN", "nip as NIP", "nama")->get();
 
 
         return response()->json([
@@ -49,11 +49,11 @@ class DosenController extends Controller
 
         $searchInput = $request->input("search");
 
-        $dosen = Dosen::select("NIDN", "NIP", "nama")
+        $dosen = Dosen::select("nidn as NIDN", "nip as NIP", "nama")
             ->where(function (Builder $query) use ($searchInput) {
                 $query->whereLike("nama", "%$searchInput%")
-                    ->orWhereLike("NIDN", "%$searchInput%")
-                    ->orWhereLike("NIP", "%$searchInput%");
+                    ->orWhereLike("nidn", "%$searchInput%")
+                    ->orWhereLike("nip", "%$searchInput%");
             })
             ->get();
 

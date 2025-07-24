@@ -116,9 +116,9 @@
                                 <div>
                                     <label for="" class="form-label mb-1">Sisa Kuota Pembimbing 1:</label>
 
-                                    @if ($userProdi === 'D3TT')
+                                    @if ($userProdi === 'D3 Teknik Telekomunikasi')
                                         <p>{{ optional($dosen->kuotaDosen)->kuota_pembimbing_1_D3 ?? '-' }}</p>
-                                    @elseif ($userProdi === 'D4JTD')
+                                    @elseif ($userProdi === 'D4 Jaringan Telekomunikasi Digital')
                                         <p>{{ optional($dosen->kuotaDosen)->kuota_pembimbing_1_D4 ?? '-' }}</p>
                                     @else
                                         <p>-</p>

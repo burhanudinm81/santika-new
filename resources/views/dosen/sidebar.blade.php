@@ -21,7 +21,9 @@
                 @endif
             </div>
             <div class="info">
-                <a href="#" class="d-block" id="profile-link">{{ auth('dosen')->user()->nama }}</a>
+                <a href="{{ route('dosen.profile') }}" id="profile-link" class="d-block">
+                    {{ auth('dosen')->user()->nama }}
+                </a>
             </div>
         </div>
 

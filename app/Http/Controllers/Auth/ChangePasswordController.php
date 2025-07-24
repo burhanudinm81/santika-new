@@ -59,8 +59,6 @@ class ChangePasswordController extends Controller
             $savedDosen = $dosen->save();
         }
 
-
-
         return $savedMhs || $savedDosen
             ? redirect()->route('logout')->with('status', 'Password changed successfully.')
             : back()->withErrors(['error' => 'Failed to change password. Please try again.']);

@@ -127,4 +127,22 @@ $(document).ready(function() {
             }
         });
     });
+
+    $('#reset-kuota-d3').on('click', function(){
+        const resetKuotaModal = $('#modal-reset-kuota');
+
+        const prodiInput = resetKuotaModal.find('input[name="prodi_id"]');
+        prodiInput.val(1);
+
+        resetKuotaModal.modal('show');
+    });
+
+    $('#reset-kuota-d4').on('click', function(){
+        const resetKuotaModal = $('#modal-reset-kuota');
+
+        const prodiInput = resetKuotaModal.find('input[name="prodi_id"]');
+        prodiInput.val(2);
+
+        resetKuotaModal.modal('show');
+    });
 });
