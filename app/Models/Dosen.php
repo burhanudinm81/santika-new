@@ -16,6 +16,7 @@ class Dosen extends Authenticatable
         'nip',
         'nama',
         'email',
+        'password',
         'no_handphone',
         'foto_profil',
         'deskripsi_profil',
@@ -27,7 +28,6 @@ class Dosen extends Authenticatable
     ];
     
     protected $hidden = [
-        'password',
         'remember_token',
     ];
 

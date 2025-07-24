@@ -1,10 +1,10 @@
 $("document").ready(function () {
     $("#edit-profile-btn").click(function () {
-        $(".content-wrapper").load("/dosen/profile/edit");
+        window.location.href = "/dosen/profile/edit";
     });
 
     $("#btn-batal").click(function () {
-        $(".content-wrapper").load("/dosen/profile");
+        window.location.href = "/dosen/profile";
     });
 
     $("#btn-simpan").click(function (event) {

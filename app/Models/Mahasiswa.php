@@ -10,7 +10,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 class Mahasiswa extends Authenticatable
 {
     protected $table = "mahasiswa";
-    protected $guarded = ["id", "password", "remember_token"];
+    protected $guarded = ["id", "remember_token"];
     protected $keyType = "integer";
     public $incrementing = true;
     public $timestamps = false;

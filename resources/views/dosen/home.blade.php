@@ -92,7 +92,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
                     </div>
                     <div class="modal-body">
                         <!-- route("dosen.profile.edit-image") -->
-                        <form id="form-ubah-foto-profil" action="#" method="post" enctype="multipart/form-data">
+                        <form id="form-ubah-foto-profil" action="{{ route('dosen.profile.edit-image') }}" method="post" enctype="multipart/form-data">
                             @csrf
                             <div class="form-group">
                                 <label for="foto-profil-baru">Upload Foto Profil:</label>
@@ -120,7 +120,7 @@ scratch. This page gets rid of all links and provides the needed markup only.
         <!-- Modal Ganti Password -->
         <div class="modal fade" id="modal-ubah-password" tabindex="-1" role="dialog"
             aria-labelledby="modal-ganti-password-label" aria-hidden="true">
-            <div class="modal-dialog" role="document">
+            <div class="modal-dialog modal-dialog-centered" role="document">
                 <div class="modal-content">
                     <div class="modal-header">
                         <h5 class="modal-title" id="modal-ganti-password-label">Ubah Password</h5>
@@ -129,45 +129,47 @@ scratch. This page gets rid of all links and provides the needed markup only.
                         </button>
                     </div>
                     <div class="modal-body">
-                        <!-- route("dosen.change-password") -->
-                        <form action="#" method="post" id="form-ubah-password">
+                        <!-- route("dosen.profile.change-password") -->
+                        <form action="{{ route('dosen.profile.change-password') }}" method="post" id="form-ubah-password">
                             @csrf
                             <div class="form-group">
                                 <label for="current-password">Password Lama</label>
                                 <div class="input-group">
                                     <input type="password" class="form-control" id="current-password"
                                         name="current_password" placeholder="Masukkan password lama">
-                                    <div class="input-group-append" id="show-current-password">
+                                    <div class="input-group-append toggle-password" data-target="#current-password">
                                         <span class="input-group-text"><i class="fas fa-eye"></i></span>
                                     </div>
                                 </div>
-
+                                <span class="invalid-feedback d-block" id="current_password_error" role="alert"></span>
                             </div>
                             <div class="form-group">
                                 <label for="new-password">Password Baru</label>
                                 <div class="input-group">
                                     <input type="password" class="form-control" id="new-password"
                                         name="new_password" placeholder="Masukkan password baru">
-                                    <div class="input-group-append" id="show-new-password">
+                                    <div class="input-group-append toggle-password" data-target="#new-password">
                                         <span class="input-group-text"><i class="fas fa-eye"></i></span>
                                     </div>
                                 </div>
+                                <span class="invalid-feedback d-block" id="new_password_error" role="alert"></span>
                             </div>
                             <div class="form-group">
                                 <label for="confirm-password">Konfirmasi Password Baru</label>
                                 <div class="input-group">
                                     <input type="password" class="form-control" id="confirm-password"
                                         name="new_password_confirmation" placeholder="Konfirmasi password baru">
-                                    <div class="input-group-append" id="show-confirm-password">
+                                    <div class="input-group-append toggle-password" data-target="#confirm-password">
                                         <span class="input-group-text"><i class="fas fa-eye"></i></span>
                                     </div>
                                 </div>
+                                <span class="invalid-feedback d-block" id="new_password_confirmation_error" role="alert"></span>
                             </div>
                         </form>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
-                        <button type="button" class="btn btn-primary" id="save-password-btn">Simpan</button>
+                        <button type="submit" class="btn btn-primary" id="save-password-btn" form="form-ubah-password">Simpan</button>
                     </div>
                 </div>
             </div>
@@ -179,7 +181,9 @@ scratch. This page gets rid of all links and provides the needed markup only.
 
     <script src="{{ url('/custom/js/home/dosen.js') }}"></script>
     <script src="{{ url('/custom/js/animate-custom-file-input.js') }}"></script>
-    <script src="{{ url('/custom/js/profile/change-password.js') }}"></script>
+    <script src="{{ url('/custom/js/auth/change-password.js') }}"></script>
+
+    @stack('page-scripts')
 
     {{-- @if ($forceChangePassword)
         <script>
