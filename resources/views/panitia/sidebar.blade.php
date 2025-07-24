@@ -49,7 +49,7 @@
                     </a>
                 </li>
 
-                <li class="nav-item nav-ajax">
+                <li class="nav-item">
                     <a href="{{ route('panitia.kuota-dosen.page') }}" class="nav-link" id="kuota-dosen-item">
                         <i class="nav-icon fas fa-solid fa-users"></i>
                         <p>

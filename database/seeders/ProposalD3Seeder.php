@@ -56,5 +56,37 @@ class ProposalD3Seeder extends Seeder
                 'tahap_id' => $tahap_id,
             ]);
         }
+
+        // Proposal untuk tahap 4
+        for ($id = 201; $id <= 208; $id++) {
+            $bidang_minat_id = rand(1, 3);
+            $jenis_judul_id = rand(1, 3);
+            $judul = "Judul $id";
+            $topik = fake()->sentence(6);
+            $tujuan = "Tujuan $id";
+            $latar_belakang = "Latar Belakang $id";
+            $blok_diagram_sistem = fake()->sentence(8);
+            $tahap_id = 4;
+
+            // Pilih dosen_pembimbing_1_id yang bidang minatnya sama
+            $dosenIds = $dosenByBidang[$bidang_minat_id] ?? null;
+            if (!$dosenIds) continue; // skip jika tidak ada dosen bidang tsb
+            $dosen_pembimbing_1_id = $dosenIds[array_rand($dosenIds)];
+
+            Proposal::create([
+                'id' => $id,
+                'prodi_id' => 1,
+                'periode_id' => 1,
+                'bidang_minat_id' => $bidang_minat_id,
+                'jenis_judul_id' => $jenis_judul_id,
+                'dosen_pembimbing_1_id' => $dosen_pembimbing_1_id,
+                'judul' => $judul,
+                'topik' => $topik,
+                'tujuan' => $tujuan,
+                'latar_belakang' => $latar_belakang,
+                'blok_diagram_sistem' => $blok_diagram_sistem,
+                'tahap_id' => $tahap_id,
+            ]);
+        }
     }
 }

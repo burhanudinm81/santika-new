@@ -290,7 +290,12 @@ Route::middleware(["auth:dosen", "auth.session", "password.changed", "is.panitia
 
         // Route untuk mengupdate kuota seorang dosen
         // {kuota_dosen} adalah ID dari record di tabel kuota_dosen
-        Route::put('/panitia/kuota-dosen/{kuota_dosen}', 'update');
+        Route::put('/panitia/kuota-dosen/{kuota_dosen}', 'update')
+            ->name("panitia.kuota-dosen.update");
+
+        // Route untuk Reset Kuota Dosen
+        Route::post('/panitia/kuota-dosen/reset', 'resetKuotaDosen')
+            ->name("panitia.kuota-dosen.reset");
     });
 
     Route::controller(SeminarProposalPanitiaController::class)->group(function () {
