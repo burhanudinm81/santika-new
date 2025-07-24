@@ -24,5 +24,9 @@ class TahapSeeder extends Seeder
         Tahap::create([
             "tahap" => 3
         ]);
+
+        Tahap::create([
+            "tahap" => 4
+        ]);
     }
 }
