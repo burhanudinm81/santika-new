@@ -150,6 +150,30 @@ class JadwalSemproController extends Controller
             $proposal->dosenPengujiSempro1()->associate($item['penguji_1']);
             $proposal->dosenPengujiSempro2()->associate($item['penguji_2']);
             $proposal->save();
+
+            // 
+            // Mengurangi kuota dosen penguji sempro 1
+            // 
+            $kuotaDosenPenguji1 = KuotaDosen::firstWhere("dosen_id", $item['penguji_1']);
+
+            if($prodiPanitia == 1)
+                $kuotaDosenPenguji1->kuota_penguji_sempro_1_D3--;
+            else if($prodiPanitia == 2)
+                $kuotaDosenPenguji1->kuota_penguji_sempro_1_D4--;
+
+            $kuotaDosenPenguji1->save();
+
+            // 
+            // Mengurangi kuota dosen penguji sempro 2
+            // 
+            $kuotaDosenPenguji2 = KuotaDosen::firstWhere("dosen_id", $item['penguji_2']);
+
+            if($prodiPanitia == 1)
+                $kuotaDosenPenguji2->kuota_penguji_sempro_2_D3--;
+            else if($prodiPanitia == 2)
+                $kuotaDosenPenguji2->kuota_penguji_sempro_2_D4--;
+
+            $kuotaDosenPenguji2->save();
         }
 
         Log::info('Jadwal seminar proposal berhasil digenerate', [
@@ -300,7 +324,8 @@ class JadwalSemproController extends Controller
         $listWaktuSelesai = $request->waktu_selesai;
         $listDosenPenguji1Id = $request->dosen_penguji_1_id;
         $listDosenPenguji2Id = $request->dosen_penguji_2_id;
-
+        
+        $prodiPanitia = Panitia::firstWhere('dosen_id', auth("dosen")->id())->prodi_id;
         $rowCount = count($listProposalId);
         
         for($i = 0; $i < $rowCount; $i++){
@@ -317,6 +342,30 @@ class JadwalSemproController extends Controller
             $proposal->penguji_sempro_1_id = $listDosenPenguji1Id[$i];
             $proposal->penguji_sempro_2_id = $listDosenPenguji2Id[$i];
             $proposal->save();
+ 
+            // 
+            // Mengurangi kuota dosen penguji sempro 1
+            // 
+            $kuotaDosenPenguji1 = KuotaDosen::firstWhere("dosen_id", $listDosenPenguji1Id[$i]);
+
+            if($prodiPanitia == 1)
+                $kuotaDosenPenguji1->kuota_penguji_sempro_1_D3--;
+            else if($prodiPanitia == 2)
+                $kuotaDosenPenguji1->kuota_penguji_sempro_1_D4--;
+
+            $kuotaDosenPenguji1->save();
+
+            // 
+            // Mengurangi kuota dosen penguji sempro 2
+            // 
+            $kuotaDosenPenguji2 = KuotaDosen::firstWhere("dosen_id", $listDosenPenguji2Id[$i]);
+
+            if($prodiPanitia == 1)
+                $kuotaDosenPenguji2->kuota_penguji_sempro_2_D3--;
+            else if($prodiPanitia == 2)
+                $kuotaDosenPenguji2->kuota_penguji_sempro_2_D4--;
+
+            $kuotaDosenPenguji1->save();
         }
 
         return redirect()

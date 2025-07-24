@@ -5,8 +5,8 @@
     <div class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
-                <div class="col-sm-6">
-                    <h1 class="m-0">Detail Jadwal Seminar Proposal</h1>
+                <div class="col-md-12">
+                    <h1 class="m-0">Detail Jadwal Seminar Proposal Prodi {{ $prodi->prodi }}</h1>
                     <h1>Periode {{ $periode->tahun }} Tahap {{ $tahap->tahap }}</h1>
                 </div><!-- /.col -->
             </div><!-- /.row -->
