@@ -59,7 +59,7 @@ class PermohonanJudulController extends Controller
 
         // jika prodi_id = 1, cari dan ambil proposal mahasiswa D3 berdasarkan proposal_id
         if ($proposal->prodi_id == 1) {
-            $proposalMahasiswa = ProposalDosenMahasiswa::with('dosen')->where('proposal_id', $proposalId)->where('status_proposal_mahasiswa_id', 3)->get();
+            $proposalMahasiswa = ProposalDosenMahasiswa::where('proposal_id', $proposalId)->where('status_proposal_mahasiswa_id', 3)->get();
             // jika ada proposal mahasiswa D3 berdasarkan proposal_id
             if (count($proposalMahasiswa) > 0) {
                 // update status_proposal_mahasiswa_id (di masing-masing mahasiswa)
@@ -69,14 +69,14 @@ class PermohonanJudulController extends Controller
             }
         } else if ($proposal->prodi_id == 2) {
             // jika prodi_id = 2, cari dan ambil proposal mahasiswa D4 berdasarkan proposal_id
-            $proposalMahasiswa = ProposalDosenMahasiswa::with('dosen')->where('proposal_id', $proposalId)->where('status_proposal_mahasiswa_id', 3)->first();
+            $proposalMahasiswa = ProposalDosenMahasiswa::where('proposal_id', $proposalId)->where('status_proposal_mahasiswa_id', 3)->first();
             // update status_proposal_mahasiswa_id (di mahasiswa D4)
             $proposalMahasiswa->update(attributes: ['status_proposal_mahasiswa_id' => $confirmationStatusId]);
         }
 
         // Logic Pengurangan Kuota Dosen
         if ($confirmationStatusId == "1") {
-            $dosenId = auth('dosen')->user()->id;
+            $dosenId = $proposalMahasiswa->dosen->id;
             $kuotaDosen = KuotaDosen::firstWhere("dosen_id", $dosenId);
 
             // Id Prodi D3 = 1, Prodi D4 = 2
@@ -88,8 +88,8 @@ class PermohonanJudulController extends Controller
                 $kuotaDosen->update(['kuota_pembimbing_1_D4' => $kuotaDosen->kuota_pembimbing_1_D4 - 1]);
             }
 
-            $proposal->update([
-                'dosen_pembimbing_1_id' => $dosenId
+            $proposal->update(attributes: [
+                'dosen_pembimbing_1_id' => $dosenId,
             ]);
         }
 
