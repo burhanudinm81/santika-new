@@ -54,12 +54,6 @@
                                     <label for="exampleDataList" class="form-label">Jenis Kegiatan</label>
                                     <input type="text" class="form-control" id="NamaKegiatan"
                                         value="{{ $logbook->jenisKegiatanLogbook->nama_kegiatan }}" readonly />
-                                    {{-- <select name="jenisKegiatanId" class="form-control" id="" required>
-                                        @foreach ($jenisKegiatanLogbook as $jenisKegiatan)
-                                            <option value="{{ $jenisKegiatan->id }}">{{ $jenisKegiatan->nama_kegiatan }}
-                                            </option>
-                                        @endforeach
-                                    </select> --}}
                                 </div>
                                 <div class="mb-3">
                                     <label for="NamaKegiatan" class="form-label">Nama Kegiatan</label>
@@ -76,12 +70,16 @@
                                     <textarea class="form-control" name="hasilKegiatan" id="hasilKegiatan" rows="3" readonly>{{ $logbook->hasil_kegiatan }}</textarea>
                                 </div>
                                 <div class="mb-3">
+                                    <label for="catatanDosen" class="form-label">Catatan Dosen</label>
+                                    <textarea class="form-control" name="catatanDosen" id="catatanDosen" rows="3" readonly>{{ $logbook->catatan_khusus_dosen }}</textarea>
+                                </div>
+                                <div class="mb-3">
                                     <label for="StatusVerifikasi" class="form-label">Status Verifikasi</label>
                                     <input type="text"
-                                        value="{{ $logbook->status_verifikasi == 1 ? 'Diverifikasi Berhasil' : 'Belum Diverifikasi' }}"
+                                        value="{{ $logbook->status == 1 ? 'Diverifikasi Berhasil' : 'Belum Diverifikasi' }}"
                                         class="form-control
-                                            @if ($logbook->status_verifikasi != 1) bg-warning
-                                            @elseif($logbook->status_verifikasi == 1) bg-success
+                                            @if ($logbook->status != 1) bg-warning
+                                            @elseif($logbook->status == 1) bg-success
                                             @else bg-info @endif
                                         " id="StatusVerifikasi" readonly />
 
