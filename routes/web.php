@@ -270,6 +270,8 @@ Route::middleware(["auth:dosen", "auth.session", "password.changed"])->group(fun
         Route::get('/dosen/bimbingan/daftar-bimbingan', 'showDaftarBimbingan')->name('dosen.bimbingan.daftar-bimbingan');
         Route::get('/dosen/bimbingan/logbook-mahasiswa/{mahasiswa}', 'showDaftarLogbookMahasiswa')->name('dosen.bimbingan.logbook-mahasiswa');
         Route::get('/dosen/bimbingan/logbook-mahasiswa/{mahasiswa}/detail/{logbook}', 'showDetailLogbook')->name('dosen.bimbingan.detail-logbook-mahasiswa');
+        Route::put('/dosen/bimbingan/logbook-mahasiswa/update-verif/logbook', 'updateVerifikasiLogbook')->name('dosen.bimbingan.update-verifikasi-logbook');
+        Route::get('/dosen/bimbingan/detail-bimbingan/{mahasiswa}', 'showDetailBimbingan')->name('dosen.bimbingan.detail-bimbingan');
     });
 
     Route::controller(DosenProfileController::class)->group(function () {

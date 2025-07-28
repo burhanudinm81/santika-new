@@ -58,7 +58,7 @@
                                                         @endif
                                                     </td>
                                                     <td>
-                                                        <a href=""class="aksi-button btn btn-primary">Detail</a>
+                                                        <a href="{{ route('dosen.bimbingan.detail-bimbingan', $kelompok[0]->mahasiswa->id) }}"class="aksi-button btn btn-primary">Detail</a>
                                                         <a href="{{ route('dosen.bimbingan.logbook-mahasiswa', $kelompok[0]->mahasiswa->id) }}"
                                                             class="aksi-button btn btn-primary">Logbook</a>
                                                     </td>
@@ -100,7 +100,7 @@
                                                         @endif
                                                     </td>
                                                     <td>
-                                                        <a href=""class="aksi-button btn btn-primary">Detail</a>
+                                                        <a href="{{ route('dosen.bimbingan.detail-bimbingan', $item->mahasiswa->id) }}"class="aksi-button btn btn-primary">Detail</a>
                                                         <a href="{{ route('dosen.bimbingan.logbook-mahasiswa', $item->mahasiswa->id) }}"
                                                             class="aksi-button btn btn-primary">Logbook</a>
                                                     </td>

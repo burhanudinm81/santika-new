@@ -15,53 +15,69 @@
     <!-- Main content -->
     <div class="content">
         <div class="container-fluid">
+
+            @if (session()->has('success'))
+                @include('notifications.success-alert', ['message' => session('success')])
+            @endif
+
             <div class="col-md-15">
                 <div class="card card-primary card-outline mb-2">
                     <!--begin::Form-->
-                    <form>
+                    <form action="{{ route('dosen.bimbingan.update-verifikasi-logbook') }}" method="POST">
+                        @csrf
+                        @method('PUT')
+
+                        <input type="hidden" name="logbook_id" value="{{ $logbook->id }}">
+                        <input type="hidden" name="mahasiswa_id" value="{{ $mahasiswa->id }}">
                         <!--begin::Body-->
                         <div class="card-body">
                             <p class="h4">Logbook 1</p>
                             <hr>
-                            <strong></i>Nama Mahasiswa 1</strong>
-                            <p class="text-muted">
-                                Dwiki Raditya Krisdyanto
-                            </p>
-                            <strong></i>Nama Mahasiswa 2</strong>
-                            <p class="text-muted">
-                                Adam Varon
-                            </p>
+
+                            @if ($mahasiswa->prodi_id == 1)
+                                <strong></i>Nama Mahasiswa 1</strong>
+                                <p class="text-muted">
+                                   {{$mahasiswaInfo[0]->mahasiswa->nama}}
+                                </p>
+                                <strong></i>Nama Mahasiswa 2</strong>
+                                <p class="text-muted">
+                                    {{ $mahasiswaInfo[1]->mahasiswa->nama }}
+                                </p>
+                            @elseif($mahasiswa->prodi_id == 2)
+                                <strong></i>Nama Mahasiswa 1</strong>
+                                <p class="text-muted">
+                                    {{ $mahasiswa->nama }}
+                                </p>
+                            @endif
                             <strong></i>Jenis Kegiatan</strong>
                             <p class="text-muted">
-                                Eksperimen
+                                {{ $logbook->jenisKegiatanLogbook->nama_kegiatan }}
                             </p>
                             <strong></i>Nama Kegiatan</strong>
                             <p class="text-muted">
-                                Doing something
+                                {{ $logbook->nama_kegiatan }}
                             </p>
                             <strong></i>Tanggal/Waktu</strong>
                             <p class="text-muted">
-                                22-03-2025/ 10.25
+                                {{ $logbook->tanggal_kegiatan }}
                             </p>
                             <strong></i>Hasil Kegiatan</strong>
                             <p class="text-muted">
-                                Lorem ipsum dolor sit amet consectetur adipisicing elit. Eveniet vitae saepe facilis
-                                aspernatur
-                                culpa doloremque expedita dignissimos! Natus animi repudiandae nam commodi? Ullam
-                                consequatur
-                                molestiae illo delectus, praesentium nulla quaerat.
+                                {{ $logbook->hasil_kegiatan }}
                             </p>
 
                             <div class="mb-3">
                                 <label for="CatatanPenguji1" class="form-label">Catatan Khusus dari Dosen</label>
-                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="10"></textarea>
+                                <textarea name="catatan_khusus_dosen" class="form-control" id="exampleFormControlTextarea1" rows="10">{{ $logbook->catatan_khusus_dosen ?? '' }}</textarea>
                             </div>
                             <strong></i>Status Logbook</strong>
                             <br>
 
                             <div class="d-grid gap-2">
-                                <button class="btn btn-block btn-primary" type="button">Terima</button>
-                                <button class="btn btn-block btn-danger" type="button">Tolak</button>
+                                <button name="status_verif_logbook" value="1" type="submit"
+                                    class="btn btn-block btn-primary" type="button">Terima</button>
+                                <button name="status_verif_logbook" value="0" type="submit"
+                                    class="btn btn-block btn-danger" type="button">Tolak</button>
                             </div>
                         </div>
                         <!--end::Body-->

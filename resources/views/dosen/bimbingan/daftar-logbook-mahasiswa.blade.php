@@ -40,8 +40,10 @@
                                         <td>
                                             @if ($logbook->status == 1)
                                                 <span class="badge badge-success">Diverifikasi</span>
-                                            @elseif ($logbook->status == 0)
+                                            @elseif ($logbook->status == -1)
                                                 <span class="badge badge-warning">Belum Diverifikasi</span>
+                                            @elseif ($logbook->status == 0)
+                                                <span class="badge badge-danger">Ditolak</span>
                                             @endif
                                         </td>
                                         <td>

@@ -14,7 +14,7 @@ class BimbinganController extends Controller
     public function showDaftarBimbingan()
     {
         $listBimbinganD3 = [];
-        $listBimbinganD4 = null;
+        $listBimbinganD4 = [];
 
 
         $proposalD3 = Proposal::where('prodi_id', 1)
@@ -61,6 +61,53 @@ class BimbinganController extends Controller
 
     public function showDetailLogbook(Mahasiswa $mahasiswa, LogBook $logbook)
     {
-        return view('dosen.bimbingan.detail-logbook-mahasiswa');
+        $mahasiswaInfo = null;
+        if ($mahasiswa->prodi_id == 1) {
+            $proposalInfo = ProposalDosenMahasiswa::where('mahasiswa_id', $mahasiswa->id)->where('status_proposal_mahasiswa_id', 1)->first();
+            $mahasiswaInfo = ProposalDosenMahasiswa::where('proposal_id', $proposalInfo->proposal_id)->get();
+        } else if ($mahasiswa->prodi_id == 2) {
+            $mahasiswaInfo = $mahasiswa;
+        }
+
+        return view('dosen.bimbingan.detail-logbook-mahasiswa', compact(['mahasiswaInfo', 'mahasiswa', 'logbook']));
+    }
+
+    public function updateVerifikasiLogbook(Request $request)
+    {
+        $mahasiswa1Id = $request->input('mahasiswa_id');
+        $logbookId = $request->input('logbook_id');
+        $catatanKhususDosen = $request->input('catatan_khusus_dosen') ?? null;
+        $statusVerifLogbook = (int) $request->input('status_verif_logbook');
+
+        $logbook = LogBook::find($logbookId);
+
+        $logbook->update([
+            'catatan_khusus_dosen' => $catatanKhususDosen,
+            'status' => $statusVerifLogbook
+        ]);
+
+        return redirect()->route('dosen.bimbingan.logbook-mahasiswa', ['mahasiswa' => $mahasiswa1Id])->with('success', 'Logbook berhasil diperbarui.');
+    }
+
+    public function showDetailBimbingan(Mahasiswa $mahasiswa)
+    {
+        $mahasiswaInfo = null;
+        $proposalSemproInfo = null;
+
+        $proposalInfo = ProposalDosenMahasiswa::with('proposal')->where('mahasiswa_id', $mahasiswa->id)->where('status_proposal_mahasiswa_id', 1)->first();
+
+        if ($mahasiswa->prodi_id == 1) {
+            $mahasiswaInfo = ProposalDosenMahasiswa::with('mahasiswa')->where('proposal_id', $proposalInfo->proposal_id)->get();
+        } else if ($mahasiswa->prodi_id == 2) {
+            $mahasiswaInfo = $mahasiswa;
+        }
+
+        $proposalSemproInfo = Proposal::with(['dosenPembimbing1', 'dosenPembimbing2'])
+            ->where('id', $proposalInfo->proposal_id)
+            ->first();
+
+
+
+        return view('dosen.bimbingan.detail-bimbingan', compact(['mahasiswaInfo', 'mahasiswa', 'proposalSemproInfo']));
     }
 }
