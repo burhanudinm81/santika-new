@@ -92,7 +92,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a href="{{ route('mahasiswa.informasi-dosen.daftar-dosen-pembimbing') }}" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Dosen Pembimbing</p>
                             </a>

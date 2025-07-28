@@ -6,7 +6,7 @@
         <div class="container-fluid">
             <div class="row justify-content-between mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Permohonan Judul</h1>
+                    <h1 class="m-0">Profil Dosen</h1>
                 </div>
                 <div class="col-sm-6 text-right">
                     <a href="{{ route("mahasiswa.informasi-dosen.daftar-dosen") }}"
