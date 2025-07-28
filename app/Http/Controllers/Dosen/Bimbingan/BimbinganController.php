@@ -52,6 +52,7 @@ class BimbinganController extends Controller
     public function showDaftarLogbookMahasiswa(Mahasiswa $mahasiswa)
     {
         $logbooksInfo = $mahasiswa->logbooks()
+            ->where('dosen_id', auth('dosen')->user()->id)
             ->with('JenisKegiatanLogbook')
             ->orderBy('created_at', 'desc')
             ->get();

@@ -22,6 +22,7 @@ class StoreLogbookRequest extends FormRequest
     public function rules(): array
     {
         return [
+            'roleDospem' => 'required|integer',
             'jenisKegiatanId' => 'required',
             'namaKegiatan' => 'required',
             'tanggalKegiatan' => 'required',

@@ -55,9 +55,9 @@
                                                 <td>{{ $logbook->nama_kegiatan }}</td>
                                                 <td>{{ $logbook->tanggal_kegiatan }}</td>
                                                 <td>
-                                                    @if ($logbook->verifikasi == 0)
+                                                    @if ($logbook->status == 0)
                                                         <span class="badge badge-warning">Belum Diverifikasi</span>
-                                                    @elseif($logbook->verifikasi == 1)
+                                                    @elseif($logbook->status == 1)
                                                         <span class="badge badge-success">Diverifikasi Berhasil</span>
                                                     @endif
                                                 </td>

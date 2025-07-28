@@ -87,6 +87,7 @@ class LogbookController extends Controller
     {
         $dosenId = (int) $request->dosenPembimbingId;
         $mahasiswaId = (int) $request->mahasiswaId;
+        $roleDospem = (int) $request->roleDospem;
         $jenisKegiatanId = (int) $request->validated()['jenisKegiatanId'];
         $namaKegiatan = $request->validated()['namaKegiatan'];
         $tanggalKegiatan = $request->validated()['tanggalKegiatan'];
@@ -103,7 +104,8 @@ class LogbookController extends Controller
             'status_verifikasi'=> $statusVerifKegiatan,
         ]);
 
-        return redirect()->back()->with('success', 'Logbook berhasil ditambahkan');
+        return redirect()->route('mahasiswa.logbook.beranda', ['roleDospem' => $roleDospem])
+            ->with('success', 'Logbook berhasil ditambahkan.');
     }
 
     public function showDetailLogbook(LogBook $logbook)
