@@ -6,7 +6,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Pendaftarann Seminar Proposal</h1>
+                    <h1 class="m-0">Pendaftaran Seminar Proposal</h1>
                     <!-- Tombol Buka Tahap Baru -->
                     <button type="button" id="btnBukaTahap" class="btn btn-primary mt-3">
                         Buka Tahap Baru

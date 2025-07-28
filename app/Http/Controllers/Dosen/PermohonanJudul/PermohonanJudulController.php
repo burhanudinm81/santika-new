@@ -89,8 +89,7 @@ class PermohonanJudulController extends Controller
             }
 
             $proposal->update([
-                'dosen_pembimbing_1_id' => $dosenId,
-                'dosen_pembimbing_2_id' => $dosenId // <- masih hardcode, nanti diganti sesuai plotting dosen 2
+                'dosen_pembimbing_1_id' => $dosenId
             ]);
         }
 

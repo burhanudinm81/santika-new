@@ -11,6 +11,7 @@ use App\Http\Controllers\Dosen\Bimbingan\BimbinganController;
 use App\Http\Controllers\KuotaDosenController;
 use App\Http\Controllers\Dosen\PermohonanJudul\PermohonanJudulController;
 use App\Http\Controllers\Mahasiswa\Ajax\AjaxMahasiswaController;
+use App\Http\Controllers\Mahasiswa\InformasiDosen\DaftarDosenPembimbingController;
 use App\Http\Controllers\Mahasiswa\Logbook\LogbookController;
 use App\Http\Controllers\Mahasiswa\PengajuanJudul\PengajuanJudulController;
 use App\Http\Controllers\Mahasiswa\SeminarHasil\SeminarHasilController;
@@ -20,6 +21,7 @@ use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\MahasiswaD3Controller;
 use App\Http\Controllers\MahasiswaD4Controller;
 use App\Http\Controllers\Panitia\Ajax\AjaxPendaftaranSemproController;
+use App\Http\Controllers\Panitia\PlottingPembimbing\PlottingPembimbingController;
 use App\Http\Controllers\Panitia\SeminarHasil\SeminarHasilPanitiaController;
 use App\Http\Controllers\Panitia\SeminarProposal\JadwalSemproController as JadwalSemproPanitiaController;
 use App\Http\Controllers\Panitia\SeminarProposal\SeminarProposalController as SeminarProposalPanitiaController;
@@ -185,7 +187,6 @@ Route::middleware(["auth:admin-prodi", "auth.session"])->group(function () {
  */
 Route::middleware(["auth:mahasiswa", "auth.session", "password.changed"])->group(function () {
 
-
     Route::controller(HomePageController::class)->group(function () {
         // Route untuk memuat halaman awal user Mahasiswa
         Route::get("/mahasiswa/home", "mahasiswa")
@@ -228,6 +229,11 @@ Route::middleware(["auth:mahasiswa", "auth.session", "password.changed"])->group
     Route::controller(DosenController::class)->group(function () {
         Route::get('/mahasiswa/informasi-dosen/daftar-dosen', 'daftarDosen')->name('mahasiswa.informasi-dosen.daftar-dosen');
         Route::get('/mahasiswa/informasi-dosen/profil-dosen/{id}', 'profilDosen')->name('mahasiswa.informasi-dosen.profil-dosen');
+    });
+
+    Route::controller(DaftarDosenPembimbingController::class)->group(function(){
+        // Route untuk menampilkan daftar dosen pembimbing
+        Route::get('/mahasiswa/informasi-dosen/daftar-dosen-pembimbing', "index")->name("mahasiswa.informasi-dosen.daftar-dosen-pembimbing");
     });
 
     Route::get('/mahasiswa/profile', [MahasiswaController::class, 'showProfile'])->name('mahasiswa.profile');
@@ -391,4 +397,12 @@ Route::middleware(["auth:dosen", "auth.session", "password.changed", "is.panitia
             // Route untuk mengirim data jadwal manual
             Route::post("/store-manual", "storeManual")->name("store-manual");
         });
+
+    Route::controller(PlottingPembimbingController::class)->group(function () {
+        // Route untuk membuka halaman plotting pembimbing
+        Route::get('/panitia/plotting-pembimbing', 'index')->name('panitia.plotting-pembimbing.index');
+
+        // Route untuk mengedit pembimbing
+        Route::post('/panitia/plotting-pembimbing/update', 'update')->name('panitia.plotting-pembimbing.update');
+    });
 });

@@ -99,5 +99,5 @@
 @endsection
 
 @section('scripts-panitia')
-    <script src="{{ asset('/custom/js/generate-jadwal-manual.js') }}"></script>
+    <script src="{{ asset('/custom/js/seminar-proposal/generate-jadwal-manual.js') }}"></script>
 @endsection
