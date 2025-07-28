@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Mahasiswa\SeminarHasil;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePendaftaranSemhasRequest;
 use App\Models\BidangMinat;
+use App\Models\LogBook;
 use App\Models\PendaftaranSemhas;
 use App\Models\Proposal;
 use App\Models\ProposalDosenMahasiswa;
@@ -19,24 +20,31 @@ class SeminarHasilController extends Controller
         $infoDospem2 = null;
         $infoBidangMinat = null;
         $infoPendaftaranSemhas = null;
+        $countLogbookDospem1 = 0;
+        $countLogbookDospem2 = 0;
+
 
         $infoProposal = Proposal::with(['proposalMahasiswas', 'dosenPembimbing1', 'dosenPembimbing2', 'bidangMinat'])
-            ->whereRelation('proposalMahasiswas', 'mahasiswa_id', auth('mahasiswa')->user()->id)
-            ->whereRelation('proposalMahasiswas', 'status_proposal_mahasiswa_id', 1)
-            ->where('pendaftaran_sempro_id', '!=', null)
-            ->first();
+        ->whereRelation('proposalMahasiswas', 'mahasiswa_id', auth('mahasiswa')->user()->id)
+        ->whereRelation('proposalMahasiswas', 'status_proposal_mahasiswa_id', 1)
+        ->where('pendaftaran_sempro_id', '!=', null)
+        ->first();
 
 
         if ($infoProposal != null) {
             $infoMahasiswaAll = ProposalDosenMahasiswa::with(['dosen', 'mahasiswa'])
-                ->where('proposal_id', $infoProposal->id)
-                ->get();
+            ->where('proposal_id', $infoProposal->id)
+            ->get();
             $infoDospem1 = $infoProposal->dosenPembimbing1()->first();
             $infoDospem2 = $infoProposal->dosenPembimbing2()->first();
 
             $infoBidangMinat = BidangMinat::all();
 
             $infoPendaftaranSemhas = PendaftaranSemhas::with('statusDaftarSeminar')->where('proposal_id', $infoProposal->id)->first();
+
+            $logbookDospem1 = LogBook::where('dosen_id', $infoProposal->dosen_pembimbing_1_id)
+                ->where('proposal_id', $infoProposal->id)
+                ->get();
         }
 
         return view('mahasiswa.seminar-hasil.daftar-semhas', compact([
