@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Panitia\SeminarHasil;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\BukaPendaftaranRequest;
 use App\Models\Panitia;
 use App\Models\PendaftaranSemhas;
 use App\Models\Periode;
@@ -14,9 +15,16 @@ class SeminarHasilPanitiaController extends Controller
     public function showBerandaPendaftaranPage()
     {
         // ambil semua data tahap
+        $listPeriode = Periode::all();
         $listTahap = Tahap::all();
 
-        return view('panitia.seminar-hasil.beranda-pendaftaran', compact('listTahap'));
+        $periodeAktif = $listPeriode->firstWhere('aktif_sidang_akhir', true);
+        $tahapAktif = $listTahap->firstWhere('aktif_sidang_akhir', true);
+
+        return view(
+            'panitia.seminar-hasil.beranda-pendaftaran', 
+            compact('listPeriode', 'listTahap', 'periodeAktif', 'tahapAktif')
+        );
     }
 
     public function showDetailPendaftaranPage($tahapId)
@@ -80,5 +88,46 @@ class SeminarHasilPanitiaController extends Controller
 
         // kembali ke halaman pendaftaran sempro dengan pesan sukses
         return redirect()->back()->with('success', 'Verifikasi Pendaftaran semhas berhasil diupdate');
+    }
+
+    public function bukaPendaftaran(BukaPendaftaranRequest $request)
+    {
+        $periodeId = (int) $request->periode_id;
+        $tahapId = (int) $request->tahap_id;
+
+        $periode = Periode::findOrFail($periodeId);
+        $tahap = Tahap::findOrFail($tahapId);
+
+        // Menutup Pendaftaran Periode dan Tahap sebelumnya
+        // Menonaktifkan periode dan tahap sebelumnya
+        $periodeAktifSidangTA = Periode::where('aktif_sidang_akhir', true)
+            ->update(['aktif_sidang_akhir' => false]);
+
+        $tahapAktifSidangTA = Tahap::where('aktif_sidang_akhir', true)
+            ->update(["aktif_sidang_akhir" => false]);
+
+        // Mengaktifkan Periode dan Tahap Tertentu
+        $periode->aktif_sidang_akhir = true;
+        $tahap->aktif_sidang_akhir = true;
+
+        $periode->save();
+        $tahap->save();
+
+        return back()->with([
+            'success' => "Berhasil membuka Pendaftaran Sidang Ujian Akhir Periode $periode->tahun, Tahap $tahap->tahap!"
+        ]);
+    }
+
+    public function tutupPendaftaran()
+    {
+        $periodeAktifSidangTA = Periode::where('aktif_sidang_akhir', true)
+            ->update(['aktif_sidang_akhir' => false]);
+
+        $tahapAktifSidangTA = Tahap::where('aktif_sidang_akhir', true)
+            ->update(["aktif_sidang_akhir" => false]);
+
+        return back()->with([
+            'success' => "Berhasil menutup Pendaftaran Sidang Ujian Akhir!"
+        ]);
     }
 }

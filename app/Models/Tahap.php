@@ -14,11 +14,18 @@ class Tahap extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        "tahap"
+        "tahap",
+        "aktif_sempro",
+        "aktif_sidang_akhir"
     ];
 
     public function proposals(): HasMany
     {
         return $this->hasMany(Proposal::class);
+    }
+
+    public function proposalSemhas(): HasMany
+    {
+        return $this->hasMany(Proposal::class, 'tahap_semhas_id');
     }
 }
