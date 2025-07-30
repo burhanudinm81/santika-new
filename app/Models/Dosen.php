@@ -26,7 +26,7 @@ class Dosen extends Authenticatable
         'link_google_scholar',
         'penghargaan'
     ];
-    
+
     protected $hidden = [
         'remember_token',
     ];
@@ -79,5 +79,10 @@ class Dosen extends Authenticatable
     public function proposalPengujiSempro2(): HasMany
     {
         return $this->hasMany(JadwalSeminarProposal::class, 'penguji_sempro_2_id');
+    }
+
+    public function logbooks()
+    {
+        return $this->hasMany(Logbook::class, 'dosen_id');
     }
 }

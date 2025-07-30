@@ -10,6 +10,7 @@ use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Dosen\Bimbingan\BimbinganController;
 use App\Http\Controllers\KuotaDosenController;
 use App\Http\Controllers\Dosen\PermohonanJudul\PermohonanJudulController;
+use App\Http\Controllers\Dosen\SeminarProposal\PenilaianSemproController;
 use App\Http\Controllers\Mahasiswa\Ajax\AjaxMahasiswaController;
 use App\Http\Controllers\Mahasiswa\InformasiDosen\DaftarDosenPembimbingController;
 use App\Http\Controllers\Mahasiswa\Logbook\LogbookController;
@@ -231,7 +232,7 @@ Route::middleware(["auth:mahasiswa", "auth.session", "password.changed"])->group
         Route::get('/mahasiswa/informasi-dosen/profil-dosen/{id}', 'profilDosen')->name('mahasiswa.informasi-dosen.profil-dosen');
     });
 
-    Route::controller(DaftarDosenPembimbingController::class)->group(function(){
+    Route::controller(DaftarDosenPembimbingController::class)->group(function () {
         // Route untuk menampilkan daftar dosen pembimbing
         Route::get('/mahasiswa/informasi-dosen/daftar-dosen-pembimbing', "index")->name("mahasiswa.informasi-dosen.daftar-dosen-pembimbing");
     });
@@ -286,6 +287,11 @@ Route::middleware(["auth:dosen", "auth.session", "password.changed"])->group(fun
         Route::post('/dosen/profile/update', 'updateProfile')->name('dosen.profile.update');
         Route::post('/dosen/profile/change-password', 'changePassword')->name('dosen.profile.change-password');
         Route::post('/dosen/profile/edit-image', 'updateFotoProfil')->name('dosen.profile.edit-image');
+    });
+
+        Route::controller(PenilaianSemproController::class)->group(function () {
+        Route::get('/dosen/penilaian-sempro/{proposal_id}', 'showPenilaianBaseOnMahasiswa')->name('dosen.penilaian-sempro');
+        Route::put('/dosen/penilaian-sempro/update', 'updatePenilaian')->name('dosen.penilaian-sempro.update-penilaian');
     });
 });
 

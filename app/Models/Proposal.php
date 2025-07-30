@@ -104,4 +104,9 @@ class Proposal extends Model
     {
         return $this->belongsTo(Dosen::class, 'penguji_sempro_2_id');
     }
+
+    public function logbooks()
+    {
+        return $this->hasMany(Logbook::class, 'proposal_id');
+    }
 }
