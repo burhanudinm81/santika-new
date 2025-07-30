@@ -14,19 +14,27 @@ class TahapSeeder extends Seeder
     public function run(): void
     {
         Tahap::create([
-            "tahap" => 1
+            "tahap" => 1,
+            "aktif_sempro" => false,
+            "aktif_sidang_akhir" => false
         ]);
 
         Tahap::create([
-            "tahap" => 2
+            "tahap" => 2,
+            "aktif_sempro" => false,
+            "aktif_sidang_akhir" => false
         ]);
 
         Tahap::create([
-            "tahap" => 3
+            "tahap" => 3,
+            "aktif_sempro" => false,
+            "aktif_sidang_akhir" => false
         ]);
 
         Tahap::create([
-            "tahap" => 4
+            "tahap" => 4,
+            "aktif_sempro" => false,
+            "aktif_sidang_akhir" => false
         ]);
     }
 }
