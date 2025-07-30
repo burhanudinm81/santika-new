@@ -21,6 +21,7 @@ use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\MahasiswaD3Controller;
 use App\Http\Controllers\MahasiswaD4Controller;
 use App\Http\Controllers\Panitia\Ajax\AjaxPendaftaranSemproController;
+use App\Http\Controllers\Panitia\KelolaPeriodeTahap\KelolaPeriodeTahapController;
 use App\Http\Controllers\Panitia\PlottingPembimbing\PlottingPembimbingController;
 use App\Http\Controllers\Panitia\SeminarHasil\SeminarHasilPanitiaController;
 use App\Http\Controllers\Panitia\SeminarProposal\JadwalSemproController as JadwalSemproPanitiaController;
@@ -328,6 +329,12 @@ Route::middleware(["auth:dosen", "auth.session", "password.changed", "is.panitia
         Route::get('/panitia/seminar-proposal/pendaftaran/{tahapId}/detail', 'showDetailPendaftaranPage')->name('panitia.seminar-proposal.pendaftaran-detail');
         Route::get('/panitia/seminar-proposal/pendaftaran/{pendaftaranId}/verifikasi', 'showVerifikasiPendaftaran')->name('panitia.seminar-proposal.verifikasi-daftar');
         Route::put('/panitia/seminar-proposal/pendaftaran/{pendaftaranId}/update-verifikasi', 'updateVerifikasiPendaftaran')->name('panitia.seminar-proposal.update-verifikasi');
+
+        // Route untuk membuka pendaftaran seminar proposal
+        Route::post('/panitia/seminar-proposal/buka-pendaftaran', 'bukaPendaftaran')->name('panitia.seminar-proposal.buka-pendaftaran');
+
+        // Route untuk menutup pendaftaran seminar proposal
+        Route::get("/panitia/seminar-proposal/tutup-pendaftaran", "tutupPendaftaran")->name('panitia.seminar-proposal.tutup-pendaftaran');
     });
 
     Route::controller(SeminarHasilPanitiaController::class)->group(function () {
@@ -335,6 +342,12 @@ Route::middleware(["auth:dosen", "auth.session", "password.changed", "is.panitia
         Route::get('/panitia/seminar-hasil/pendaftaran/{tahapId}/detail', 'showDetailPendaftaranPage')->name('panitia.seminar-hasil.pendaftaran-detail');
         Route::get('/panitia/seminar-hasil/pendaftaran/{pendaftaranId}/verifikasi', 'showVerifikasiPendaftaran')->name('panitia.seminar-hasil.verifikasi-daftar');
         Route::put('/panitia/seminar-hasil/pendaftaran/{pendaftaranId}/update-verifikasi', 'updateVerifikasiPendaftaran')->name('panitia.seminar-hasil.update-verifikasi');
+
+        // Route unutk membuka pendaftaran sidang ujian akhir
+        Route::post('/panitia/seminar-hasil/buka-pendaftaran', 'bukaPendaftaran')->name('panitia.seminar-hasil.buka-pendaftaran');
+
+        // Route untuk menutup pendaftaran sidang ujian akhir
+        Route::get("/panitia/seminar-hasil/tutup-pendaftaran", "tutupPendaftaran")->name('panitia.seminar-hasil.tutup-pendaftaran');
     });
 
     Route::controller(AjaxPendaftaranSemproController::class)->group(function () {
@@ -407,4 +420,14 @@ Route::middleware(["auth:dosen", "auth.session", "password.changed", "is.panitia
         // Route untuk mengedit pembimbing
         Route::post('/panitia/plotting-pembimbing/update', 'update')->name('panitia.plotting-pembimbing.update');
     });
+
+    Route::controller(KelolaPeriodeTahapController::class)
+        ->prefix('/panitia/kelola-periode-tahap')
+        ->name('panitia.kelola-periode-tahap.')
+        ->group(function(){
+            // Route untuk tambah tahap baru
+            Route::get("/tambah-tahap", "tambahTahap")->name('tambah-tahap');
+            // Route untuk tambah period
+            Route::post('/tambah-periode', 'tambahPeriode')->name('tambah-periode');
+        });
 });

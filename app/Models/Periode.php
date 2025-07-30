@@ -14,7 +14,9 @@ class Periode extends Model
     public $timestamps = false;
 
     protected $fillable = [
-        "tahun"
+        "tahun",
+        "aktif_sempro",
+        "aktif_sidang_akhir"
     ];
 
     public function mahasiswa(): HasMany
@@ -25,5 +27,10 @@ class Periode extends Model
     public function proposals(): HasMany
     {
         return $this->hasMany(Proposal::class);
+    }
+
+    public function proposalSemhas(): HasMany
+    {
+        return $this->hasMany(Proposal::class, 'periode_semhas_id');
     }
 }

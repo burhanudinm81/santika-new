@@ -7,8 +7,10 @@ use App\Http\Requests\StorePendaftaranSemhasRequest;
 use App\Models\BidangMinat;
 use App\Models\LogBook;
 use App\Models\PendaftaranSemhas;
+use App\Models\Periode;
 use App\Models\Proposal;
 use App\Models\ProposalDosenMahasiswa;
+use App\Models\Tahap;
 use Illuminate\Http\Request;
 
 class SeminarHasilController extends Controller
@@ -22,7 +24,7 @@ class SeminarHasilController extends Controller
         $infoPendaftaranSemhas = null;
         $countLogbookDospem1 = 0;
         $countLogbookDospem2 = 0;
-
+        $isPendaftaranClose = false;
 
         $infoProposal = Proposal::with(['proposalMahasiswas', 'dosenPembimbing1', 'dosenPembimbing2', 'bidangMinat'])
         ->whereRelation('proposalMahasiswas', 'mahasiswa_id', auth('mahasiswa')->user()->id)
@@ -47,6 +49,10 @@ class SeminarHasilController extends Controller
                 ->get();
         }
 
+        $periodeAktif = Periode::where('aktif_sidang_akhir', true)->exists();
+        $tahapAktif = Tahap::where('aktif_sidang_akhir', true)->exists();
+        $isPendaftaranClose = !($periodeAktif && $tahapAktif);
+
         return view('mahasiswa.seminar-hasil.daftar-semhas', compact([
             'infoProposal',
             'infoMahasiswaAll',
@@ -54,6 +60,7 @@ class SeminarHasilController extends Controller
             'infoDospem2',
             'infoBidangMinat',
             'infoPendaftaranSemhas',
+            'isPendaftaranClose'
         ]));
     }
 
@@ -140,8 +147,13 @@ class SeminarHasilController extends Controller
             'status_file_skla' => false,
         ]);
 
+        $periodeAktif = Periode::firstWhere('aktif_sidang_akhir', true);
+        $tahapAktif = Tahap::firstWhere('aktif_sidang_akhir', true);
+
         $infoProposal->update([
             'pendaftaran_semhas_id' => $newPendaftaranSemhas->id,
+            'periode_semhas_id' => $periodeAktif->id,
+            'tahap_semhas_id' => $tahapAktif->id
         ]);
 
         return redirect()->back()->with('success', 'Pendaftaran Semhas Berhasil Dibuat');
