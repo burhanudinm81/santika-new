@@ -92,6 +92,7 @@ class Proposal extends Model
     {
         return $this->belongsTo(Dosen::class, 'dosen_pembimbing_1_id');
     }
+
     public function dosenPembimbing2(): BelongsTo
     {
         return $this->belongsTo(Dosen::class, 'dosen_pembimbing_2_id');
@@ -100,9 +101,26 @@ class Proposal extends Model
     {
         return $this->belongsTo(Dosen::class, 'penguji_sempro_1_id');
     }
+
     public function dosenPengujiSempro2(): BelongsTo
     {
         return $this->belongsTo(Dosen::class, 'penguji_sempro_2_id');
+    }
+
+    public function statusSemproPenguji1()
+    {
+        return $this->belongsTo(StatusProposal::class, 'status_sempro_penguji_1_id');
+    }
+
+
+    public function statusSemproPenguji2()
+    {
+        return $this->belongsTo(StatusProposal::class, 'status_sempro_penguji_2_id');
+    }
+
+    public function statusSemproTotal()
+    {
+        return $this->belongsTo(StatusProposal::class, 'status_sempro_proposal_id');
     }
 
     public function logbooks()

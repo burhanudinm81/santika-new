@@ -9,4 +9,19 @@ class StatusProposal extends Model
 {
     protected $table = "status_proposal";
     protected $guarded = ["id"];
+
+    public function proposals()
+    {
+        return $this->hasMany(Proposal::class);
+    }
+
+    public function statusSemproPenguji1()
+    {
+        return $this->hasMany(Proposal::class);
+    }
+
+    public function statusSemproPenguji2()
+    {
+        return $this->hasMany(Proposal::class);
+    }
 }
