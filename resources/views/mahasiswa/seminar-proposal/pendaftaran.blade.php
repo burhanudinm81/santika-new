@@ -30,9 +30,14 @@
                 @include('notifications.success-alert', ['message' => session('success')])
             @endif
             <div class="col-md-15">
-                @if ($isPendingProposal)
+                @if ($isPendaftaranClose)
+                    <div class="alert alert-danger" role="alert">
+                        <h4 class="alert-heading"><strong>Maaf, anda belum bisa mendaftar Seminar Proposal</strong></h4>
+                        <p>Pendaftaran Seminar Proposal Belum Dibuka</p>
+                    </div>
+                @elseif ($isPendingProposal)
                     <div class="alert alert-warning" role="alert">
-                        <h4 class="alert-heading"><strong>Maaf, anda belum bisa mendaftar seminar proposal</strong></h4>
+                        <h4 class="alert-heading"><strong>Maaf, anda belum bisa mendaftar Seminar Proposal</strong></h4>
                         <p>Anda memiliki proposal yang masih belum dikonfirmasi dosen YBS</p>
                     </div>
                 @elseif($isPendingPendaftaran != 0)

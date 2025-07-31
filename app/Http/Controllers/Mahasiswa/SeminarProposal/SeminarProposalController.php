@@ -6,8 +6,10 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePendaftaranSemproRequest;
 use App\Models\Mahasiswa;
 use App\Models\PendaftaranSeminarProposal;
+use App\Models\Periode;
 use App\Models\Proposal;
 use App\Models\ProposalDosenMahasiswa;
+use App\Models\Tahap;
 use App\Models\Revisi;
 use Illuminate\Http\Request;
 
@@ -15,6 +17,7 @@ class SeminarProposalController extends Controller
 {
     public function showPendaftaranPage()
     {
+        $isPendaftaranClose = false;
         $isPendingProposal = false;
         $isPendingPendaftaran = 0;
 
@@ -47,7 +50,11 @@ class SeminarProposalController extends Controller
                 ->first();
         }
 
-        return view('mahasiswa.seminar-proposal.pendaftaran', compact(['isPendingProposal', 'isPendingPendaftaran', 'acceptedProposalMahasiswa1', 'acceptedProposalMahasiswa2']));
+        $periodeAktif = Periode::where('aktif_sempro', true)->exists();
+        $tahapAktif = Tahap::where('aktif_sempro', true)->exists();
+        $isPendaftaranClose = !($periodeAktif && $tahapAktif);
+
+        return view('mahasiswa.seminar-proposal.pendaftaran', compact(['isPendaftaranClose', 'isPendingProposal', 'isPendingPendaftaran', 'acceptedProposalMahasiswa1', 'acceptedProposalMahasiswa2']));
     }
 
     public function storePendaftaran(StorePendaftaranSemproRequest $request)
@@ -107,11 +114,14 @@ class SeminarProposalController extends Controller
             'status_bukti_cek_plagiasi' => false,
         ]);
 
+        $periodeAktif = Periode::firstWhere('aktif_sempro', true);
+        $tahapAktif = Tahap::firstWhere('aktif_sempro', true);
+
         $infoProposal->update([
             'pendaftaran_sempro_id' => $newPendaftaranSempro->id,
-            'tahap_id' => 1
+            'periode_id' => $periodeAktif->id,
+            'tahap_id' => $tahapAktif->id
         ]);
-
 
         return redirect()->back()->with('success', 'Pendaftaran Sempro Berhasil Dibuat');
     }

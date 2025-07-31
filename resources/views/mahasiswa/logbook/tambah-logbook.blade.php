@@ -39,7 +39,6 @@
                         <form action="{{ route('mahasiswa.logbook.store') }}" method="POST">
                             @csrf
                             @method('POST')
-
                             {{-- hidden input --}}
                             <input type="hidden" name="mahasiswaId" value="{{ auth('mahasiswa')->user()->id }}">
                             <input type="hidden" name="statusVerifKegiatan" value="0" class="form-control"

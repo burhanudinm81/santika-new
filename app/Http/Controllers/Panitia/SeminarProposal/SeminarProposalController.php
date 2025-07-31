@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Panitia\SeminarProposal;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\BukaPendaftaranRequest;
 use App\Models\Panitia;
 use App\Models\PendaftaranSeminarProposal;
 use App\Models\Periode;
@@ -15,11 +16,15 @@ class SeminarProposalController extends Controller
 {
     public function showBerandaPendaftaranPage()
     {
-        // ambil semua data tahap
+        // ambil semua data tahap dan periode
+        $listPeriode = Periode::all();
         $listTahap = Tahap::all();
 
+        $periodeAktif = $listPeriode->firstWhere('aktif_sempro', true);
+        $tahapAktif = $listTahap->firstWhere('aktif_sempro', true);
+
         // menampilkan halaman beranda pendaftaran sempro
-        return view('panitia.seminar-proposal.beranda-pendaftaran', compact('listTahap'));
+        return view('panitia.seminar-proposal.beranda-pendaftaran', compact('listPeriode', 'listTahap', 'periodeAktif', 'tahapAktif'));
     }
 
     public function showDetailPendaftaranPage($tahapId)
@@ -134,5 +139,46 @@ class SeminarProposalController extends Controller
         }
 
         return redirect()->back()->with('success', 'Status Revisi Berhasil Diupdate');
+    }
+    
+    public function bukaPendaftaran(BukaPendaftaranRequest $request)
+    {
+        $periodeId = (int) $request->periode_id;
+        $tahapId = (int) $request->tahap_id;
+
+        $periode = Periode::findOrFail($periodeId);
+        $tahap = Tahap::findOrFail($tahapId);
+
+        // Menutup Pendaftaran Periode dan Tahap sebelumnya
+        // Menonaktifkan periode dan tahap sebelumnya
+        $periodeAktifSempro = Periode::where('aktif_sempro', true)
+            ->update(['aktif_sempro' => false]);
+
+        $tahapAktifSempro = Tahap::where('aktif_sempro', true)
+            ->update(["aktif_sempro" => false]);
+
+        // Mengaktifkan Periode dan Tahap Tertentu
+        $periode->aktif_sempro = true;
+        $tahap->aktif_sempro = true;
+
+        $periode->save();
+        $tahap->save();
+
+        return back()->with([
+            'success' => "Berhasil membuka Pendaftaran Seminar Proposal Periode $periode->tahun, Tahap $tahap->tahap!"
+        ]);
+    }
+
+    public function tutupPendaftaran()
+    {
+        $periodeAktifSempro = Periode::where('aktif_sempro', true)
+            ->update(['aktif_sempro' => false]);
+
+        $tahapAktifSempro = Tahap::where('aktif_sempro', true)
+            ->update(["aktif_sempro" => false]);
+
+        return back()->with([
+            'success' => "Berhasil menutup Pendaftaran Seminar Proposal"
+        ]);
     }
 }
