@@ -1,5 +1,13 @@
 $(document).ready(function () {
 
+    // fungsi debounce
+    function debounce(func, delay) {
+        let timeout;
+        return function (...args) {
+            clearTimeout(timeout);
+            timeout = setTimeout(() => func.apply(this, args), delay);
+        }
+    }
 
     const $inputMahasiswa2 = $('#custom-select-mahasiswa2');
     const $dropdownMahasiswa2 = $('#dropdown-mahasiswa2');
@@ -41,10 +49,10 @@ $(document).ready(function () {
         fetchMahasiswa2();
     });
     // Saat mengetik
-    $inputMahasiswa2.on('input', function () {
+    $inputMahasiswa2.on('input', debounce(function () {
         const q = $(this).val();
         fetchMahasiswa2(q);
-    });
+    }, 500));
     // Klik pada hasil dropdown
     $dropdownMahasiswa2.on('click', 'li', function () {
         const nama = $(this).text();
@@ -103,10 +111,10 @@ $(document).ready(function () {
         fetchCalonDosen();
     });
     // Saat mengetik
-    $inputCalonDosen.on('input', function () {
+    $inputCalonDosen.on('input', debounce(function () {
         const q = $(this).val();
         fetchCalonDosen(q);
-    });
+    }, 300));
     // Klik pada hasil dropdown
     $dropdownCalonDosen.on('click', 'li', function () {
         const nama = $(this).text();

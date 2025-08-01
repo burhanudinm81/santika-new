@@ -73,7 +73,7 @@
                                                 <td>{{ $jadwal->proposal->dosenPembimbing1->nama }}</td>
                                                 <td>{{ $jadwal->proposal->dosenPengujiSempro1->nama }}</td>
                                                 <td>{{ $jadwal->proposal->dosenPengujiSempro2->nama }}</td>
-                                                <td><a href="#" class="btn btn-primary" style="width: 150px">Input Nilai</a></td>
+                                                <td><a href="{{ route('dosen.penilaian-sempro', ['proposal_id' => $jadwal->proposal_id]) }}" class="btn btn-primary" style="width: 150px">Input Nilai</a></td>
                                             </tr>
                                             @endforeach
                                         @endif
@@ -116,7 +116,7 @@
                                                 <td>{{ $jadwal->proposal->dosenPembimbing1->nama }}</td>
                                                 <td>{{ $jadwal->proposal->dosenPengujiSempro1->nama }}</td>
                                                 <td>{{ $jadwal->proposal->dosenPengujiSempro2->nama }}</td>
-                                                <td><a href="#" class="btn btn-primary" style="width: 150px">Input Nilai</a></td>
+                                                <td><a href="{{ route('dosen.penilaian-sempro') }}" class="btn btn-primary" style="width: 150px">Input Nilai</a></td>
                                             </tr>
                                             @endforeach
                                         @endif

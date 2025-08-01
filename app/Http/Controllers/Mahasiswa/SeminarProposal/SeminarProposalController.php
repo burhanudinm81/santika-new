@@ -4,11 +4,13 @@ namespace App\Http\Controllers\Mahasiswa\SeminarProposal;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePendaftaranSemproRequest;
+use App\Models\Mahasiswa;
 use App\Models\PendaftaranSeminarProposal;
 use App\Models\Periode;
 use App\Models\Proposal;
 use App\Models\ProposalDosenMahasiswa;
 use App\Models\Tahap;
+use App\Models\Revisi;
 use Illuminate\Http\Request;
 
 class SeminarProposalController extends Controller
@@ -122,5 +124,90 @@ class SeminarProposalController extends Controller
         ]);
 
         return redirect()->back()->with('success', 'Pendaftaran Sempro Berhasil Dibuat');
+    }
+
+    public function showHasilSempro()
+    {
+        $proposalInfo = ProposalDosenMahasiswa::with('proposal', 'mahasiswa')
+            ->where('mahasiswa_id', auth('mahasiswa')->user()->id)
+            ->where('status_proposal_mahasiswa_id', 1)
+            ->first();
+
+        $mainProposalInfo = Proposal::with(['dosenPengujiSempro1', 'dosenPengujiSempro1', 'statusSemproPenguji1', 'statusSemproPenguji2'])
+            ->where('id', $proposalInfo->proposal_id)
+            ->first();
+
+        $revisiDosen1 = Revisi::where('proposal_id', $mainProposalInfo->id)
+            ->where('dosen_id', $mainProposalInfo->dosenPengujiSempro1->id)
+            ->first();
+
+        $revisiDosen2 = Revisi::where('proposal_id', $mainProposalInfo->id)
+            ->where('dosen_id', $mainProposalInfo->dosenPengujiSempro2->id)
+            ->first();
+
+        return view('mahasiswa.seminar-proposal.hasil-sempro', compact(['proposalInfo', 'mainProposalInfo', 'revisiDosen1', 'revisiDosen2']));
+    }
+
+    public function showUploadRevisi()
+    {
+        $proposalInfo = ProposalDosenMahasiswa::with('proposal', 'mahasiswa')
+            ->where('mahasiswa_id', auth('mahasiswa')->user()->id)
+            ->where('status_proposal_mahasiswa_id', 1)
+            ->first();
+
+        $mainProposalInfo = Proposal::with(['dosenPengujiSempro1', 'dosenPengujiSempro1', 'statusSemproPenguji1', 'statusSemproPenguji2'])
+            ->where('id', $proposalInfo->proposal_id)
+            ->first();
+
+        return view('mahasiswa.seminar-proposal.upload-revisi', compact('mainProposalInfo'));
+    }
+
+    public function storeUploadRevisi(Request $request)
+    {
+        $penguji1ID = $request->input('penguji_1_id');
+        $penguji2ID = $request->input('penguji_2_id');
+        $proposalID = $request->input('proposal_id');
+        $fileLembarRevisiPenguji1 = $request->file('lembar_revisi_penguji_1');
+        $fileLembarRevisiPenguji2 = $request->file('lembar_revisi_penguji_2');
+        $fileProposalRevisi = $request->file('proposal_revisi');
+
+        // rename file
+        $nameLembarRevisi1 = uniqid() . '.' . $fileLembarRevisiPenguji1->getClientOriginalExtension();
+        $nameLembarRevisi2 = uniqid() . '.' . $fileLembarRevisiPenguji2->getClientOriginalExtension();
+        $nameProposalRevisi = uniqid() . '.' . $fileProposalRevisi->getClientOriginalExtension();
+
+        $pathProposalRevisi = $fileProposalRevisi->storeAs(
+            'seminar-proposal/revisi/proposal',
+            $nameProposalRevisi,
+            'local'
+        );
+        $pathLembarRevisi1 = $fileLembarRevisiPenguji1->storeAs(
+            'seminar-proposal/revisi/lembar-revisi-penguji-1',
+            $nameLembarRevisi1,
+            'local'
+        );
+        $pathLembarRevisi2 = $fileLembarRevisiPenguji2->storeAs(
+            'seminar-proposal/revisi/lembar-revisi-penguji-2',
+            $nameLembarRevisi2,
+            'local'
+        );
+
+        $revisi1 = Revisi::where('proposal_id', $proposalID)
+            ->where('dosen_id', $penguji1ID)
+            ->first();
+        $revisi2 = Revisi::where('proposal_id', $proposalID)
+            ->where('dosen_id', $penguji2ID)
+            ->first();
+
+        $revisi1->update([
+            'file_proposal_revisi' => $pathProposalRevisi,
+            'file_lembar_revisi_dosen' => $pathLembarRevisi1
+        ]);
+        $revisi2->update([
+            'file_proposal_revisi' => $pathProposalRevisi,
+            'file_lembar_revisi_dosen' => $pathLembarRevisi2
+        ]);
+
+        return redirect()->back()->with('success', 'Revisi Berhasil Diupload');
     }
 }
