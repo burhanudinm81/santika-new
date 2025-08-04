@@ -31,13 +31,6 @@
                                     </div>
                                 </div>
                             </div>
-                            <!-- Tombol Buka Pendaftaran (Hijau) -->
-                            <button class="btn btn-success btn-sm ml-2" onclick="alert('Pendaftaran dibuka!')">Buka
-                                Pendaftaran</button>
-
-                            <!-- Tombol Tutup Pendaftaran (Merah) -->
-                            <button class="btn btn-danger btn-sm ml-2" onclick="alert('Pendaftaran ditutup!')">Tutup
-                                Pendaftaran</button>
                         </div>
                         <!-- /.card-header -->
 

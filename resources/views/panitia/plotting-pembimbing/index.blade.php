@@ -11,6 +11,16 @@
         </div>
     </div>
 
+    @if ($errors->any())
+        <div class="alert alert-danger">
+            <ul>
+                @foreach ($errors->all() as $error)
+                    <li>{{ $error }}</li>
+                @endforeach
+            </ul>
+        </div>
+    @endif
+
     <div class="content">
         <div class="container-fluid">
             <div class="row">
@@ -161,7 +171,7 @@
                 <div class="modal-body">
                     <form id="edit-pembimbing-form-d3" action="{{ route('panitia.plotting-pembimbing.update') }}" method="POST">
                         @csrf
-                        <input type="hidden" name="prodi_id" value="2">
+                        <input type="hidden" name="prodi_id" value="1">
                         <input type="hidden" name="proposal_id">
                         <!-- Menambahkan Nama Mahasiswa yang Read-Only -->
                         <div class="form-group">

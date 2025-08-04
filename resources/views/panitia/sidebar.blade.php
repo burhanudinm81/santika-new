@@ -113,7 +113,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="ta4.php" class="nav-link">
+                            <a href="{{ route('panitia.jadwal-sidang-akhir.index') }}" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Jadwal</p>
                             </a>

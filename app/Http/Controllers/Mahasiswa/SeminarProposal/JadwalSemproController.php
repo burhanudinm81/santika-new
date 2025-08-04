@@ -17,6 +17,7 @@ class JadwalSemproController extends Controller
             ->value('proposal_id');
 
         $jadwalSeminarProposal = JadwalSeminarProposal::where('proposal_id', $proposalId)
+            ->with('proposal.dosenPembimbing1')
             ->first();
 
         return view("mahasiswa.seminar-proposal.jadwal", compact('jadwalSeminarProposal'));
