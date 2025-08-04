@@ -107,7 +107,7 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="jadwalsidangakhir.php" class="nav-link">
+                            <a href="{{ route('dosen.seminar-hasil.beranda-jadwal') }}" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Jadwal Sidang</p>
                             </a>

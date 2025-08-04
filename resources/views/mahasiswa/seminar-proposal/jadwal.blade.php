@@ -1,27 +1,21 @@
 @extends("mahasiswa.home")
 
 @section("content")
-    <!-- Content Header (Page header) -->
     <div class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
                     <h1 class="m-0">Jadwal Seminar Proposal</h1>
-                </div><!-- /.col -->
-            </div><!-- /.row -->
-        </div><!-- /.container-fluid -->
+                </div>
+            </div>
+        </div>
     </div>
-    <!-- /.content-header -->
-
-    <!-- Main content -->
     <div class="content">
         <div class="container-fluid">
             <div class="col-md-15">
 
                 <div class="card card-primary card-outline mb-4">
-                    <!--begin::Form-->
                     <form>
-                        <!--begin::Body-->
                         <div class="card-body">
                             @if (is_null($jadwalSeminarProposal))
                                 <div class="mb-3">
@@ -50,21 +44,14 @@
                                 </div>
                                 <div class="mb-3">
                                     <label for="Moderator" class="form-label">Moderator</label>
-                                    <input type="text" class="form-control" id="Moderator" value="Moderator"
+                                    <input type="text" class="form-control" id="Moderator" value="{{ $jadwalSeminarProposal->proposal->dosenPembimbing1->nama ?? '-' }}"
                                         aria-describedby="Moderator" aria-label="readonly input example" readonly>
                                 </div>
                             @endif
                         </div>
-                        <!--end::Body-->
-                        <!--begin::Footer-->
-                        <!--end::Footer-->
                     </form>
-                    <!--end::Form-->
                 </div>
-
-            </div><!-- /.container-fluid -->
+            </div>
         </div>
-        <!-- /.content -->
     </div>
-    <!-- /.content-wrapper -->
 @endsection

@@ -73,12 +73,22 @@ class Dosen extends Authenticatable
 
     public function proposalPengujiSempro1(): HasMany
     {
-        return $this->hasMany(JadwalSeminarProposal::class, 'penguji_sempro_1_id');
+        return $this->hasMany(Proposal::class, 'penguji_sempro_1_id');
     }
 
     public function proposalPengujiSempro2(): HasMany
     {
-        return $this->hasMany(JadwalSeminarProposal::class, 'penguji_sempro_2_id');
+        return $this->hasMany(Proposal::class, 'penguji_sempro_2_id');
+    }
+
+    public function proposalPengujiSidangTA1(): HasMany
+    {
+        return $this->hasMany(Proposal::class, 'penguji_sidang_ta_1_id');
+    }
+
+    public function proposalPengujiSidangTA2(): HasMany
+    {
+        return $this->hasMany(Proposal::class, 'penguji_sidang_ta_2_id');
     }
 
     public function logbooks()

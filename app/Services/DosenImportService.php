@@ -63,7 +63,19 @@ class DosenImportService
                 $dataKuotaToInsert = [];
                 foreach ($newDosens as $dosen) {
                     $dataKuotaToInsert[] = [
-                        'dosen_id' => $dosen->id
+                        'dosen_id' => $dosen->id,
+                        'kuota_pembimbing_1_D3' => 5,
+                        'kuota_pembimbing_2_D3' => 8,
+                        'kuota_penguji_sempro_1_D3' => 8,
+                        'kuota_penguji_sempro_2_D3' => 8,
+                        'kuota_penguji_sidang_TA_1_D3' => 8,
+                        'kuota_penguji_sidang_TA_2_D3' => 8,
+                        'kuota_pembimbing_1_D4' => 5,
+                        'kuota_pembimbing_2_D4' => 8,
+                        'kuota_penguji_sempro_1_D4' => 8,
+                        'kuota_penguji_sempro_2_D4' => 8,
+                        'kuota_penguji_sidang_TA_1_D4' => 8,
+                        'kuota_penguji_sidang_TA_2_D4' => 8
                     ];
                 }
 

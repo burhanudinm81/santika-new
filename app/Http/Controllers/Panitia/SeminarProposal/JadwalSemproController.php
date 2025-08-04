@@ -82,6 +82,9 @@ class JadwalSemproController extends Controller
         $tanggals = $request->tanggal;
         $sesis = $request->sesi;
 
+        $tahapId = $request->integer("tahap_id");
+        $periodeId = $request->integer("periode_id");
+
         $jumlahProposal = count($proposals);
         $jumlahRuang = count($ruangs);
         $jumlahTanggal = count($tanggals);
@@ -104,6 +107,18 @@ class JadwalSemproController extends Controller
         $waktuBerhalangan = [];
         if ($request->has('waktu_berhalangan_dosen') && $request->waktu_berhalangan_dosen) {
             $waktuBerhalangan = $request->input('waktu_berhalangan', []);
+        }
+
+        // Hapus Jadwal Sempro yang lama jika ada
+        $jadwalSemproLama = JadwalSeminarProposal::whereHas('proposal', function($query) use ($tahapId, $periodeId){
+            $query->where('tahap_id', $tahapId)
+                ->where('periode_id', $periodeId);
+        })->get();
+
+        if($jadwalSemproLama->isNotEmpty()){
+            $jadwalSemproLama->each(function ($jadwal) {
+                $jadwal->delete();
+            });
         }
 
         $scheduler = new SemproSchedulerService();
