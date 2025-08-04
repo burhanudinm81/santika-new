@@ -89,7 +89,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="sempro6.php" class="nav-link">
+                            <a href="{{ route('panitia.seminar-proposal.tahap-rekap-nilai') }}" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Rekap Nilai</p>
                             </a>

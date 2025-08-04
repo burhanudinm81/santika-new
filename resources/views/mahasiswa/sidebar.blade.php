@@ -122,13 +122,13 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a href="{{ route('mahasiswa.seminar-proposal.hasil-sempro') }}" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Pengumuman Sempro</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a href="{{ route('mahasiswa.seminar-proposal.revisi') }}" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Revisi Sempro</p>
                             </a>
