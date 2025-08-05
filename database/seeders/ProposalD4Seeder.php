@@ -75,7 +75,7 @@ class ProposalD4Seeder extends Seeder
 
             Proposal::create([
                 'id' => $id,
-                'prodi_id' => 1,
+                'prodi_id' => 2,
                 'periode_id' => 1,
                 'bidang_minat_id' => $bidang_minat_id,
                 'jenis_judul_id' => $jenis_judul_id,

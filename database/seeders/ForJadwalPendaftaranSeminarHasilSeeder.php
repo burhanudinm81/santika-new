@@ -16,6 +16,10 @@ class ForJadwalPendaftaranSeminarHasilSeeder extends Seeder
     {
         Proposal::all()->each(function ($proposal) {
             if ($proposal->id <= 216) {
+                // Mengisi periode_semhas_id dan tahap_semhas_id
+                $proposal->periode_semhas_id = $proposal->periode_id;
+                $proposal->tahap_semhas_id = $proposal->tahap_id;
+
                 // Cari dosen pembimbing 2 yang bidang minatnya sama dengan proposal
                 $dosenPembimbing2 = DosenBidangMinat::where('bidang_minat_id', $proposal->bidang_minat_id)
                     ->where('dosen_id', '!=', $proposal->dosen_pembimbing_1_id)
@@ -23,8 +27,12 @@ class ForJadwalPendaftaranSeminarHasilSeeder extends Seeder
                     ->first();
                 if ($dosenPembimbing2) {
                     $proposal->dosen_pembimbing_2_id = $dosenPembimbing2->dosen_id;
-                    $proposal->save();
                 }
+
+                // Simpan perubahan pada proposal
+                $proposal->save();
+
+                // Buat pendaftaran seminar hasil
                 $proposal->pendaftaranSemhas()->create([
                     'status_daftar_semhas_id' => 1,
                     'file_rekom_dospem' => fake()->sentence(),

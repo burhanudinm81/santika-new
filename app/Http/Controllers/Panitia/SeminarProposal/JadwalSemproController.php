@@ -42,6 +42,9 @@ class JadwalSemproController extends Controller
             ->unique(function ($item) {
                 return $item['tahap_id'] . '-' . $item['periode_id'];
             })
+            ->sortBy(function($item) {
+                return $item['tahap_id'] . '-' . $item['periode_id'];
+            })
             ->values();
 
         $prodi = Prodi::findOrFail($prodiPanita);
@@ -101,8 +104,6 @@ class JadwalSemproController extends Controller
             ];
         })->toArray();
 
-        // Log::info('Proposal: ' . json_encode($proposals, JSON_PRETTY_PRINT));
-
         // Ambil input waktu berhalangan dosen jika ada
         $waktuBerhalangan = [];
         if ($request->has('waktu_berhalangan_dosen') && $request->waktu_berhalangan_dosen) {
@@ -110,16 +111,11 @@ class JadwalSemproController extends Controller
         }
 
         // Hapus Jadwal Sempro yang lama jika ada
-        $jadwalSemproLama = JadwalSeminarProposal::whereHas('proposal', function($query) use ($tahapId, $periodeId){
+        $jadwalSemproLama = JadwalSeminarProposal::whereHas('proposal', function($query) use ($tahapId, $periodeId, $prodiPanitia){
             $query->where('tahap_id', $tahapId)
-                ->where('periode_id', $periodeId);
-        })->get();
-
-        if($jadwalSemproLama->isNotEmpty()){
-            $jadwalSemproLama->each(function ($jadwal) {
-                $jadwal->delete();
-            });
-        }
+                ->where('periode_id', $periodeId)
+                ->where('prodi_id', $prodiPanitia);
+        })->delete();
 
         $scheduler = new SemproSchedulerService();
         $jadwal = $scheduler->generate($proposals, $ruangs, $tanggals, $sesis, $dosenKuota, $waktuBerhalangan);
@@ -267,7 +263,7 @@ class JadwalSemproController extends Controller
         $listDosenPenguji1 = Dosen::whereHas('kuotaDosen', function($query) use ($prodiPanitia){
             if($prodiPanitia == 1){
                 $query->where("kuota_penguji_sempro_1_D3", ">", 0);
-            } else if($prodiPanitia == 1){
+            } else if($prodiPanitia == 2){
                 $query->where("kuota_penguji_sempro_1_D4", ">", 0);
             }
         })->get();
@@ -275,13 +271,13 @@ class JadwalSemproController extends Controller
         $listDosenPenguji2 = Dosen::whereHas('kuotaDosen', function($query) use ($prodiPanitia){
             if($prodiPanitia == 1){
                 $query->where("kuota_penguji_sempro_2_D3", ">", 0);
-            } else if($prodiPanitia == 1){
+            } else if($prodiPanitia == 2){
                 $query->where("kuota_penguji_sempro_2_D4", ">", 0);
             }
         })->get();
 
-        $listProposal = Proposal::whereHas('proposalMahasiswas', function ($query) {
-            $query->where("status_proposal_mahasiswa_id", 1);
+        $listProposal = Proposal::whereHas('pendaftaranSempro', function ($query) {
+            $query->where("status_daftar_sempro_id", 1);
         })
             ->where("periode_id", $periode)
             ->where("tahap_id", $tahap)
@@ -342,6 +338,17 @@ class JadwalSemproController extends Controller
         
         $prodiPanitia = Panitia::firstWhere('dosen_id', auth("dosen")->id())->prodi_id;
         $rowCount = count($listProposalId);
+
+        $proposal = Proposal::findOrFail($listProposalId[0]);
+        $periodeId = $proposal->periode_id;
+        $tahapId = $proposal->tahap_id;
+
+        // Menghapus Jadwal Sempro Lama jika ada
+        $jadwalSemhasLama = JadwalSeminarProposal::whereHas('proposal', function($query) use ($periodeId, $tahapId, $prodiPanitia) {
+            $query->where('periode_id', $periodeId)
+                ->where('tahap_id', $tahapId)
+                ->where('prodi_id', $prodiPanitia);
+        })->delete();
         
         for($i = 0; $i < $rowCount; $i++){
             JadwalSeminarProposal::create([
@@ -380,11 +387,11 @@ class JadwalSemproController extends Controller
             else if($prodiPanitia == 2)
                 $kuotaDosenPenguji2->kuota_penguji_sempro_2_D4--;
 
-            $kuotaDosenPenguji1->save();
+            $kuotaDosenPenguji2->save();
         }
 
         return redirect()
             ->route('jadwal-sempro.index')
-            ->with('success', 'Jadwal seminar proposal berhasil dibuat!');
+            ->with('success', 'Jadwal Seminar Proposal berhasil dibuat!');
     }
 }

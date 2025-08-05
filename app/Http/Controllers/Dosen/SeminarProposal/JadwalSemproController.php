@@ -18,13 +18,13 @@ class JadwalSemproController extends Controller
         return view("dosen.seminar-proposal.beranda-jadwal", compact('listTahap'));
     }
 
-    public function showJadwalPage(Request $request, int $tahapId): View
+    public function showJadwalPage(Request $request, int $tahapId, ?int $periodeId = 1): View
     {
         $tahap = Tahap::findOrFail($tahapId);
         $listPeriode = Periode::all();
         $idDosen = auth("dosen")->id();
 
-        $jadwalSeminarProposalD3 = JadwalSeminarProposal::whereHas('proposal', function ($query) use ($idDosen, $tahapId) {
+        $jadwalSeminarProposalD3 = JadwalSeminarProposal::whereHas('proposal', function ($query) use ($idDosen, $tahapId, $periodeId) {
             $query->where(function($q) use ($idDosen) {
                 $q->where('dosen_pembimbing_1_id', $idDosen)
                     ->orWhere('penguji_sempro_1_id', $idDosen)
@@ -33,12 +33,12 @@ class JadwalSemproController extends Controller
             })
                 ->where('prodi_id', 1)
                 ->where('tahap_id', $tahapId)
-                ->where('periode_id', 1);
+                ->where('periode_id', $periodeId);
         })
             ->with('proposal.proposalMahasiswas')
             ->get();
 
-        $jadwalSeminarProposalD4 = JadwalSeminarProposal::whereHas('proposal', function ($query) use ($idDosen, $tahapId) {
+        $jadwalSeminarProposalD4 = JadwalSeminarProposal::whereHas('proposal', function ($query) use ($idDosen, $tahapId, $periodeId) {
             $query->where(function($q) use ($idDosen) {
                 $q->where('dosen_pembimbing_1_id', $idDosen)
                     ->orWhere('penguji_sempro_1_id', $idDosen)
@@ -47,14 +47,14 @@ class JadwalSemproController extends Controller
             })
                 ->where('prodi_id', 2)
                 ->where('tahap_id', $tahapId)
-                ->where('periode_id', 1);
+                ->where('periode_id', $periodeId);
         })
             ->with('proposal.proposalMahasiswas')
             ->get();
 
         return view(
             "dosen.seminar-proposal.jadwal", 
-            compact('tahap', 'listPeriode', 'jadwalSeminarProposalD3', 'jadwalSeminarProposalD4')
+            compact('tahap', 'listPeriode', 'jadwalSeminarProposalD3', 'jadwalSeminarProposalD4', 'periodeId')
         );
     }
 }
