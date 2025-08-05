@@ -127,12 +127,24 @@ class Proposal extends Model
     {
         return $this->hasMany(Logbook::class, 'proposal_id');
     }
-    public function proposalSemhas(): BelongsTo
+    public function dosenPengujiSidangTA1(): BelongsTo
+    {
+        return $this->belongsTo(Dosen::class, 'penguji_sidang_ta_1_id');
+    }
+    public function dosenPengujiSidangTA2(): BelongsTo
+    {
+        return $this->belongsTo(Dosen::class, 'penguji_sidang_ta_2_id');
+    }
+    public function periodeSemhas(): BelongsTo
     {
         return $this->belongsTo(Periode::class, 'periode_semhas_id');
     }
     public function tahapSemhas(): BelongsTo
     {
         return $this->belongsTo(Tahap::class, 'tahap_semhas_id');
+    }
+    public function jadwalSeminarHasil(): HasOne
+    {
+        return $this->hasOne(JadwalSeminarHasil::class, 'proposal_id');
     }
 }

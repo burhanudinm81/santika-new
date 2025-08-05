@@ -1,22 +1,17 @@
 @extends('panitia.home')
 
 @section('content-panitia')
-    <!-- Content Header (Page header) -->
     <div class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-12">
-                    <h1 class="m-0">Jadwal Seminar Proposal Prodi {{ $prodi->prodi }}</h1>
-                </div><!-- /.col -->
-            </div><!-- /.row -->
-        </div><!-- /.container-fluid -->
+                    <h1 class="m-0">Jadwal Sidang Ujian Akhir Prodi {{ $prodi->prodi }}</h1>
+                </div>
+            </div>
+        </div>
     </div>
-    <!-- /.content-header -->
-
-    {{-- floating notification --}}
     @if (session('success'))
         <div>
-            {{-- modal popup success --}}
             <div style="
                     position: fixed;
                     top: 30px;
@@ -35,18 +30,16 @@
             </div>
         </div>
     @endif
-
-    <!-- Main content -->
     <div class="content">
         <div class="container-fluid">
             <div class="row">
                 <div class="col-md-12">
                     <div class="card">
                         <div class="card-header">
-                            <h3 class="card-title font-weight-bold">Buat Jadwal Seminar Proposal</h3>
+                            <h3 class="card-title font-weight-bold">Buat Jadwal Sidang Ujian Akhir</h3>
                         </div>
                         <div class="card-body">
-                            <form action="{{ route('jadwal-sempro.store') }}" method="POST">
+                            <form action="{{ route('panitia.jadwal-sidang-akhir.store') }}" method="POST">
                                 @if ($errors->any())
                                     <div class="alert alert-danger">
                                         <strong>Ups!</strong> Terjadi beberapa masalah dengan input Anda.<br><br>
@@ -62,7 +55,7 @@
                                     <label for="periode">Periode</label>
                                     <select class="custom-select" id="periode" name="periode_id" required>
                                         <option selected>Open this select menu</option>
-                                        @foreach ($periodes as $periode)
+                                        @foreach ($listPeriode as $periode)
                                             <option value="{{ $periode->id }}">{{ $periode->tahun }}</option>
                                         @endforeach
                                     </select>
@@ -71,7 +64,7 @@
                                     <label for="tahap">Tahap</label>
                                     <select class="custom-select" id="tahap" name="tahap_id" required>
                                         <option selected>Open this select menu</option>
-                                        @foreach ($tahaps as $tahap)
+                                        @foreach ($listTahap as $tahap)
                                             <option value="{{ $tahap->id }}">{{ $tahap->tahap }}</option>
                                         @endforeach
                                     </select>
@@ -170,7 +163,7 @@
                                             <td>
                                                 <select class="custom-select" name="waktu_berhalangan[0][dosen_id]">
                                                     <option selected>Open this select menu</option>
-                                                    @foreach ($dosens as $dosen)
+                                                    @foreach ($listDosen as $dosen)
                                                         <option value="{{ $dosen->id }}">{{ $dosen->nama }}</option>
                                                     @endforeach
                                                 </select>
@@ -204,12 +197,9 @@
                         </div>
                     </div>
                 </div>
-            </div><!-- /.container-fluid -->
+            </div>
         </div>
-        <!-- /.content -->
     </div>
-
-
 @endsection
 
 @section('scripts-panitia')

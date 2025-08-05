@@ -225,5 +225,5 @@
 @endsection
 
 @section('scripts-panitia')
-    <script src="{{ asset('/custom/js/seminar-proposal/buka-tutup-pendaftaran.js') }}"></script>
+    <script src="{{ asset('/custom/js/seminar/buka-tutup-pendaftaran.js') }}"></script>
 @endsection

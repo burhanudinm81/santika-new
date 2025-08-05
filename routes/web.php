@@ -3,6 +3,7 @@
 use App\Http\Controllers\Auth\ChangePasswordController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Dosen\SeminarProposal\JadwalSemproController as JadwalSemproDosenController;
+use App\Http\Controllers\Dosen\SeminarHasil\JadwalSemhasController as JadwalSemhasDosenController;
 use App\Http\Controllers\DosenController;
 use App\Http\Controllers\HomePageController;
 use App\Http\Controllers\Auth\LoginController;
@@ -19,12 +20,14 @@ use App\Http\Controllers\Mahasiswa\PengajuanJudul\PengajuanJudulController;
 use App\Http\Controllers\Mahasiswa\SeminarHasil\SeminarHasilController;
 use App\Http\Controllers\Mahasiswa\SeminarProposal\SeminarProposalController;
 use App\Http\Controllers\Mahasiswa\SeminarProposal\JadwalSemproController as JadwalSemproMahasiswaController;
+use App\Http\Controllers\Mahasiswa\SeminarHasil\JadwalSemhasController as JadwalSemhasMahasiswaController;
 use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\MahasiswaD3Controller;
 use App\Http\Controllers\MahasiswaD4Controller;
 use App\Http\Controllers\Panitia\Ajax\AjaxPendaftaranSemproController;
 use App\Http\Controllers\Panitia\KelolaPeriodeTahap\KelolaPeriodeTahapController;
 use App\Http\Controllers\Panitia\PlottingPembimbing\PlottingPembimbingController;
+use App\Http\Controllers\Panitia\SeminarHasil\JadwalSemhasController as JadwalSemhasPanitiaController;
 use App\Http\Controllers\Panitia\SeminarHasil\SeminarHasilPanitiaController;
 use App\Http\Controllers\Panitia\SeminarProposal\JadwalSemproController as JadwalSemproPanitiaController;
 use App\Http\Controllers\Panitia\SeminarProposal\SeminarProposalController as SeminarProposalPanitiaController;
@@ -244,6 +247,10 @@ Route::middleware(["auth:mahasiswa", "auth.session", "password.changed"])->group
         Route::get('/mahasiswa/informasi-dosen/daftar-dosen-pembimbing', "index")->name("mahasiswa.informasi-dosen.daftar-dosen-pembimbing");
     });
 
+    Route::controller(JadwalSemhasMahasiswaController::class)->group(function () {
+        Route::get('/mahasiswa/seminar-hasil/jadwal', 'showJadwalPage')->name('mahasiswa.seminar-hasil.jadwal');
+    });
+
     Route::get('/mahasiswa/profile', [MahasiswaController::class, 'showProfile'])->name('mahasiswa.profile');
     Route::post('/mahasiswa/profile/edit-email', [MahasiswaController::class, 'updateEmail'])->name('mahasiswa.profile.edit-email');
     Route::post('/mahasiswa/profile/edit-image', [MahasiswaController::class, 'updateFotoProfil'])->name('mahasiswa.profile.edit-image');
@@ -276,8 +283,17 @@ Route::middleware(["auth:dosen", "auth.session", "password.changed"])->group(fun
         Route::get('/dosen/seminar-proposal/jadwal', 'showBerandaJadwalPage')->name('dosen.seminar-proposal.beranda-jadwal');
 
         // Route untuk menampilkan halaman jadwal seminar proposal
-        Route::get("/dosen/seminar-proposal/jadwal/{tahapId}", "showJadwalPage")
+        Route::get("/dosen/seminar-proposal/jadwal/tahap/{tahapId}/periode/{periodeId?}", "showJadwalPage")
             ->name("dosen.seminar-proposal.jadwal");
+    });
+
+    Route::controller(JadwalSemhasDosenController::class)->group(function () {
+        // Route untuk menampilkan halaman beranda jadwal seminar hasil
+        Route::get('/dosen/seminar-hasil/jadwal', 'showBerandaJadwalPage')->name('dosen.seminar-hasil.beranda-jadwal');
+
+        // Route untuk menampilkan halaman jadwal seminar hasil
+        Route::get("/dosen/seminar-hasil/jadwal/tahap/{tahapId}/periode/{periodeId?}", "showJadwalPage")
+            ->name("dosen.seminar-hasil.jadwal");
     });
 
     Route::controller(BimbinganController::class)->group(function () {
@@ -423,7 +439,7 @@ Route::middleware(["auth:dosen", "auth.session", "password.changed", "is.panitia
             // Route::delete('/delete/{id}', 'delete')->name('delete');
 
             //  Route untuk melihat detail jadwal sempro
-            Route::get('/detail/{tahap_id}/{periode_id}', 'detail')->name('detail');
+            Route::get('/detail/tahap/{tahap_id}/periode/{periode_id}', 'detail')->name('detail');
 
             // -- Buat Jadwal Manual --
             // Route untuk membuka halaman generate jadwal manual
@@ -444,6 +460,32 @@ Route::middleware(["auth:dosen", "auth.session", "password.changed", "is.panitia
         Route::post('/panitia/plotting-pembimbing/update', 'update')->name('panitia.plotting-pembimbing.update');
     });
 
+    Route::controller(JadwalSemhasPanitiaController::class)
+        ->prefix('/panitia/jadwal-sidang-akhir')
+        ->name('panitia.jadwal-sidang-akhir.')
+        ->group(function(){
+            // Route untuk menampilkan jadwal sidang akhir
+            Route::get('/', 'index')->name('index');
+
+            // Route untuk membuka halaman generate jadwal sidang ujian akhir otomatis
+            Route::get('/create', 'create')->name('create');
+
+            // Route untuk mengirim data generate jadwal sidang ujian akhir otomatis
+            Route::post('/store', 'store')->name('store');
+
+            // Route untuk menampilkan halaman detail jadwal sidang ujian akhir
+            Route::get("/detail/tahap/{tahap_id}/periode/{periode_id}", "detail")->name('detail');
+
+            // Route untuk membuka halaman generate jadwal sidang ujian akhir manual
+            Route::get('/create-manual', 'showCreateManualPage')->name('create-manual');
+
+            // Route untuk mendapatkan daftar calon peserta sidang ujian akhir
+            Route::get('/calon-peserta', 'getCalonPesertaSemhas')->name('calon-peserta');
+
+            // Route untuk mengirim data generate jadwal sidang ujian akhir manual
+            Route::post("/store-manual", "storeManual")->name("store-manual");
+        });
+
     // Route untuk serving file yang private, dalam bentuk link path
     Route::get('/file-private/{filepath}', function ($filepath) {
         $path = storage_path('app/private/' . $filepath);
@@ -461,7 +503,7 @@ Route::middleware(["auth:dosen", "auth.session", "password.changed", "is.panitia
         ->group(function () {
             // Route untuk tambah tahap baru
             Route::get("/tambah-tahap", "tambahTahap")->name('tambah-tahap');
-            // Route untuk tambah period
+            // Route untuk tambah periode
             Route::post('/tambah-periode', 'tambahPeriode')->name('tambah-periode');
         });
 });

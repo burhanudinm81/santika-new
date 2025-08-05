@@ -14,12 +14,12 @@ class ExampleTest extends TestCase
 {
     public function testSembarang(): void
     {
-        $listProposal = Proposal::whereHas('proposalMahasiswas', function ($query) {
-            $query->where("status_proposal_mahasiswa_id", 1);
+        $listProposal = Proposal::whereHas('pendaftaranSempro', function ($query) {
+            $query->where("status_daftar_sempro_id", 1);
         })
             ->where("periode_id", 1)
-            ->where("tahap_id", 1)
-            ->where("prodi_id", 1)
+            ->where("tahap_id", 4)
+            ->where("prodi_id", 2)
             ->with([
                 'proposalMahasiswas' => [
                     'mahasiswa',

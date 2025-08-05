@@ -182,7 +182,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="jadwalsidang.php" class="nav-link">
+                            <a href="{{ route('mahasiswa.seminar-hasil.jadwal') }}" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Jadwal Sidang</p>
                             </a>
