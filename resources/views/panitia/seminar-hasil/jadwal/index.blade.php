@@ -70,7 +70,7 @@
                         </tbody>
                     </table>
                     <a href="{{ route('panitia.jadwal-sidang-akhir.create') }}" class="btn btn-success">Generate Jadwal Otomatis</a>
-                    <a href="#{{-- route('jadwal-sempro.create-manual') --}}" class="btn btn-primary">Buat Jadwal Manual</a>
+                    <a href="{{ route('panitia.jadwal-sidang-akhir.create-manual') }}" class="btn btn-primary">Buat Jadwal Manual</a>
                 </div>
             </div>
         </div>

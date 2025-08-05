@@ -18,7 +18,11 @@
                         <select class="custom-select" id="periode" aria-label="Example select with button addon">
                             <option disabled>Pilih Periode</option>
                             @foreach ($listPeriode as $periode)
-                                <option value="{{ $periode->id }}">{{ $periode->tahun }}</option>
+                                @if ($periode->id == $periodeId)
+                                    <option value="{{ $periode->id }}" selected>{{ $periode->tahun }}</option>
+                                @else
+                                    <option value="{{ $periode->id }}">{{ $periode->tahun }}</option>
+                                @endif
                             @endforeach
                         </select>
                     </div>
@@ -136,3 +140,7 @@
         </div>
     </div>
 @endsection
+
+@push('page-scripts')
+    <script src="{{ asset('/custom/js/seminar-hasil/dosen/filter-jadwal-based-on-periode.js') }}"></script>
+@endpush

@@ -213,5 +213,5 @@
 @endsection
 
 @section('scripts-panitia')
-    <script src="{{ asset('/custom/js/seminar-proposal/generate-jadwal.js') }}"></script>
+    <script src="{{ asset('/custom/js/seminar/generate-jadwal.js') }}"></script>
 @endsection

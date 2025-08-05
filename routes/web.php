@@ -282,7 +282,7 @@ Route::middleware(["auth:dosen", "auth.session", "password.changed"])->group(fun
         Route::get('/dosen/seminar-proposal/jadwal', 'showBerandaJadwalPage')->name('dosen.seminar-proposal.beranda-jadwal');
 
         // Route untuk menampilkan halaman jadwal seminar proposal
-        Route::get("/dosen/seminar-proposal/jadwal/{tahapId}", "showJadwalPage")
+        Route::get("/dosen/seminar-proposal/jadwal/tahap/{tahapId}/periode/{periodeId?}", "showJadwalPage")
             ->name("dosen.seminar-proposal.jadwal");
     });
 
@@ -291,7 +291,7 @@ Route::middleware(["auth:dosen", "auth.session", "password.changed"])->group(fun
         Route::get('/dosen/seminar-hasil/jadwal', 'showBerandaJadwalPage')->name('dosen.seminar-hasil.beranda-jadwal');
 
         // Route untuk menampilkan halaman jadwal seminar hasil
-        Route::get("/dosen/seminar-hasil/jadwal/{tahapId}", "showJadwalPage")
+        Route::get("/dosen/seminar-hasil/jadwal/tahap/{tahapId}/periode/{periodeId?}", "showJadwalPage")
             ->name("dosen.seminar-hasil.jadwal");
     });
 
@@ -469,6 +469,15 @@ Route::middleware(["auth:dosen", "auth.session", "password.changed", "is.panitia
 
             // Route untuk menampilkan halaman detail jadwal sidang ujian akhir
             Route::get("/detail/tahap/{tahap_id}/periode/{periode_id}", "detail")->name('detail');
+
+            // Route untuk membuka halaman generate jadwal sidang ujian akhir manual
+            Route::get('/create-manual', 'showCreateManualPage')->name('create-manual');
+
+            // Route untuk mendapatkan daftar calon peserta sidang ujian akhir
+            Route::get('/calon-peserta', 'getCalonPesertaSemhas')->name('calon-peserta');
+
+            // Route untuk mengirim data generate jadwal sidang ujian akhir manual
+            Route::post("/store-manual", "storeManual")->name("store-manual");
         });
 
     // Route untuk serving file yang private, dalam bentuk link path

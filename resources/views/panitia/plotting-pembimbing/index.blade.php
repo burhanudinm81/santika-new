@@ -173,7 +173,6 @@
                         @csrf
                         <input type="hidden" name="prodi_id" value="1">
                         <input type="hidden" name="proposal_id">
-                        <!-- Menambahkan Nama Mahasiswa yang Read-Only -->
                         <div class="form-group">
                             <label for="namaMahasiswa">Nama Mahasiswa 1</label>
                             <input type="text" class="form-control" id="nama-mahasiswa-1" readonly>

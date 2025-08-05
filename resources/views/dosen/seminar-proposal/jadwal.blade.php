@@ -6,28 +6,28 @@
             <div class="row mb-2">
                 <div class="col-sm-6">
                     <h1 class="m-0">Jadwal Seminar Proposal Tahap {{ $tahap->tahap }}</h1>
-                </div><!-- /.col -->
-            </div><!-- /.row -->
-        </div><!-- /.container-fluid -->
+                </div>
+            </div>
+        </div>
     </div>
-    <!-- /.content-header -->
-
-    <!-- Main content -->
     <div class="content">
         <div class="container-fluid">
             <div class="col-md-15">
                 <div class="my-2" style="width: 300px; margin-right: 300px">
                     <div class="input-group">
-                        <select class="custom-select" id="periode" aria-label="Example select with button addon">
+                        <select class="custom-select" id="periode" aria-label="Periode">
                             <option disabled>Pilih Periode</option>
                             @foreach ($listPeriode as $periode)
-                                <option value="{{ $periode->id }}">{{ $periode->tahun }}</option>
+                                @if ($periode->id == $periodeId)
+                                    <option value="{{ $periode->id }}" selected>{{ $periode->tahun }}</option>
+                                @else
+                                    <option value="{{ $periode->id }}">{{ $periode->tahun }}</option>
+                                @endif
                             @endforeach
                         </select>
                     </div>
                 </div>
                 <div class="card card-primary card-outline mb-2">
-                    <!--begin::Form-->
                     <form>
                         <nav class="nav">
                             <a class="nav-link" href="#D3TT">D3 Teknik Telekomunikasi</a>
@@ -61,20 +61,24 @@
                                                     yang tersedia</td>
                                             </tr>
                                         @else
-                                             @foreach ($jadwalSeminarProposalD3 as $idx => $jadwal)
-                                            <tr>
-                                                <th scope="row">{{ $idx + 1 }}</th>
-                                                <td>{{ $jadwal->ruang }}</td>
-                                                <td>{{ $jadwal->tanggal->isoFormat('dddd, D MMMM YYYY') }}</td>
-                                                <td>Sesi {{ $jadwal->sesi }}, {{ $jadwal->waktu_mulai->isoFormat('HH:mm') }}-{{ $jadwal->waktu_selesai->isoFormat('HH:mm') }}</td>
-                                                <td>{{ $jadwal->proposal->proposalMahasiswas[0]->mahasiswa->nama }}</td>
-                                                <td>{{ $jadwal->proposal->proposalMahasiswas[1]->mahasiswa->nama }}</td>
-                                                <td>{{ $jadwal->proposal->judul }}</td>
-                                                <td>{{ $jadwal->proposal->dosenPembimbing1->nama }}</td>
-                                                <td>{{ $jadwal->proposal->dosenPengujiSempro1->nama }}</td>
-                                                <td>{{ $jadwal->proposal->dosenPengujiSempro2->nama }}</td>
-                                                <td><a href="{{ route('dosen.penilaian-sempro', ['proposal_id' => $jadwal->proposal_id]) }}" class="btn btn-primary" style="width: 150px">Input Nilai</a></td>
-                                            </tr>
+                                            @foreach ($jadwalSeminarProposalD3 as $idx => $jadwal)
+                                                <tr>
+                                                    <th scope="row">{{ $idx + 1 }}</th>
+                                                    <td>{{ $jadwal->ruang }}</td>
+                                                    <td>{{ $jadwal->tanggal->isoFormat('dddd, D MMMM YYYY') }}</td>
+                                                    <td>
+                                                        Sesi {{ $jadwal->sesi }},
+                                                        {{ $jadwal->waktu_mulai->isoFormat('HH:mm') }}-{{ $jadwal->waktu_selesai->isoFormat('HH:mm') }}
+                                                    </td>
+                                                    <td>{{ $jadwal->proposal->proposalMahasiswas[0]->mahasiswa->nama }}</td>
+                                                    <td>{{ $jadwal->proposal->proposalMahasiswas[1]->mahasiswa->nama }}</td>
+                                                    <td>{{ $jadwal->proposal->judul }}</td>
+                                                    <td>{{ $jadwal->proposal->dosenPembimbing1->nama }}</td>
+                                                    <td>{{ $jadwal->proposal->dosenPengujiSempro1->nama }}</td>
+                                                    <td>{{ $jadwal->proposal->dosenPengujiSempro2->nama }}</td>
+                                                    <td><a href="{{ route('dosen.penilaian-sempro', ['proposal_id' => $jadwal->proposal_id]) }}"
+                                                            class="btn btn-primary" style="width: 150px">Input Nilai</a></td>
+                                                </tr>
                                             @endforeach
                                         @endif
                                     </tbody>
@@ -105,31 +109,36 @@
                                                     yang tersedia</td>
                                             </tr>
                                         @else
-                                             @foreach ($jadwalSeminarProposalD4 as $idx => $jadwal)
-                                            <tr>
-                                                <th scope="row">{{ $idx + 1 }}</th>
-                                                <td>{{ $jadwal->ruang }}</td>
-                                                <td>{{ $jadwal->tanggal->isoFormat('dddd, D MMMM YYYY') }}</td>
-                                                <td>Sesi {{ $jadwal->sesi }}, {{ $jadwal->waktu_mulai->isoFormat('HH:mm') }}-{{ $jadwal->waktu_selesai->isoFormat('HH:mm') }}</td>
-                                                <td>{{ $jadwal->proposal->proposalMahasiswas[0]->mahasiswa->nama }}</td>
-                                                <td>{{ $jadwal->proposal->judul }}</td>
-                                                <td>{{ $jadwal->proposal->dosenPembimbing1->nama }}</td>
-                                                <td>{{ $jadwal->proposal->dosenPengujiSempro1->nama }}</td>
-                                                <td>{{ $jadwal->proposal->dosenPengujiSempro2->nama }}</td>
-                                                <td><a href="{{ route('dosen.penilaian-sempro') }}" class="btn btn-primary" style="width: 150px">Input Nilai</a></td>
-                                            </tr>
+                                            @foreach ($jadwalSeminarProposalD4 as $idx => $jadwal)
+                                                <tr>
+                                                    <th scope="row">{{ $idx + 1 }}</th>
+                                                    <td>{{ $jadwal->ruang }}</td>
+                                                    <td>{{ $jadwal->tanggal->isoFormat('dddd, D MMMM YYYY') }}</td>
+                                                    <td>
+                                                        Sesi {{ $jadwal->sesi }},
+                                                        {{ $jadwal->waktu_mulai->isoFormat('HH:mm') }}-{{ $jadwal->waktu_selesai->isoFormat('HH:mm') }}
+                                                    </td>
+                                                    <td>{{ $jadwal->proposal->proposalMahasiswas[0]->mahasiswa->nama }}</td>
+                                                    <td>{{ $jadwal->proposal->judul }}</td>
+                                                    <td>{{ $jadwal->proposal->dosenPembimbing1->nama }}</td>
+                                                    <td>{{ $jadwal->proposal->dosenPengujiSempro1->nama }}</td>
+                                                    <td>{{ $jadwal->proposal->dosenPengujiSempro2->nama }}</td>
+                                                    <td><a href="{{ route('dosen.penilaian-sempro', ['proposal_id' => $jadwal->proposal_id]) }}"
+                                                            class="btn btn-primary" style="width: 150px">Input Nilai</a></td>
+                                                </tr>
                                             @endforeach
                                         @endif
                                     </tbody>
                                 </table>
                             </div>
                         </div>
-                        <!--end::Body-->
                     </form>
-                    <!--end::Form-->
                 </div>
-            </div><!-- /.container-fluid -->
+            </div>
         </div>
-        <!-- /.content -->
     </div>
 @endsection
+
+@push('page-scripts')
+    <script src="{{ asset('/custom/js/seminar-proposal/dosen/filter-jadwal-based-on-periode.js') }}"></script>
+@endpush

@@ -135,7 +135,7 @@ class Proposal extends Model
     {
         return $this->belongsTo(Dosen::class, 'penguji_sidang_ta_2_id');
     }
-    public function proposalSemhas(): BelongsTo
+    public function periodeSemhas(): BelongsTo
     {
         return $this->belongsTo(Periode::class, 'periode_semhas_id');
     }
