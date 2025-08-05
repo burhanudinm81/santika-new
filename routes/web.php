@@ -10,6 +10,7 @@ use App\Http\Controllers\Auth\LogoutController;
 use App\Http\Controllers\Dosen\Bimbingan\BimbinganController;
 use App\Http\Controllers\KuotaDosenController;
 use App\Http\Controllers\Dosen\PermohonanJudul\PermohonanJudulController;
+use App\Http\Controllers\Dosen\SeminarHasil\PenilaianSemhasController;
 use App\Http\Controllers\Dosen\SeminarProposal\PenilaianSemproController;
 use App\Http\Controllers\Mahasiswa\Ajax\AjaxMahasiswaController;
 use App\Http\Controllers\Mahasiswa\InformasiDosen\DaftarDosenPembimbingController;
@@ -298,6 +299,11 @@ Route::middleware(["auth:dosen", "auth.session", "password.changed"])->group(fun
     Route::controller(PenilaianSemproController::class)->group(function () {
         Route::get('/dosen/penilaian-sempro/{proposal_id}', 'showPenilaianBaseOnMahasiswa')->name('dosen.penilaian-sempro');
         Route::put('/dosen/penilaian-sempro/update', 'updatePenilaian')->name('dosen.penilaian-sempro.update-penilaian');
+    });
+
+    Route::controller(PenilaianSemhasController::class)->group(function () {
+        Route::get('/dosen/penilaian-semhas/temporary/{proposal_id}', 'showInputPenilaianSementara')->name('dosen.penilaian-semhas');
+        Route::put('/dosen/penilaian-semhas/temporary/update', 'updatePenilaianSementara')->name('dosen.penilaian-semhas.update-penilaian-sementara');
     });
 });
 

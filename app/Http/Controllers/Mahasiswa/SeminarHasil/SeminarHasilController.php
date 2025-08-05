@@ -44,9 +44,9 @@ class SeminarHasilController extends Controller
 
             $infoPendaftaranSemhas = PendaftaranSemhas::with('statusDaftarSeminar')->where('proposal_id', $infoProposal->id)->first();
 
-            $logbookDospem1 = LogBook::where('dosen_id', $infoProposal->dosen_pembimbing_1_id)
-                ->where('proposal_id', $infoProposal->id)
-                ->get();
+            // $logbookDospem1 = LogBook::where('dosen_id', $infoProposal->dosen_pembimbing_1_id)
+            //     ->where('proposal_id', $infoProposal->id)
+            //     ->get();
         }
 
         $periodeAktif = Periode::where('aktif_sidang_akhir', true)->exists();
