@@ -29,5 +29,13 @@ class PendaftaranSeminarProposalSeeder extends Seeder
                 'status_bukti_cek_plagiasi' => true,
             ]);
         }
+
+        $pendaftaranSempro = PendaftaranSeminarProposal::all();
+        $pendaftaranSempro->each(function($item){
+            $proposal = Proposal::find($item->proposal_id);
+            $proposal->pendaftaran_sempro_id = $item->id;
+            $proposal->save();
+        });
+
     }
 }

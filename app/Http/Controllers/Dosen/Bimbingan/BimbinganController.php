@@ -53,7 +53,7 @@ class BimbinganController extends Controller
     {
         $logbooksInfo = $mahasiswa->logbooks()
             ->where('dosen_id', auth('dosen')->user()->id)
-            ->with('JenisKegiatanLogbook')
+            ->with(['JenisKegiatanLogbook', 'statusLogbook'])
             ->orderBy('created_at', 'desc')
             ->get();
 
@@ -84,7 +84,7 @@ class BimbinganController extends Controller
 
         $logbook->update([
             'catatan_khusus_dosen' => $catatanKhususDosen,
-            'status' => $statusVerifLogbook
+            'status_logbook_id' => $statusVerifLogbook
         ]);
 
         return redirect()->route('dosen.bimbingan.logbook-mahasiswa', ['mahasiswa' => $mahasiswa1Id])->with('success', 'Logbook berhasil diperbarui.');

@@ -8,6 +8,7 @@ use App\Models\Dosen;
 use App\Models\JenisKegiatanLogbook;
 use App\Models\LogBook;
 use App\Models\Proposal;
+use App\Models\ProposalDosenMahasiswa;
 use Illuminate\Http\Request;
 
 class LogbookController extends Controller
@@ -30,17 +31,18 @@ class LogbookController extends Controller
             ->whereRelation('proposalMahasiswas', 'status_proposal_mahasiswa_id', 1)
             // cari proposal yang sudah mendaftar seminar proposal
             ->where('pendaftaran_sempro_id', '!=', null)
+            ->latest()
             ->first();
 
         if ($proposalInfo != null && $roleDospem == 1) {
             $dospem1Info = $proposalInfo->dosenPembimbing1()->first();
-            $logbooksDospem1 = LogBook::with('JenisKegiatanLogbook')->where('mahasiswa_id', auth('mahasiswa')->user()->id)
+            $logbooksDospem1 = LogBook::with(['JenisKegiatanLogbook', 'statusLogbook'])->where('proposal_id', $proposalInfo->id)
                 ->where('dosen_id', $dospem1Info->id)
                 ->orderBy('created_at', 'desc')
                 ->get();
         } else if ($proposalInfo != null && $roleDospem == 2) {
             $dospem2Info = $proposalInfo->dosenPembimbing2()->first();
-            $logbooksDospem2 = LogBook::with('JenisKegiatanLogbook')->where('mahasiswa_id', auth('mahasiswa')->user()->id)
+            $logbooksDospem2 = LogBook::with(['JenisKegiatanLogbook', 'statusLogbook'])->where('proposal_id', $proposalInfo->id)
                 ->where('dosen_id', $dospem2Info->id)
                 ->orderBy('created_at', 'desc')
                 ->get();
@@ -92,16 +94,19 @@ class LogbookController extends Controller
         $namaKegiatan = $request->validated()['namaKegiatan'];
         $tanggalKegiatan = $request->validated()['tanggalKegiatan'];
         $hasilKegiatan = $request->validated()['hasilKegiatan'];
-        $statusVerifKegiatan = (int) $request->statusVerifKegiatan;
+
+        $proposalMahasiswa = ProposalDosenMahasiswa::where('mahasiswa_id', $mahasiswaId)
+            ->latest()
+            ->first();
 
         LogBook::create([
+            'proposal_id' => $proposalMahasiswa->proposal_id,
             'dosen_id'=> $dosenId,
             'mahasiswa_id'=> $mahasiswaId,
             'jenis_kegiatan_id'=> $jenisKegiatanId,
             'nama_kegiatan'=> $namaKegiatan,
             'tanggal_kegiatan'=> $tanggalKegiatan,
             'hasil_kegiatan'=> $hasilKegiatan,
-            'status_verifikasi'=> $statusVerifKegiatan,
         ]);
 
         return redirect()->route('mahasiswa.logbook.beranda', ['roleDospem' => $roleDospem])

@@ -24,19 +24,21 @@ class SeminarHasilController extends Controller
         $infoPendaftaranSemhas = null;
         $countLogbookDospem1 = 0;
         $countLogbookDospem2 = 0;
+        $isLogbookAmountNotSatisfied = true;
         $isPendaftaranClose = false;
 
         $infoProposal = Proposal::with(['proposalMahasiswas', 'dosenPembimbing1', 'dosenPembimbing2', 'bidangMinat'])
-        ->whereRelation('proposalMahasiswas', 'mahasiswa_id', auth('mahasiswa')->user()->id)
-        ->whereRelation('proposalMahasiswas', 'status_proposal_mahasiswa_id', 1)
-        ->where('pendaftaran_sempro_id', '!=', null)
-        ->first();
+            ->whereRelation('proposalMahasiswas', 'mahasiswa_id', auth('mahasiswa')->user()->id)
+            ->whereRelation('proposalMahasiswas', 'status_proposal_mahasiswa_id', 1)
+            ->where('pendaftaran_sempro_id', '!=', null)
+            ->latest()
+            ->first();
 
 
         if ($infoProposal != null) {
             $infoMahasiswaAll = ProposalDosenMahasiswa::with(['dosen', 'mahasiswa'])
-            ->where('proposal_id', $infoProposal->id)
-            ->get();
+                ->where('proposal_id', $infoProposal->id)
+                ->get();
             $infoDospem1 = $infoProposal->dosenPembimbing1()->first();
             $infoDospem2 = $infoProposal->dosenPembimbing2()->first();
 
@@ -46,7 +48,19 @@ class SeminarHasilController extends Controller
 
             $logbookDospem1 = LogBook::where('dosen_id', $infoProposal->dosen_pembimbing_1_id)
                 ->where('proposal_id', $infoProposal->id)
+                ->where('status_logbook_id', 3)
                 ->get();
+
+            $logbookDospem2 = LogBook::where('dosen_id', $infoProposal->dosen_pembimbing_2_id)
+                ->where('proposal_id', $infoProposal->id)
+                ->where('status_logbook_id', 3)
+                ->get();
+
+            $countLogbookDospem1 = $logbookDospem1->count();
+            $countLogbookDospem2 = $logbookDospem2->count();
+
+            if ($countLogbookDospem1 >= 10 && $countLogbookDospem2 >= 0)
+                $isLogbookAmountNotSatisfied = false;
         }
 
         $periodeAktif = Periode::where('aktif_sidang_akhir', true)->exists();
@@ -60,6 +74,9 @@ class SeminarHasilController extends Controller
             'infoDospem2',
             'infoBidangMinat',
             'infoPendaftaranSemhas',
+            'countLogbookDospem1',
+            'countLogbookDospem2',
+            'isLogbookAmountNotSatisfied',
             'isPendaftaranClose'
         ]));
     }
