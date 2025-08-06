@@ -55,10 +55,12 @@
                                                 <td>{{ $logbook->nama_kegiatan }}</td>
                                                 <td>{{ $logbook->tanggal_kegiatan }}</td>
                                                 <td>
-                                                    @if ($logbook->status == 0)
-                                                        <span class="badge badge-warning">Belum Diverifikasi</span>
-                                                    @elseif($logbook->status == 1)
-                                                        <span class="badge badge-success">Diverifikasi Berhasil</span>
+                                                    @if($logbook->status_logbook_id == 1)
+                                                        <span class="badge badge-warning">{{ $logbook->statusLogbook->status }}</span>
+                                                    @elseif ($logbook->status_logbook_id == 2)
+                                                        <span class="badge badge-danger">{{ $logbook->statusLogbook->status }}</span>
+                                                    @elseif($logbook->status_logbook_id == 3)
+                                                        <span class="badge badge-success">{{ $logbook->statusLogbook->status }}</span>
                                                     @endif
                                                 </td>
                                                 <td>

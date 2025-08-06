@@ -25,6 +25,7 @@ class DatabaseSeeder extends Seeder
             StatusProposalMahasiswaSeeder::class,
             StatusPendaftaranSeminarSeeder::class,
             StatusDosenBidangMinatSeeder::class,
+            StatusLogbookSeeder::class,
             JenisKegiatanLogbookSeeder::class,
             DosenForJadwalSeeder::class,
             DosenSeeder::class,
