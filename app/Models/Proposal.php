@@ -112,15 +112,29 @@ class Proposal extends Model
         return $this->belongsTo(StatusProposal::class, 'status_sempro_penguji_1_id');
     }
 
-
     public function statusSemproPenguji2()
     {
         return $this->belongsTo(StatusProposal::class, 'status_sempro_penguji_2_id');
     }
 
+    public function statusSemhasPenguji1()
+    {
+        return $this->belongsTo(StatusProposal::class, 'status_semhas_penguji_1_id');
+    }
+
+    public function statusSemhasPenguji2()
+    {
+        return $this->belongsTo(StatusProposal::class, 'status_semhas_penguji_2_id');
+    }
+
     public function statusSemproTotal()
     {
         return $this->belongsTo(StatusProposal::class, 'status_sempro_proposal_id');
+    }
+
+    public function statusSemhasTotal()
+    {
+        return $this->belongsTo(StatusProposal::class, 'status_semhas_proposal_id');
     }
 
     public function logbooks()

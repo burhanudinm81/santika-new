@@ -188,7 +188,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a href="{{ route('mahasiswa.seminar-hasil.hasil-semhas-sementara') }}" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Pengumuman Sidang</p>
                             </a>

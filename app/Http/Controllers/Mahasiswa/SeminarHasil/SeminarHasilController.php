@@ -10,6 +10,7 @@ use App\Models\PendaftaranSemhas;
 use App\Models\Periode;
 use App\Models\Proposal;
 use App\Models\ProposalDosenMahasiswa;
+use App\Models\Revisi;
 use App\Models\Tahap;
 use Illuminate\Http\Request;
 
@@ -27,16 +28,16 @@ class SeminarHasilController extends Controller
         $isPendaftaranClose = false;
 
         $infoProposal = Proposal::with(['proposalMahasiswas', 'dosenPembimbing1', 'dosenPembimbing2', 'bidangMinat'])
-        ->whereRelation('proposalMahasiswas', 'mahasiswa_id', auth('mahasiswa')->user()->id)
-        ->whereRelation('proposalMahasiswas', 'status_proposal_mahasiswa_id', 1)
-        ->where('pendaftaran_sempro_id', '!=', null)
-        ->first();
+            ->whereRelation('proposalMahasiswas', 'mahasiswa_id', auth('mahasiswa')->user()->id)
+            ->whereRelation('proposalMahasiswas', 'status_proposal_mahasiswa_id', 1)
+            ->where('pendaftaran_sempro_id', '!=', null)
+            ->first();
 
 
         if ($infoProposal != null) {
             $infoMahasiswaAll = ProposalDosenMahasiswa::with(['dosen', 'mahasiswa'])
-            ->where('proposal_id', $infoProposal->id)
-            ->get();
+                ->where('proposal_id', $infoProposal->id)
+                ->get();
             $infoDospem1 = $infoProposal->dosenPembimbing1()->first();
             $infoDospem2 = $infoProposal->dosenPembimbing2()->first();
 
@@ -157,5 +158,33 @@ class SeminarHasilController extends Controller
         ]);
 
         return redirect()->back()->with('success', 'Pendaftaran Semhas Berhasil Dibuat');
+    }
+
+    public function showHasilSementaraSemhas()
+    {
+        $proposalInfo = ProposalDosenMahasiswa::with('proposal', 'mahasiswa')
+            ->where('mahasiswa_id', auth('mahasiswa')->user()->id)
+            ->where('status_proposal_mahasiswa_id', 1)
+            ->orderBy('created_at', 'desc')
+            ->first();
+
+        $mainProposalInfo = Proposal::with(['dosenPengujiSidangTA1', 'dosenPengujiSidangTA2', 'statusSemhasPenguji1', 'statusSemhasPenguji2'])
+            ->where('id', $proposalInfo->proposal_id)
+            ->first();
+
+        $revisiDosen1 = Revisi::where('proposal_id', $mainProposalInfo->id)
+            ->where('dosen_id', $mainProposalInfo->dosenPengujiSidangTA1->id)
+            ->where('jenis_revisi', 'semhas')
+            ->first();
+
+        $revisiDosen2 = Revisi::where('proposal_id', $mainProposalInfo->id)
+            ->where('dosen_id', $mainProposalInfo->dosenPengujiSidangTA2->id)
+            ->where('jenis_revisi', 'semhas')
+            ->first();
+
+        return view(
+            'mahasiswa.seminar-hasil.hasil-semhas-sementara'
+            ,compact(['proposalInfo', 'mainProposalInfo', 'revisiDosen1', 'revisiDosen2'])
+        );
     }
 }

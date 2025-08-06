@@ -22,7 +22,7 @@ class SeminarHasilPanitiaController extends Controller
         $tahapAktif = $listTahap->firstWhere('aktif_sidang_akhir', true);
 
         return view(
-            'panitia.seminar-hasil.beranda-pendaftaran', 
+            'panitia.seminar-hasil.beranda-pendaftaran',
             compact('listPeriode', 'listTahap', 'periodeAktif', 'tahapAktif')
         );
     }
@@ -129,5 +129,13 @@ class SeminarHasilPanitiaController extends Controller
         return back()->with([
             'success' => "Berhasil menutup Pendaftaran Sidang Ujian Akhir!"
         ]);
+    }
+
+    public function showTahapRekapNilai()
+    {
+        // ambil semua tahap
+        $listTahap = Tahap::all();
+
+        return view('panitia.seminar-hasil.tahap-rekap-nilai', compact('listTahap'));
     }
 }

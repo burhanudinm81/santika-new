@@ -218,6 +218,7 @@ Route::middleware(["auth:mahasiswa", "auth.session", "password.changed"])->group
     Route::controller(SeminarHasilController::class)->group(function () {
         Route::get('/mahasiswa/seminar-hasil/daftar-semhas', 'showPendaftaranPage')->name('mahasiswa.seminar-hasil.daftar-semhas');
         Route::post('/mahasiswa/seminar-hasil/daftar-semhas-store', 'storePendaftaran')->name('mahasiswa.seminar-hasil.daftar-semhas-store');
+         Route::get('/mahasiswa/seminar-hasil/hasil-semhas-sementara', 'showHasilSementaraSemhas')->name('mahasiswa.seminar-hasil.hasil-semhas-sementara');
     });
 
     Route::controller(LogbookController::class)->group(function () {
@@ -318,8 +319,10 @@ Route::middleware(["auth:dosen", "auth.session", "password.changed"])->group(fun
     });
 
     Route::controller(PenilaianSemhasController::class)->group(function () {
-        Route::get('/dosen/penilaian-semhas/temporary/{proposal_id}', 'showInputPenilaianSementara')->name('dosen.penilaian-semhas');
+        Route::get('/dosen/penilaian-semhas/temporary/{proposal_id}', 'showInputPenilaianSementara')->name('dosen.penilaian-semhas-sementara');
         Route::put('/dosen/penilaian-semhas/temporary/update', 'updatePenilaianSementara')->name('dosen.penilaian-semhas.update-penilaian-sementara');
+        Route::get('/dosen/penilaian-semhas/akhir/{proposal_id}', 'showInputPenilaianAkhir')->name('dosen.penilaian-semhas-akhir');
+        Route::put('/dosen/penilaian-semhas/akhir/update', 'updatePenilaianAkhir')->name('dosen.penilaian-semhas.update-penilaian-akhir');
     });
 });
 
