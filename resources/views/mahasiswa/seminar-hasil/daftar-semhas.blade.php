@@ -1,22 +1,17 @@
 @extends('mahasiswa.home')
 
 @section('content')
-    <!-- Content Header (Page header) -->
     <div class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
                     <h1 class="m-0">Pendaftaran Sidang Laporan Akhir</h1>
-                </div><!-- /.col -->
-            </div><!-- /.row -->
-        </div><!-- /.container-fluid -->
+                </div>
+            </div>
+        </div>
     </div>
-    <!-- /.content-header -->
-
-    <!-- Main content -->
     <div class="content">
         <div class="container-fluid">
-
             @if($isPendaftaranClose)
                 <div class="alert alert-danger" role="alert">
                     <h4 class="alert-heading"><strong>Maaf, anda belum bisa mendaftar Sidang Ujian Akhir</strong></h4>
@@ -26,6 +21,13 @@
                 <div class="alert alert-warning" role="alert">
                     <h4 class="alert-heading"><strong>Maaf, anda belum bisa mendaftar Sidang Ujian Akhir</strong></h4>
                     <p>Anda masih belum eligible</p>
+                </div>
+            @elseif($isLogbookAmountNotSatisfied)
+                <div class="alert alert-warning" role="alert">
+                    <h4 class="alert-heading"><strong>Maaf, anda belum bisa mendaftar Sidang Ujian Akhir</strong></h4>
+                    <p>Jumlah Logbook anda masih belum memenuhi Persyaratan</p>
+                    <p class="mb-0">Jumlah Logbook Yang Diverifikasi Dosen Pembimbing 1: {{ $countLogbookDospem1 }}/10</p>
+                    <p>Jumlah Logbook Yang Diverifikasi Dosen Pembimbing 2: {{ $countLogbookDospem2 }}/10</p>
                 </div>
             @else
                 @if ($errors->any())
@@ -44,14 +46,11 @@
 
                 <div class="col-md-15">
                     <div class="card card-primary card-outline mb-4">
-                        <!--begin::Form-->
                         <form action="{{ route('mahasiswa.seminar-hasil.daftar-semhas-store') }}" method="post"
                             enctype="multipart/form-data">
                             @csrf
                             @method('post')
-
                             <input type="hidden" name="proposal_id" value="{{ $infoProposal->id }}">
-                            <!--begin::Body-->
                             <div class="card-body">
                                 <div class="form-group">
                                     <label for="JudulProposal" class="form-label" style="font-size: 22px">Status Pendaftaran
@@ -62,7 +61,7 @@
                                          @elseif($infoPendaftaranSemhas != null && $infoPendaftaranSemhas->status_daftar_semhas_id == 1) bg-success
                                          @else bg-info @endif
                                         " id="JudulProposal" aria-describedby="JudulProposal"
-                                        value=" @if ($infoPendaftaranSemhas != null) {{ $infoPendaftaranSemhas->statusDaftarSeminar->status }}@else Anda belum mendaftar seminar proposal @endif"
+                                        value=" @if ($infoPendaftaranSemhas != null) {{ $infoPendaftaranSemhas->statusDaftarSeminar->status }}@else Anda belum mendaftar Sidang Ujian Akhir @endif"
                                         readonly />
                                 </div>
 

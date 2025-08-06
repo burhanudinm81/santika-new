@@ -41,8 +41,6 @@
                             @method('POST')
                             {{-- hidden input --}}
                             <input type="hidden" name="mahasiswaId" value="{{ auth('mahasiswa')->user()->id }}">
-                            <input type="hidden" name="statusVerifKegiatan" value="0" class="form-control"
-                                id="StatusVerifikasi" />
                             <input type="hidden" name="roleDospem" value="{{ $roleDospem }}">
 
                             <div class="card-body">

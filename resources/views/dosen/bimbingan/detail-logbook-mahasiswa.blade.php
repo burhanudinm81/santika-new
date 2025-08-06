@@ -6,13 +6,10 @@
             <div class="row mb-2">
                 <div class="col-sm-6">
                     <h1 class="m-0">Detail Logbook</h1>
-                </div><!-- /.col -->
-            </div><!-- /.row -->
-        </div><!-- /.container-fluid -->
+                </div>
+            </div>
+        </div>
     </div>
-    <!-- /.content-header -->
-
-    <!-- Main content -->
     <div class="content">
         <div class="container-fluid">
 
@@ -22,14 +19,12 @@
 
             <div class="col-md-15">
                 <div class="card card-primary card-outline mb-2">
-                    <!--begin::Form-->
                     <form action="{{ route('dosen.bimbingan.update-verifikasi-logbook') }}" method="POST">
                         @csrf
                         @method('PUT')
 
                         <input type="hidden" name="logbook_id" value="{{ $logbook->id }}">
                         <input type="hidden" name="mahasiswa_id" value="{{ $mahasiswa->id }}">
-                        <!--begin::Body-->
                         <div class="card-body">
                             <p class="h4">Logbook 1</p>
                             <hr>
@@ -74,19 +69,15 @@
                             <br>
 
                             <div class="d-grid gap-2">
-                                <button name="status_verif_logbook" value="1" type="submit"
+                                <button name="status_verif_logbook" value="3" type="submit"
                                     class="btn btn-block btn-primary" type="button">Terima</button>
-                                <button name="status_verif_logbook" value="0" type="submit"
+                                <button name="status_verif_logbook" value="2" type="submit"
                                     class="btn btn-block btn-danger" type="button">Tolak</button>
                             </div>
                         </div>
-                        <!--end::Body-->
                     </form>
-                    <!--end::Form-->
-
                 </div>
-            </div><!-- /.container-fluid -->
+            </div>
         </div>
-        <!-- /.content -->
     </div>
 @endsection

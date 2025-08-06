@@ -36,9 +36,9 @@ class AjaxPendaftaranSemproController extends Controller
         $prodiDosenPanitiaId = $request->input('prodi_panitia_id');
 
         $listPendaftaranSemhas = PendaftaranSemhas::with('proposal.proposalMahasiswas.mahasiswa')
-            ->whereRelation('proposal', 'tahap_id', $tahapId)
+            ->whereRelation('proposal', 'tahap_semhas_id', $tahapId)
             ->whereRelation('proposal', 'prodi_id', $prodiDosenPanitiaId)
-            ->whereRelation('proposal', 'periode_id', $periodeId)
+            ->whereRelation('proposal', 'periode_semhas_id', $periodeId)
             ->get();
 
         return response()->json($listPendaftaranSemhas);

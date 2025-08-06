@@ -14,22 +14,27 @@ class ExampleTest extends TestCase
 {
     public function testSembarang(): void
     {
-        $listProposal = Proposal::whereHas('pendaftaranSempro', function ($query) {
-            $query->where("status_daftar_sempro_id", 1);
-        })
-            ->where("periode_id", 1)
-            ->where("tahap_id", 4)
-            ->where("prodi_id", 2)
-            ->with([
-                'proposalMahasiswas' => [
-                    'mahasiswa',
-                    'dosen'
-                ]
-            ])
-            ->get();
+        $listProposal = Proposal::all();
+
+        [$proposalD3, $proposalD4] = $listProposal->partition(function ($item) {
+            return $item->id <= 100 || ($item->id > 200 && $item->id <= 208);
+        });
+
+        $proposalD3->each(function ($item) {
+            $mahasiswaIds = ProposalDosenMahasiswa::where('proposal_id', $item->id)
+                ->pluck('mahasiswa_id');
+
+            Log::info("Mahasiswa ID: ");
+            Log::info(json_encode($mahasiswaIds, JSON_PRETTY_PRINT));
+        });
+
+        $proposalD4->each(function ($item) {
+            $mahasiswaId = ProposalDosenMahasiswa::where('proposal_id', $item->id)
+                ->first()->mahasiswa_id;
+
+            Log::info("Mahasiswa ID: $mahasiswaId");
+        });
 
         self::assertTrue(true);
-        Log::info("List Proposal:");
-        Log::info(json_encode($listProposal, JSON_PRETTY_PRINT));
     }
 }
