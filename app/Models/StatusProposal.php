@@ -24,4 +24,14 @@ class StatusProposal extends Model
     {
         return $this->hasMany(Proposal::class);
     }
+
+    public function statusSemhasPenguji1()
+    {
+        return $this->hasMany(Proposal::class);
+    }
+
+    public function statusSemhasPenguji2()
+    {
+        return $this->hasMany(Proposal::class);
+    }
 }
