@@ -28,7 +28,7 @@
                             <div class="icon">
                                 <i class="fas fa-solid fa-user"></i>
                             </div>
-                            <a href="{{ route('panitia.seminar-proposal.beranda-rekap-nilai', $tahap->id) }}" class="small-box-footer">
+                            <a href="{{ route('panitia.seminar-hasil.beranda-rekap-nilai', ['tahapId' => $tahap->id]) }}" class="small-box-footer">
                                 More info <i class="fas fa-arrow-circle-right"></i>
                             </a>
                         </div>

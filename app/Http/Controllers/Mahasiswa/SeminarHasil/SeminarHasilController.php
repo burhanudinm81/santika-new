@@ -204,4 +204,90 @@ class SeminarHasilController extends Controller
             ,compact(['proposalInfo', 'mainProposalInfo', 'revisiDosen1', 'revisiDosen2'])
         );
     }
+
+    public function showUploadRevisi()
+    {
+        $proposalInfo = ProposalDosenMahasiswa::with('proposal', 'mahasiswa')
+            ->where('mahasiswa_id', auth('mahasiswa')->user()->id)
+            ->where('status_proposal_mahasiswa_id', 1)
+            ->first();
+
+        $mainProposalInfo = Proposal::with(['dosenPengujiSidangTA1', 'dosenPengujiSidangTA2', 'statusSemhasPenguji1', 'statusSemhasPenguji2', 'statusSemhasTotal'])
+            ->where('id', $proposalInfo->proposal_id)
+            ->first();
+
+        $revisiPeng1 = Revisi::where('proposal_id', $mainProposalInfo->id)
+            ->where('dosen_id', $mainProposalInfo->dosenPengujiSidangTA1->id)
+            ->where('jenis_revisi', 'semhas')
+            ->first();
+        if($revisiPeng1 == null){
+            $revisiPeng1 = null;
+        }
+
+        $revisiPeng2 = Revisi::where('proposal_id', $mainProposalInfo->id)
+            ->where('dosen_id', $mainProposalInfo->dosenPengujiSidangTA2->id)
+            ->where('jenis_revisi', 'semhas')
+            ->first();
+        if($revisiPeng2 == null){
+            $revisiPeng2 = null;
+        }
+
+        return view('mahasiswa.seminar-hasil.upload-revisi', compact([
+            'mainProposalInfo',
+            'revisiPeng1',
+            'revisiPeng2'
+        ]));
+    }
+
+    public function storeUploadRevisi(Request $request)
+    {
+        $penguji1ID = $request->input('penguji_1_id');
+        $penguji2ID = $request->input('penguji_2_id');
+        $proposalID = $request->input('proposal_id');
+        $fileLembarRevisiPenguji1 = $request->file('lembar_revisi_penguji_1');
+        $fileLembarRevisiPenguji2 = $request->file('lembar_revisi_penguji_2');
+        $fileProposalRevisi = $request->file('proposal_revisi');
+
+        // rename file
+        $nameLembarRevisi1 = uniqid() . '.' . $fileLembarRevisiPenguji1->getClientOriginalExtension();
+        $nameLembarRevisi2 = uniqid() . '.' . $fileLembarRevisiPenguji2->getClientOriginalExtension();
+        $nameProposalRevisi = uniqid() . '.' . $fileProposalRevisi->getClientOriginalExtension();
+
+        $pathProposalRevisi = $fileProposalRevisi->storeAs(
+            'seminar-hasil/revisi/proposal',
+            $nameProposalRevisi,
+            'local'
+        );
+        $pathLembarRevisi1 = $fileLembarRevisiPenguji1->storeAs(
+            'seminar-hasil/revisi/lembar-revisi-penguji-1',
+            $nameLembarRevisi1,
+            'local'
+        );
+        $pathLembarRevisi2 = $fileLembarRevisiPenguji2->storeAs(
+            'seminar-hasil/revisi/lembar-revisi-penguji-2',
+            $nameLembarRevisi2,
+            'local'
+        );
+
+        $revisi1 = Revisi::where('proposal_id', $proposalID)
+            ->where('dosen_id', $penguji1ID)
+            ->where('jenis_revisi', 'semhas')
+            ->first();
+        $revisi2 = Revisi::where('proposal_id', $proposalID)
+            ->where('dosen_id', $penguji2ID)
+            ->where('jenis_revisi', 'semhas')
+            ->first();
+
+
+        $revisi1->update([
+            'file_proposal_revisi' => $pathProposalRevisi,
+            'file_lembar_revisi_dosen' => $pathLembarRevisi1
+        ]);
+        $revisi2->update([
+            'file_proposal_revisi' => $pathProposalRevisi,
+            'file_lembar_revisi_dosen' => $pathLembarRevisi2
+        ]);
+
+        return redirect()->back()->with('success', 'Revisi Berhasil Diupload');
+    }
 }

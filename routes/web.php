@@ -36,6 +36,7 @@ use App\Http\Controllers\PrivateFileController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\DosenProfileController;
+use App\Http\Controllers\Panitia\Ajax\AjaxRekapNilaiSemhasController;
 use App\Http\Controllers\Panitia\Ajax\AjaxRekapNilaiSemproController;
 
 // Route::get('/', function () {
@@ -218,7 +219,9 @@ Route::middleware(["auth:mahasiswa", "auth.session", "password.changed"])->group
     Route::controller(SeminarHasilController::class)->group(function () {
         Route::get('/mahasiswa/seminar-hasil/daftar-semhas', 'showPendaftaranPage')->name('mahasiswa.seminar-hasil.daftar-semhas');
         Route::post('/mahasiswa/seminar-hasil/daftar-semhas-store', 'storePendaftaran')->name('mahasiswa.seminar-hasil.daftar-semhas-store');
-         Route::get('/mahasiswa/seminar-hasil/hasil-semhas-sementara', 'showHasilSementaraSemhas')->name('mahasiswa.seminar-hasil.hasil-semhas-sementara');
+        Route::get('/mahasiswa/seminar-hasil/hasil-semhas-sementara', 'showHasilSementaraSemhas')->name('mahasiswa.seminar-hasil.hasil-semhas-sementara');
+        Route::get('/mahasiswa/seminar-hasil/revisi', 'showUploadRevisi')->name('mahasiswa.seminar-hasil.revisi');
+        Route::post('/mahasiswa/seminar-hasil/revisi-store', 'storeUploadRevisi')->name('mahasiswa.seminar-hasil.revisi-store');
     });
 
     Route::controller(LogbookController::class)->group(function () {
@@ -256,6 +259,18 @@ Route::middleware(["auth:mahasiswa", "auth.session", "password.changed"])->group
     Route::post('/mahasiswa/profile/edit-email', [MahasiswaController::class, 'updateEmail'])->name('mahasiswa.profile.edit-email');
     Route::post('/mahasiswa/profile/edit-image', [MahasiswaController::class, 'updateFotoProfil'])->name('mahasiswa.profile.edit-image');
     Route::post('/mahasiswa/profile/change-password', [MahasiswaController::class, 'changePassword'])->name('mahasiswa.profile.change-password');
+
+
+    // Route untuk serving file yang private, dalam bentuk link path
+    Route::get('/file-private-mahasiswa/{filepath}', function ($filepath) {
+        $path = storage_path('app/private/' . $filepath);
+
+        if (!file_exists($path)) {
+            abort(404);
+        }
+
+        return response()->file($path);
+    })->where('filepath', '.*')->name('file-private-mahasiswa.view');
 });
 
 /**
@@ -380,6 +395,10 @@ Route::middleware(["auth:dosen", "auth.session", "password.changed", "is.panitia
         Route::get('/panitia/seminar-hasil/pendaftaran/{tahapId}/detail', 'showDetailPendaftaranPage')->name('panitia.seminar-hasil.pendaftaran-detail');
         Route::get('/panitia/seminar-hasil/pendaftaran/{pendaftaranId}/verifikasi', 'showVerifikasiPendaftaran')->name('panitia.seminar-hasil.verifikasi-daftar');
         Route::put('/panitia/seminar-hasil/pendaftaran/{pendaftaranId}/update-verifikasi', 'updateVerifikasiPendaftaran')->name('panitia.seminar-hasil.update-verifikasi');
+        Route::get('/panitia/seminar-hasil/tahap-rekap-nilai', 'showTahapRekapNilai')->name('panitia.seminar-hasil.tahap-rekap-nilai');
+        Route::get('/panitia/seminar-hasil/beranda-rekap-nilai/{tahapId}', 'showBerandaRekapNilai')->name('panitia.seminar-hasil.beranda-rekap-nilai');
+        Route::get('/panitia/seminar-hasil/detail-verifikasi-revisi/{proposalId}', 'showDetailVerifikasiRevisi')->name('panitia.seminar-hasil.detail-verifikasi-revisi');
+        Route::put('/panitia/seminar-hasil/detail-verifikasi-revisi/update', 'updateVerifikasiRevisi')->name('panitia.seminar-hasil.update-verifikasi-revisi');
 
         // Route unutk membuka pendaftaran sidang ujian akhir
         Route::post('/panitia/seminar-hasil/buka-pendaftaran', 'bukaPendaftaran')->name('panitia.seminar-hasil.buka-pendaftaran');
@@ -395,6 +414,10 @@ Route::middleware(["auth:dosen", "auth.session", "password.changed", "is.panitia
 
     Route::controller(AjaxRekapNilaiSemproController::class)->group(function () {
         Route::get('/panitia/ajax/list-rekap-nilai-sempro', 'listRekapNilaiSempro')->name('panitia.ajax.list-rekap-nilai-sempro');
+    });
+
+    Route::controller(AjaxRekapNilaiSemhasController::class)->group(function () {
+        Route::get('/panitia/ajax/list-rekap-nilai-semhas', 'listRekapNilaiSemhas')->name('panitia.ajax.list-rekap-nilai-semhas');
     });
 
     Route::controller(PrivateFileController::class)->group(function () {
@@ -466,7 +489,7 @@ Route::middleware(["auth:dosen", "auth.session", "password.changed", "is.panitia
     Route::controller(JadwalSemhasPanitiaController::class)
         ->prefix('/panitia/jadwal-sidang-akhir')
         ->name('panitia.jadwal-sidang-akhir.')
-        ->group(function(){
+        ->group(function () {
             // Route untuk menampilkan jadwal sidang akhir
             Route::get('/', 'index')->name('index');
 
