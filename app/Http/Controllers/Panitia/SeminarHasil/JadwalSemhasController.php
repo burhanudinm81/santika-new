@@ -87,7 +87,10 @@ class JadwalSemhasController extends Controller
         $periodeId = $request->integer("periode_id");
 
         // 3. Ambil proposal sesuai input
-        $proposals = Proposal::where('tahap_semhas_id', $request->tahap_id)
+        $proposals = Proposal::whereHas('pendaftaranSemhas', function($query){
+            $query->where('status_daftar_semhas_id', 1);
+        })
+            ->where('tahap_semhas_id', $request->tahap_id)
             ->where('periode_semhas_id', $request->periode_id)
             ->where('prodi_id', $prodiPanitia)
             ->get();
@@ -184,8 +187,8 @@ class JadwalSemhasController extends Controller
         $prodiPanitia = Panitia::firstWhere('dosen_id', $idDosen)->prodi_id;
 
         $jadwalSemhas = JadwalSeminarHasil::whereHas('proposal', function ($q) use ($tahap_id, $periode_id, $prodiPanitia) {
-            $q->where('tahap_id', $tahap_id)
-                ->where('periode_id', $periode_id)
+            $q->where('tahap_semhas_id', $tahap_id)
+                ->where('periode_semhas_id', $periode_id)
                 ->where('prodi_id', $prodiPanitia);
         })
             ->with(['proposal.proposalMahasiswas.mahasiswa', 'proposal.dosenPembimbing1', 'proposal.dosenPembimbing2', 'proposal.dosenPengujiSidangTA1', 'proposal.dosenPengujiSidangTA2'])
