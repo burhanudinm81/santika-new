@@ -20,7 +20,6 @@ class SeminarProposalController extends Controller
         $isPendaftaranClose = false;
         $isPendingProposal = false;
         $isPendingPendaftaran = 0;
-
         $acceptedProposalMahasiswa2 = null;
         $acceptedProposalMahasiswa1 = ProposalDosenMahasiswa::with('mahasiswa', 'dosen', 'proposal')
             ->where('mahasiswa_id', auth('mahasiswa')->user()->id)
@@ -155,7 +154,7 @@ class SeminarProposalController extends Controller
             ->where('status_proposal_mahasiswa_id', 1)
             ->first();
 
-        $mainProposalInfo = Proposal::with(['dosenPengujiSempro1', 'dosenPengujiSempro1', 'statusSemproPenguji1', 'statusSemproPenguji2'])
+        $mainProposalInfo = Proposal::with(['dosenPengujiSempro1', 'dosenPengujiSempro2', 'statusSemproPenguji1', 'statusSemproPenguji2'])
             ->where('id', $proposalInfo->proposal_id)
             ->first();
 

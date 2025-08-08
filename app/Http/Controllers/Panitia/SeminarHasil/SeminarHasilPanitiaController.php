@@ -7,6 +7,8 @@ use App\Http\Requests\BukaPendaftaranRequest;
 use App\Models\Panitia;
 use App\Models\PendaftaranSemhas;
 use App\Models\Periode;
+use App\Models\Proposal;
+use App\Models\Revisi;
 use App\Models\Tahap;
 use Illuminate\Http\Request;
 
@@ -22,7 +24,7 @@ class SeminarHasilPanitiaController extends Controller
         $tahapAktif = $listTahap->firstWhere('aktif_sidang_akhir', true);
 
         return view(
-            'panitia.seminar-hasil.beranda-pendaftaran', 
+            'panitia.seminar-hasil.beranda-pendaftaran',
             compact('listPeriode', 'listTahap', 'periodeAktif', 'tahapAktif')
         );
     }
@@ -129,5 +131,58 @@ class SeminarHasilPanitiaController extends Controller
         return back()->with([
             'success' => "Berhasil menutup Pendaftaran Sidang Ujian Akhir!"
         ]);
+    }
+
+    public function showTahapRekapNilai()
+    {
+        // ambil semua tahap
+        $listTahap = Tahap::all();
+
+        return view('panitia.seminar-hasil.tahap-rekap-nilai', compact('listTahap'));
+    }
+
+    public function showBerandaRekapNilai($tahapId)
+    {
+        $tahapInfo = Tahap::find($tahapId);
+
+        // ambil semua data periode, untuk opsi dropdown
+        $periodeInfo = Periode::all();
+
+        // ambil data dosen yang menjadi panitia, berdasarkan id dosen yang saat ini sedang login
+        $dosenPanitiaInfo = Panitia::where('dosen_id', auth('dosen')->user()->id)->first();
+
+        return view('panitia.seminar-hasil.beranda-rekap-nilai', compact(['tahapInfo', 'periodeInfo', 'dosenPanitiaInfo']));
+    }
+
+    public function showDetailVerifikasiRevisi($proposalId)
+    {
+        $proposalInfo = Proposal::find($proposalId);
+        $revisi1 = Revisi::where('proposal_id', $proposalInfo->id)
+            ->where('dosen_id', $proposalInfo->dosenPengujiSidangTA1->id)
+            ->where('jenis_revisi', 'semhas')
+            ->first();
+        $revisi2 = Revisi::where('proposal_id', $proposalInfo->id)
+            ->where('dosen_id', $proposalInfo->dosenPengujiSidangTA2->id)
+            ->where('jenis_revisi', 'semhas')
+            ->first();
+
+        return view('panitia.seminar-hasil.detail-verifikasi-revisi', compact(['proposalInfo', 'revisi1', 'revisi2']));
+    }
+
+    public function updateVerifikasiRevisi(Request $request)
+    {
+        $proposalId = $request->input('proposal_id');
+
+        $revisiTotal = Revisi::where('proposal_id', $proposalId)
+            ->where('jenis_revisi', 'semhas')
+            ->get();
+
+        foreach ($revisiTotal as $revisi) {
+            $revisi->update([
+                'status' => $request->input('status_revisi')
+            ]);
+        }
+
+        return redirect()->back()->with('success', 'Status Revisi Berhasil Diupdate');
     }
 }

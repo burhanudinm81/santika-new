@@ -130,7 +130,9 @@ class SeminarProposalController extends Controller
     {
         $proposalId = $request->input('proposal_id');
 
-        $revisiTotal = Revisi::where('proposal_id', $proposalId)->get();
+        $revisiTotal = Revisi::where('proposal_id', $proposalId)
+            ->where('jenis_revisi', 'sempro')
+            ->get();
 
         foreach ($revisiTotal as $revisi) {
             $revisi->update([
@@ -140,7 +142,7 @@ class SeminarProposalController extends Controller
 
         return redirect()->back()->with('success', 'Status Revisi Berhasil Diupdate');
     }
-    
+
     public function bukaPendaftaran(BukaPendaftaranRequest $request)
     {
         $periodeId = (int) $request->periode_id;
