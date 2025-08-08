@@ -33,8 +33,8 @@ class JadwalSemhasController extends Controller
 
             })
                 ->where('prodi_id', 1)
-                ->where('tahap_id', $tahapId)
-                ->where('periode_id', $periodeId);
+                ->where('tahap_semhas_id', $tahapId)
+                ->where('periode_semhas_id', $periodeId);
         })
             ->with('proposal.proposalMahasiswas')
             ->get();
@@ -48,8 +48,8 @@ class JadwalSemhasController extends Controller
 
             })
                 ->where('prodi_id', 2)
-                ->where('tahap_id', $tahapId)
-                ->where('periode_id', $periodeId);
+                ->where('tahap_semhas_id', $tahapId)
+                ->where('periode_semhas_id', $periodeId);
         })
             ->with('proposal.proposalMahasiswas')
             ->get();

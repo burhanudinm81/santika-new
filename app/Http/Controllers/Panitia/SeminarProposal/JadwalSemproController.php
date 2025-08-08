@@ -76,11 +76,21 @@ class JadwalSemproController extends Controller
         $idDosen = auth('dosen')->id();
         $prodiPanitia = Panitia::firstWhere('dosen_id', $idDosen)->prodi_id;
 
-        $proposals = Proposal::where('tahap_id', $request->tahap_id)
+        $proposals = Proposal::whereHas('pendaftaranSempro', function ($query) {
+            $query->where('status_daftar_sempro_id', 1);
+        })
+            ->where('tahap_id', $request->tahap_id)
             ->where('periode_id', $request->periode_id)
             ->where('prodi_id', $prodiPanitia)
             ->get()
             ->toArray();
+
+        if (count($proposals) == 0) {
+            return redirect()
+                ->route('jadwal-sempro.index')
+                ->withErrors(['proposals' => 'Belum ada Pendaftaran yang dikonfirmasi!']);
+        }
+        
         $ruangs = $request->ruang;
         $tanggals = $request->tanggal;
         $sesis = $request->sesi;

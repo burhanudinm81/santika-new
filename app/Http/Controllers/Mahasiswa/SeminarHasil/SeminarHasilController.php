@@ -59,7 +59,7 @@ class SeminarHasilController extends Controller
             $countLogbookDospem1 = $logbookDospem1->count();
             $countLogbookDospem2 = $logbookDospem2->count();
 
-            if ($countLogbookDospem1 >= 10 && $countLogbookDospem2 >= 0)
+            if ($countLogbookDospem1 >= 10 && $countLogbookDospem2 >= 10)
                 $isLogbookAmountNotSatisfied = false;
         }
 
