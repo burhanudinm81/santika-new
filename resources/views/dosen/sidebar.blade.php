@@ -9,11 +9,11 @@
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
             <div class="image">
                 @if (is_null(auth('dosen')->user()->foto_profil))
-                    <img src={{ url('/images/blank-profile-128x128.png') }} class="img-circle elevation-2"
-                        alt="User Image" id="user-image">
+                    <img src={{ url('/images/blank-profile-128x128.png') }} class="img-circle elevation-2" alt="User Image"
+                        id="user-image">
                 @else
-                    <img src={{ asset('/storage/' . auth('dosen')->user()->foto_profil) }}
-                        class="img-circle elevation-2" alt="User Image" id="user-image" width="30px" height="30px">
+                    <img src={{ asset('/storage/' . auth('dosen')->user()->foto_profil) }} class="img-circle elevation-2"
+                        alt="User Image" id="user-image" width="30px" height="30px">
                 @endif
             </div>
             <div class="info">
@@ -23,8 +23,7 @@
             </div>
         </div>
         <nav class="mt-2">
-            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
-                data-accordion="false">
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                 <li class="nav-item" id="dashboard-item">
                     <!-- route("dosen.dashboard") -->
                     <a href="#" class="nav-link">
@@ -74,12 +73,6 @@
                                 <p>Jadwal</p>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a href="penilaiansempro.php" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Penilaian</p>
-                            </a>
-                        </li>
                     </ul>
 
                 <li class="nav-item">
@@ -104,12 +97,6 @@
                                 <p>Jadwal Sidang</p>
                             </a>
                         </li>
-                        <li class="nav-item">
-                            <a href="penilaiansidangakhir.php" class="nav-link">
-                                <i class="far fa-circle nav-icon"></i>
-                                <p>Penilaian Sidang</p>
-                            </a>
-                        </li>
                     </ul>
                     <ul class="nav nav-pills nav-sidebar flex-column">
                         <li class="nav-item">
@@ -121,6 +108,7 @@
                             </a>
                         </li>
                     </ul>
+                </li>
         </nav>
     </div>
 </aside>

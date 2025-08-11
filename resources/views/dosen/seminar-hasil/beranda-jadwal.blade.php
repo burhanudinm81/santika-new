@@ -17,7 +17,7 @@
                     <div class="col-lg-3 col-6">
                         <div class="small-box bg-info">
                             <div class="inner">
-                                <h3>Tahap {{ $tahap->tahap }}</h3>
+                                <h3>Tahap {{ $tahap->tahap ?? "-"}}</h3>
                             </div>
                             <div class="icon">
                                 <i class="fas fa-solid fa-user"></i>

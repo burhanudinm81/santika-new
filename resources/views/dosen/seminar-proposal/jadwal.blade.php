@@ -5,7 +5,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Jadwal Seminar Proposal Tahap {{ $tahap->tahap }}</h1>
+                    <h1 class="m-0">Jadwal Seminar Proposal Tahap {{ $tahap->tahap ?? "-" }}</h1>
                 </div>
             </div>
         </div>
@@ -64,18 +64,18 @@
                                             @foreach ($jadwalSeminarProposalD3 as $idx => $jadwal)
                                                 <tr>
                                                     <th scope="row">{{ $idx + 1 }}</th>
-                                                    <td>{{ $jadwal->ruang }}</td>
-                                                    <td>{{ $jadwal->tanggal->isoFormat('dddd, D MMMM YYYY') }}</td>
+                                                    <td>{{ $jadwal->ruang ?? "-" }}</td>
+                                                    <td>{{ $jadwal->tanggal->isoFormat('dddd, D MMMM YYYY') ?? "-" }}</td>
                                                     <td>
-                                                        Sesi {{ $jadwal->sesi }},
-                                                        {{ $jadwal->waktu_mulai->isoFormat('HH:mm') }}-{{ $jadwal->waktu_selesai->isoFormat('HH:mm') }}
+                                                        Sesi {{ $jadwal->sesi ?? "-" }},
+                                                        {{ $jadwal->waktu_mulai->isoFormat('HH:mm') ?? "-" }}-{{ $jadwal->waktu_selesai->isoFormat('HH:mm') ?? "-" }}
                                                     </td>
-                                                    <td>{{ $jadwal->proposal->proposalMahasiswas[0]->mahasiswa->nama }}</td>
-                                                    <td>{{ $jadwal->proposal->proposalMahasiswas[1]->mahasiswa->nama }}</td>
-                                                    <td>{{ $jadwal->proposal->judul }}</td>
-                                                    <td>{{ $jadwal->proposal->dosenPembimbing1->nama }}</td>
-                                                    <td>{{ $jadwal->proposal->dosenPengujiSempro1->nama }}</td>
-                                                    <td>{{ $jadwal->proposal->dosenPengujiSempro2->nama }}</td>
+                                                    <td>{{ $jadwal->proposal->proposalMahasiswas[0]->mahasiswa->nama ?? "-" }}</td>
+                                                    <td>{{ $jadwal->proposal->proposalMahasiswas[1]->mahasiswa->nama ?? "-" }}</td>
+                                                    <td>{{ $jadwal->proposal->judul ?? "-" }}</td>
+                                                    <td>{{ $jadwal->proposal->dosenPembimbing1->nama ?? "-" }}</td>
+                                                    <td>{{ $jadwal->proposal->dosenPengujiSempro1->nama ?? "-" }}</td>
+                                                    <td>{{ $jadwal->proposal->dosenPengujiSempro2->nama ?? "-" }}</td>
                                                     <td><a href="{{ route('dosen.penilaian-sempro', ['proposal_id' => $jadwal->proposal_id]) }}"
                                                             class="btn btn-primary" style="width: 150px">Input Nilai</a></td>
                                                 </tr>
@@ -112,17 +112,17 @@
                                             @foreach ($jadwalSeminarProposalD4 as $idx => $jadwal)
                                                 <tr>
                                                     <th scope="row">{{ $idx + 1 }}</th>
-                                                    <td>{{ $jadwal->ruang }}</td>
-                                                    <td>{{ $jadwal->tanggal->isoFormat('dddd, D MMMM YYYY') }}</td>
+                                                    <td>{{ $jadwal->ruang ?? "-" }}</td>
+                                                    <td>{{ $jadwal->tanggal->isoFormat('dddd, D MMMM YYYY') ?? "-" }}</td>
                                                     <td>
-                                                        Sesi {{ $jadwal->sesi }},
-                                                        {{ $jadwal->waktu_mulai->isoFormat('HH:mm') }}-{{ $jadwal->waktu_selesai->isoFormat('HH:mm') }}
+                                                        Sesi {{ $jadwal->sesi ?? "-" }},
+                                                        {{ $jadwal->waktu_mulai->isoFormat('HH:mm') ?? "-" }}-{{ $jadwal->waktu_selesai->isoFormat('HH:mm') ?? "-" }}
                                                     </td>
-                                                    <td>{{ $jadwal->proposal->proposalMahasiswas[0]->mahasiswa->nama }}</td>
-                                                    <td>{{ $jadwal->proposal->judul }}</td>
-                                                    <td>{{ $jadwal->proposal->dosenPembimbing1->nama }}</td>
-                                                    <td>{{ $jadwal->proposal->dosenPengujiSempro1->nama }}</td>
-                                                    <td>{{ $jadwal->proposal->dosenPengujiSempro2->nama }}</td>
+                                                    <td>{{ $jadwal->proposal->proposalMahasiswas[0]->mahasiswa->nama ?? "-" }}</td>
+                                                    <td>{{ $jadwal->proposal->judul ?? "-" }}</td>
+                                                    <td>{{ $jadwal->proposal->dosenPembimbing1->nama ?? "-" }}</td>
+                                                    <td>{{ $jadwal->proposal->dosenPengujiSempro1->nama ?? "-" }}</td>
+                                                    <td>{{ $jadwal->proposal->dosenPengujiSempro2->nama ?? "-" }}</td>
                                                     <td><a href="{{ route('dosen.penilaian-sempro', ['proposal_id' => $jadwal->proposal_id]) }}"
                                                             class="btn btn-primary" style="width: 150px">Input Nilai</a></td>
                                                 </tr>
