@@ -1,15 +1,11 @@
-<!-- Main Sidebar Container -->
 <aside class="main-sidebar sidebar-dark-primary elevation-4">
-    <!-- Brand Logo -->
     <a href="index3.html" class="brand-link">
         <img src={{ url('/adminlte/dist/img/AdminLTELogo.png') }} alt="AdminLTE Logo"
             class="brand-image img-circle elevation-3" style="opacity: .8">
         <span class="brand-text font-weight-light">S A N T I K A</span>
     </a>
 
-    <!-- Sidebar -->
     <div class="sidebar">
-        <!-- Sidebar user panel (optional) -->
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
             <div class="image">
                 @if (is_null(auth('mahasiswa')->user()->foto_profil))
@@ -25,11 +21,8 @@
             </a>
         </div>
 
-        <!-- Sidebar Menu -->
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
-                <!-- Add icons to the links using the .nav-icon class
-               with font-awesome or any other icon font library -->
                 <li id="dashboard-item" class="nav-item">
                     <!-- route("mahasiswa.home") -->
                     <a href="#" class="nav-link">
@@ -109,28 +102,27 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item" id="pendaftaran-sempro-item">
-                            <!-- route("mahasiswa.seminar-proposal.form-daftar") -->
                             <a href="{{ route('mahasiswa.seminar-proposal.pendaftaran') }}" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
-                                <p>Pendaftaran Sempro</p>
+                                <p>Pendaftaran</p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="{{ route('mahasiswa.seminar-proposal.jadwal') }}" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
-                                <p>Jadwal Sempro</p>
+                                <p>Jadwal</p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="{{ route('mahasiswa.seminar-proposal.hasil-sempro') }}" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
-                                <p>Pengumuman Sempro</p>
+                                <p>Pengumuman</p>
                             </a>
                         </li>
                         <li class="nav-item">
                             <a href="{{ route('mahasiswa.seminar-proposal.revisi') }}" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
-                                <p>Revisi Sempro</p>
+                                <p>Revisi</p>
                             </a>
                         </li>
                         <li class="nav-item" id="riwayat-pendaftaran-item">
@@ -215,7 +207,5 @@
                 </li>
             </ul>
         </nav>
-        <!-- /.sidebar-menu -->
     </div>
-    <!-- /.sidebar -->
 </aside>

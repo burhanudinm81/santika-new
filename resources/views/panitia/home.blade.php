@@ -14,19 +14,14 @@
 
 <body class="hold-transition sidebar-mini">
     <div class="wrapper">
-
         @include('panitia.navbar')
-
         @include('panitia.sidebar')
 
-        <!-- Content Wrapper. Contains page content -->
         <div class="content-wrapper">
             @yield('content-panitia')
         </div>
-
-        <!-- Control Sidebar -->
+        
         <aside class="control-sidebar control-sidebar-dark">
-            <!-- Control sidebar content goes here -->
             <div class="p-3">
                 <h5>Title</h5>
                 <p>Sidebar content</p>

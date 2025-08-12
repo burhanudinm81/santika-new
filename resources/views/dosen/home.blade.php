@@ -1,16 +1,10 @@
 <!DOCTYPE html>
-<!--
-This is a starter template page. Use this page to start your new project from
-scratch. This page gets rid of all links and provides the needed markup only.
--->
 <html lang="en">
 
 <head>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1">
     <title>SANTIKA</title>
-
-    <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     @include('required-css')
@@ -21,23 +15,17 @@ scratch. This page gets rid of all links and provides the needed markup only.
         @include('dosen.navbar')
         @include('dosen.sidebar')
 
-        {{-- Main content --}}
         <div class="content-wrapper">
             @yield('content')
         </div>
-        {{-- End Main Content --}}
 
-        <!-- Control Sidebar -->
         <aside class="control-sidebar control-sidebar-dark">
-            <!-- Control sidebar content goes here -->
             <div class="p-3">
                 <h5>Title</h5>
                 <p>Sidebar content</p>
             </div>
         </aside>
-        <!-- /.control-sidebar -->
         @include('dosen.footer')
-        <!-- ./wrapper -->
 
         <!-- Modal Pop Up Sukses -->
         <div class="modal" id="modal-popup-sukses" tabindex="-1">
@@ -184,16 +172,6 @@ scratch. This page gets rid of all links and provides the needed markup only.
     <script src="{{ url('/custom/js/auth/change-password.js') }}"></script>
 
     @stack('page-scripts')
-
-    {{-- @if ($forceChangePassword)
-        <script>
-            $("#modal-ubah-password").modal();
-
-            $("#modal-ubah-password").on("hidden.bs.modal", function() {
-                document.location = "/logout";
-            });
-        </script>
-    @endif --}}
 </body>
 
 </html>

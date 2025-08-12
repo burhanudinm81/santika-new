@@ -7,25 +7,23 @@
             <div class="row mb-2">
                 <div class="col-sm-12">
                     <h1 class="m-0">Jadwal Seminar Proposal Prodi {{ $prodi->prodi }}</h1>
-                </div><!-- /.col -->
-            </div><!-- /.row -->
-        </div><!-- /.container-fluid -->
+                </div>
+            </div>
+        </div>
     </div>
-    <!-- /.content-header -->
-
     {{-- floating notification --}}
     @if (session('success'))
         <div>
             {{-- modal popup success --}}
             <div style="
-                            position: fixed;
-                            top: 30px;
-                            left: 60%;
-                            transform: translateX(-50%);
-                            z-index: 1050;
-                            width: 50%;
-                            transition: all 0.2s ease-in-out;
-                        "
+                                    position: fixed;
+                                    top: 30px;
+                                    left: 60%;
+                                    transform: translateX(-50%);
+                                    z-index: 1050;
+                                    width: 50%;
+                                    transition: all 0.2s ease-in-out;
+                                "
                 class="bg-white border-bottom-0 border-right-0 border-left-0 py-4 border-success shadow shadow-md mx-auto alert alert-dismissible fade show relative"
                 role="alert">
                 <strong class="text-success">{{ session('success') }}</strong>
@@ -35,8 +33,33 @@
             </div>
         </div>
     @endif
-
-    <!-- Main content -->
+    @if ($errors->any())
+        <div>
+            {{-- modal popup error --}}
+            <div style="
+                                                                    position: fixed;
+                                                                    top: 30px;
+                                                                    left: 60%;
+                                                                    transform: translateX(-50%);
+                                                                    z-index: 1050;
+                                                                    width: 50%;
+                                                                    transition: all 0.2s ease-in-out;
+                                                                "
+                class="bg-white border-bottom-0 border-right-0 border-left-0 py-4 border-danger shadow shadow-md mx-auto alert alert-dismissible fade show relative"
+                role="alert">
+                <strong class="text-danger">
+                    <ul>
+                        @foreach ($errors->all() as $error)
+                            <li>{{ $error }}</li>
+                        @endforeach
+                    </ul>
+                </strong>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        </div>
+    @endif
     <div class="content">
         <div class="container-fluid">
             <div class="row">
@@ -59,12 +82,14 @@
                                     <tr>
                                         <td>{{ $index + 1 }}</td>
                                         <td>
-                                            <a href="{{ route('jadwal-sempro.detail', ['tahap_id' => $item['tahap_id'], 'periode_id' => $item['periode_id']]) }}">
+                                            <a
+                                                href="{{ route('jadwal-sempro.detail', ['tahap_id' => $item['tahap_id'], 'periode_id' => $item['periode_id']]) }}">
                                                 {{ $item['tahap']->tahap }}
                                             </a>
                                         </td>
                                         <td>
-                                            <a href="{{ route('jadwal-sempro.detail', ['tahap_id' => $item['tahap_id'], 'periode_id' => $item['periode_id']]) }}">
+                                            <a
+                                                href="{{ route('jadwal-sempro.detail', ['tahap_id' => $item['tahap_id'], 'periode_id' => $item['periode_id']]) }}">
                                                 {{ $item['periode']->tahun }}
                                             </a>
                                         </td>
@@ -73,14 +98,12 @@
                             @endif
                         </tbody>
                     </table>
-
                     <a href="{{ route('jadwal-sempro.create') }}" class="btn btn-success">Generate Jadwal Otomatis</a>
                     <a href="{{ route('jadwal-sempro.create-manual') }}" class="btn btn-primary">Buat Jadwal Manual</a>
                 </div>
-            </div><!-- /.container-fluid -->
+            </div>
         </div>
-        <!-- /.content -->
     </div>
 
-    
+
 @endsection

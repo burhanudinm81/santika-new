@@ -33,13 +33,13 @@
                                 <div class="mb-3">
                                     <label for="RuanganSempro" class="form-label">Ruangan</label>
                                     <input type="text" class="form-control" id="RuanganSempro"
-                                        value="{{ $jadwalSeminarProposal->ruang }}" aria-describedby="RuanganSempro"
+                                        value="{{ $jadwalSeminarProposal->ruang ?? "-" }}" aria-describedby="RuanganSempro"
                                         aria-label="readonly input example" readonly>
                                 </div>
                                 <div class="mb-3">
                                     <label for="SesiSempro" class="form-label">Sesi dan Jam</label>
                                     <input type="text" class="form-control" id="SesiSempro"
-                                        value="Sesi {{ $jadwalSeminarProposal->sesi }}, {{ $jadwalSeminarProposal->waktu_mulai->isoFormat('HH:mm') }} - {{ $jadwalSeminarProposal->waktu_selesai->isoFormat('HH:mm') }}"
+                                        value="Sesi {{ $jadwalSeminarProposal->sesi ?? "-" }}, {{ $jadwalSeminarProposal->waktu_mulai->isoFormat('HH:mm') ?? "-" }} - {{ $jadwalSeminarProposal->waktu_selesai->isoFormat('HH:mm') ?? "-" }}"
                                         aria-describedby="SesiSempro" aria-label="readonly input example" readonly>
                                 </div>
                                 <div class="mb-3">
