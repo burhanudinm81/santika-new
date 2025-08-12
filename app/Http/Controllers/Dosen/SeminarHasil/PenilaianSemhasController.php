@@ -162,12 +162,20 @@ class PenilaianSemhasController extends Controller
         $nilaiLaporan1 = $request->input('laporan1');
         $nilaiRataRata1 = $request->input('rata_rata1');
 
+        $nilaiPenguasaanMateri1 = $request->input('penguasaanMateri1');
+        $nilaiPresentasi1 = $request->input('presentasi1');
+        $nilaiKaryaTulis1 = $request->input('karyaTulis1');
+
         if ($prodiId == 1) {
             $nilaiSikap2 = $request->input('sikap2');
             $nilaiKemampuan2 = $request->input('kemampuan2');
             $nilaiHasilKarya2 = $request->input('hasil_karya2');
             $nilaiLaporan2 = $request->input('laporan2');
             $nilaiRataRata2 = $request->input('rata_rata2');
+
+            $nilaiPenguasaanMateri2 = $request->input('penguasaanMateri2');
+            $nilaiPresentasi2 = $request->input('presentasi2');
+            $nilaiKaryaTulis2 = $request->input('karyaTulis2');
         }
 
         // cek data nilai akhir mahasiswa
@@ -228,38 +236,30 @@ class PenilaianSemhasController extends Controller
             }
         } else if ($roleDosen == 'Dosen Penguji Sidang TA 1') {
             $nilaiAkhirMahasiswa1->update([
-                'nilai_sikap_peng1' => $nilaiSikap1 ?? $nilaiAkhirMahasiswa1->nilai_sikap_peng1,
-                'nilai_kemampuan_peng1' => $nilaiKemampuan1 ?? $nilaiAkhirMahasiswa1->nilai_kemampuan_peng1,
-                'nilai_hasilKarya_peng1' => $nilaiHasilKarya1 ?? $nilaiAkhirMahasiswa1->nilai_hasilKarya_peng1,
-                'nilai_laporan_peng1' => $nilaiLaporan1 ?? $nilaiAkhirMahasiswa1->nilai_laporan_peng1,
-                'avg_nilai_penguji1' => $nilaiRataRata1 ?? $nilaiAkhirMahasiswa1->avg_nilai_penguji1,
+                'nilai_penguasaan_materi1' => $nilaiPenguasaanMateri1 ?? $nilaiAkhirMahasiswa1->nilaiPenguasaanMateri1,
+                'nilai_presentasi1' => $nilaiPresentasi1 ?? $nilaiAkhirMahasiswa1->nilaiPresentasi1,
+                'nilai_karya_tulis1' => $nilaiKaryaTulis1 ?? $nilaiAkhirMahasiswa1->nilaiKaryaTulis1,
             ]);
 
             if ($prodiId == 1) {
                 $nilaiAkhirMahasiswa2->update([
-                    'nilai_sikap_peng1' => $nilaiSikap2 ?? $nilaiAkhirMahasiswa2->nilai_sikap_peng1,
-                    'nilai_kemampuan_peng1' => $nilaiKemampuan2 ?? $nilaiAkhirMahasiswa2->nilai_kemampuan_peng1,
-                    'nilai_hasilKarya_peng1' => $nilaiHasilKarya2 ?? $nilaiAkhirMahasiswa2->nilai_hasilKarya_peng1,
-                    'nilai_laporan_peng1' => $nilaiLaporan2 ?? $nilaiAkhirMahasiswa2->nilai_laporan_peng1,
-                    'avg_nilai_penguji1' => $nilaiRataRata2 ?? $nilaiAkhirMahasiswa2->avg_nilai_penguji1,
+                    'nilai_penguasaan_materi1' => $nilaiPenguasaanMateri1 ?? $nilaiAkhirMahasiswa2->nilaiPenguasaanMateri1,
+                    'nilai_presentasi1' => $nilaiPresentasi1 ?? $nilaiAkhirMahasiswa2->nilaiPresentasi1,
+                    'nilai_karya_tulis1' => $nilaiKaryaTulis1 ?? $nilaiAkhirMahasiswa2->nilaiKaryaTulis1,
                 ]);
             }
-        }else if ($roleDosen == 'Dosen Penguji Sidang TA 2') {
+        } else if ($roleDosen == 'Dosen Penguji Sidang TA 2') {
             $nilaiAkhirMahasiswa1->update([
-                'nilai_sikap_peng2' => $nilaiSikap1 ?? $nilaiAkhirMahasiswa1->nilai_sikap_peng2,
-                'nilai_kemampuan_peng2' => $nilaiKemampuan1 ?? $nilaiAkhirMahasiswa1->nilai_kemampuan_peng2,
-                'nilai_hasilKarya_peng2' => $nilaiHasilKarya1 ?? $nilaiAkhirMahasiswa1->nilai_hasilKarya_peng2,
-                'nilai_laporan_peng2' => $nilaiLaporan1 ?? $nilaiAkhirMahasiswa1->nilai_laporan_peng2,
-                'avg_nilai_penguji2' => $nilaiRataRata1 ?? $nilaiAkhirMahasiswa1->avg_nilai_penguji2,
+                'nilai_penguasaan_materi2' => $nilaiPenguasaanMateri2 ?? $nilaiAkhirMahasiswa1->nilaiPenguasaanMateri2,
+                'nilai_presentasi2' => $nilaiPresentasi2 ?? $nilaiAkhirMahasiswa1->nilaiPresentasi2,
+                'nilai_karya_tulis2' => $nilaiKaryaTulis2 ?? $nilaiAkhirMahasiswa1->nilaiKaryaTulis2,
             ]);
 
             if ($prodiId == 1) {
                 $nilaiAkhirMahasiswa2->update([
-                    'nilai_sikap_peng2' => $nilaiSikap2 ?? $nilaiAkhirMahasiswa2->nilai_sikap_peng2,
-                    'nilai_kemampuan_peng2' => $nilaiKemampuan2 ?? $nilaiAkhirMahasiswa2->nilai_kemampuan_peng2,
-                    'nilai_hasilKarya_peng2' => $nilaiHasilKarya2 ?? $nilaiAkhirMahasiswa2->nilai_hasilKarya_peng2,
-                    'nilai_laporan_peng2' => $nilaiLaporan2 ?? $nilaiAkhirMahasiswa2->nilai_laporan_peng2,
-                    'avg_nilai_penguji2' => $nilaiRataRata2 ?? $nilaiAkhirMahasiswa2->avg_nilai_penguji2,
+                    'nilai_penguasaan_materi2' => $nilaiPenguasaanMateri2 ?? $nilaiAkhirMahasiswa2->nilaiPenguasaanMateri2,
+                    'nilai_presentasi2' => $nilaiPresentasi2 ?? $nilaiAkhirMahasiswa2->nilaiPresentasi2,
+                    'nilai_karya_tulis2' => $nilaiKaryaTulis2 ?? $nilaiAkhirMahasiswa2->nilaiKaryaTulis2,
                 ]);
             }
         }
