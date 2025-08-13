@@ -20,13 +20,21 @@ function hitungAverageNilai(sikap, kemampuan, hasilKarya, laporan) {
     return average;
 }
 
+// menghitung rata-rata nilai dari penguji
+function hitungAverageNilaiByPenguji(penguasaanMateri, presentasi, karyaTulis) {
+    let total = parseFloat(penguasaanMateri) + parseFloat(presentasi) + parseFloat(karyaTulis);
+    let average = total / 3;
+    return average;
+}
 
-// -> Mahasiswa 1
+
+// -> Mahasiswa 1 =======================================================
+// by Dosen Pembimbing ---------------------------------------------------
 let nilaiSikapMahasiswa1 = document.getElementById('sikap1');
 let nilaiKemampuanMahasiswa1 = document.getElementById('kemampuan1');
 let nilaiHasilKaryaMahasiswa1 = document.getElementById('hasil_karya1');
 let nilaiLaporanMahasiswa1 = document.getElementById('laporan1');
-let nilaiRataRataMahasiswa1 = document.getElementById('rata_rata1');
+let nilaiRataRataMahasiswa1 = document.getElementById('rata_rata_penguji1');
 let buttonHitungAvg1 = document.getElementById('countAverage1');
 
 nilaiSikapMahasiswa1.addEventListener('input', function () {
@@ -50,12 +58,15 @@ buttonHitungAvg1.addEventListener('click', function () {
     nilaiRataRataMahasiswa1.value = average.toFixed(2);
 });
 
-// -> Mahasiswa 2
+// by Dosen Penguji ------------------------------------------------------
+
+// -> Mahasiswa 2 =======================================================
+// by Dosen Pembimbing ---------------------------------------------------
 let nilaiSikapMahasiswa2 = document.getElementById('sikap2');
 let nilaiKemampuanMahasiswa2 = document.getElementById('kemampuan2');
 let nilaiHasilKaryaMahasiswa2 = document.getElementById('hasil_karya2');
 let nilaiLaporanMahasiswa2 = document.getElementById('laporan2');
-let nilaiRataRataMahasiswa2 = document.getElementById('rata_rata2');
+let nilaiRataRataMahasiswa2 = document.getElementById('rata_rata_penguji2');
 let buttonHitungAvg2 = document.getElementById('countAverage2');
 
 nilaiSikapMahasiswa2.addEventListener('input', function () {
@@ -78,3 +89,6 @@ buttonHitungAvg2.addEventListener('click', function () {
     let average = hitungAverageNilai(nilaiSikap2, nilaiKemampuan2, nilaiHasilKarya2, nilaiLaporan2);
     nilaiRataRataMahasiswa2.value = average.toFixed(2);
 });
+
+// by Dosen Penguji ------------------------------------------------------
+

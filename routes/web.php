@@ -339,6 +339,19 @@ Route::middleware(["auth:dosen", "auth.session", "password.changed"])->group(fun
         Route::get('/dosen/penilaian-semhas/akhir/{proposal_id}', 'showInputPenilaianAkhir')->name('dosen.penilaian-semhas-akhir');
         Route::put('/dosen/penilaian-semhas/akhir/update', 'updatePenilaianAkhir')->name('dosen.penilaian-semhas.update-penilaian-akhir');
     });
+
+    Route::controller(PrivateFileController::class)->group(function () {
+        // revisi sempro
+        Route::get('/revisi-proposal-sempro/dosen{id}', 'serveRevisiProposalSempro')
+            ->name('revisi-proposal-sempro-dosen.show');
+        Route::get('/revisi-lembarRevisi-sempro/dosen{id}', 'serveRevisiLembarRevisiSempro')
+            ->name('revisi-lembarRevisi-sempro-dosen.show');
+        // revisi semhas
+        Route::get('/revisi-proposal-semhas/dosen{id}', 'serveRevisiProposalSemhas')
+            ->name('revisi-proposal-semhas-dosen.show');
+        Route::get('/revisi-lembarRevisi-semhas/dosen{id}', 'serveRevisiLembarRevisiSemhas')
+            ->name('revisi-lembarRevisi-semhas-dosen.show');
+    });
 });
 
 /**
@@ -444,6 +457,17 @@ Route::middleware(["auth:dosen", "auth.session", "password.changed", "is.panitia
             ->name('bebas-pkl.show');
         Route::get('/skla/{id}', 'serveSKLAFile')
             ->name('skla.show');
+
+        // revisi sempro
+        Route::get('/revisi-proposal-sempro/{id}', 'serveRevisiProposalSempro')
+            ->name('revisi-proposal-sempro.show');
+        Route::get('/revisi-lembarRevisi-sempro/{id}', 'serveRevisiLembarRevisiSempro')
+            ->name('revisi-lembarRevisi-sempro.show');
+        // revisi semhas
+        Route::get('/revisi-proposal-semhas/{id}', 'serveRevisiProposalSemhas')
+            ->name('revisi-proposal-semhas.show');
+        Route::get('/revisi-lembarRevisi-semhas/{id}', 'serveRevisiLembarRevisiSemhas')
+            ->name('revisi-lembarRevisi-semhas.show');
     });
 
     Route::controller(JadwalSemproPanitiaController::class)

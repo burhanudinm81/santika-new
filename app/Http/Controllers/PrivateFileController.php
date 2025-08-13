@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Models\PendaftaranSemhas;
 use App\Models\PendaftaranSeminarProposal;
 use App\Models\Proposal;
+use App\Models\Revisi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 
@@ -264,4 +265,99 @@ class PrivateFileController extends Controller
             'Cache-Control' => 'public, max-age=3600',
         ]);
     }
+
+    // UNTUK REVISI
+    public function serveRevisiProposalSempro($id)
+    {
+        $revisi = Revisi::where('id', $id)->where('jenis_revisi', 'sempro')->first();
+
+        if (!$revisi->file_proposal_revisi) {
+            abort(404, 'Blok file revisi tidak ditemukan');
+        }
+
+        $filepath = $revisi->file_proposal_revisi;
+
+        if (!Storage::disk('local')->exists($filepath)) {
+            abort(404, 'Blok file revisi  tidak ditemukan');
+        }
+
+        $file = Storage::disk('local')->get($filepath);
+        $mimeType = Storage::disk('local')->mimeType($filepath);
+
+        return response($file, 200, [
+            'Content-Type' => $mimeType,
+            'Cache-Control' => 'public, max-age=3600',
+        ]);
+    }
+
+    public function serveRevisiProposalSemhas($id)
+    {
+        $revisi = Revisi::where('id', $id)->where('jenis_revisi', 'semhas')->first();
+
+        if (!$revisi->file_proposal_revisi) {
+            abort(404, 'Blok file revisi tidak ditemukan');
+        }
+
+        $filepath = $revisi->file_proposal_revisi;
+
+        if (!Storage::disk('local')->exists($filepath)) {
+            abort(404, 'Blok file revisi  tidak ditemukan');
+        }
+
+        $file = Storage::disk('local')->get($filepath);
+        $mimeType = Storage::disk('local')->mimeType($filepath);
+
+        return response($file, 200, [
+            'Content-Type' => $mimeType,
+            'Cache-Control' => 'public, max-age=3600',
+        ]);
+    }
+
+    public function serveRevisiLembarRevisiSempro($id)
+    {
+        $revisi = Revisi::where('id', $id)->where('jenis_revisi', 'sempro')->first();
+
+        if (!$revisi->file_lembar_revisi_dosen) {
+            abort(404, 'Blok file revisi tidak ditemukan');
+        }
+
+        $filepath = $revisi->file_lembar_revisi_dosen;
+
+        if (!Storage::disk('local')->exists($filepath)) {
+            abort(404, 'Blok file revisi  tidak ditemukan');
+        }
+
+        $file = Storage::disk('local')->get($filepath);
+        $mimeType = Storage::disk('local')->mimeType($filepath);
+
+        return response($file, 200, [
+            'Content-Type' => $mimeType,
+            'Cache-Control' => 'public, max-age=3600',
+        ]);
+    }
+
+    public function serveRevisiLembarRevisiSemhas($id)
+    {
+        $revisi = Revisi::where('id', $id)->where('jenis_revisi', 'semhas')->first();
+
+        if (!$revisi->file_lembar_revisi_dosen) {
+            abort(404, 'Blok file revisi tidak ditemukan');
+        }
+
+        $filepath = $revisi->file_lembar_revisi_dosen;
+
+        if (!Storage::disk('local')->exists($filepath)) {
+            abort(404, 'Blok file revisi  tidak ditemukan');
+        }
+
+        $file = Storage::disk('local')->get($filepath);
+        $mimeType = Storage::disk('local')->mimeType($filepath);
+
+        return response($file, 200, [
+            'Content-Type' => $mimeType,
+            'Cache-Control' => 'public, max-age=3600',
+        ]);
+    }
+
+    
 }

@@ -161,6 +161,7 @@ class SeminarHasilPanitiaController extends Controller
             ->where('dosen_id', $proposalInfo->dosenPengujiSidangTA1->id)
             ->where('jenis_revisi', 'semhas')
             ->first();
+
         $revisi2 = Revisi::where('proposal_id', $proposalInfo->id)
             ->where('dosen_id', $proposalInfo->dosenPengujiSidangTA2->id)
             ->where('jenis_revisi', 'semhas')
