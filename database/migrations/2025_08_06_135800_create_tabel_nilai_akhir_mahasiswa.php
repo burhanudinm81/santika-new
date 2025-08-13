@@ -34,15 +34,13 @@ return new class extends Migration
             $table->float('avg_nilai_penguji2')->nullable();
             $table->float('avg_nilai_totalPenguji')->nullable();
             // penguji 1
-            $table->float('nilai_sikap_peng1')->nullable();
-            $table->float('nilai_kemampuan_peng1')->nullable();
-            $table->float('nilai_hasilKarya_peng1')->nullable();
-            $table->float('nilai_laporan_peng1')->nullable();
+            $table->float('nilai_penguasaan_materi1')->nullable();
+            $table->float('nilai_presentasi1')->nullable();
+            $table->float('nilai_karya_tulis1')->nullable();
             // penguji 2
-            $table->float('nilai_sikap_peng2')->nullable();
-            $table->float('nilai_kemampuan_peng2')->nullable();
-            $table->float('nilai_hasilKarya_peng2')->nullable();
-            $table->float('nilai_laporan_peng2')->nullable();
+            $table->float('nilai_penguasaan_materi2')->nullable();
+            $table->float('nilai_presentasi2')->nullable();
+            $table->float('nilai_karya_tulis2')->nullable();
 
             $table->timestamps();
         });

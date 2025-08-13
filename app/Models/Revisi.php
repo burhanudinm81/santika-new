@@ -18,4 +18,69 @@ class Revisi extends Model
     {
         return $this->belongsTo(Dosen::class, "dosen_id");
     }
+
+    public function getPathRevisiProposalSempro()
+    {
+        if ($this->file_proposal_revisi) {
+            return route('revisi-proposal-sempro.show', $this->id);
+        }
+        return null;
+    }
+
+    public function getPathLembarRevisiSempro()
+    {
+        if ($this->file_lembar_revisi_dosen) {
+            return route('revisi-lembarRevisi-sempro.show', $this->id);
+        }
+        return null;
+    }
+
+    public function getPathRevisiProposalSemhas()
+    {
+        if ($this->file_proposal_revisi) {
+            return route('revisi-proposal-semhas.show', $this->id);
+        }
+        return null;
+    }
+
+    public function getPathLembarRevisiSemhas()
+    {
+        if ($this->file_lembar_revisi_dosen) {
+            return route('revisi-lembarRevisi-semhas.show', $this->id);
+        }
+        return null;
+    }
+
+    // untuk dosen
+    public function getPathRevisiProposalSemproForDosen()
+    {
+        if ($this->file_proposal_revisi) {
+            return route('revisi-proposal-sempro-dosen.show', $this->id);
+        }
+        return null;
+    }
+
+    public function getPathLembarRevisiSemproForDosen()
+    {
+        if ($this->file_lembar_revisi_dosen) {
+            return route('revisi-lembarRevisi-sempro-dosen.show', $this->id);
+        }
+        return null;
+    }
+
+    public function getPathRevisiProposalSemhasForDosen()
+    {
+        if ($this->file_proposal_revisi) {
+            return route('revisi-proposal-semhas-dosen.show', $this->id);
+        }
+        return null;
+    }
+
+    public function getPathLembarRevisiSemhasForDosen()
+    {
+        if ($this->file_lembar_revisi_dosen) {
+            return route('revisi-lembarRevisi-semhas-dosen.show', $this->id);
+        }
+        return null;
+    }
 }

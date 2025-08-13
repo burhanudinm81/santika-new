@@ -21,13 +21,10 @@ class PenilaianSemproController extends Controller
         $listStatusPenilaian = StatusProposal::all();
         // dd($listMahasiswa[1]->mahasiswa->nama);
 
-        $prevRevisi = Revisi::where('proposal_id', $proposal_id)->get();
-
-        if (count($prevRevisi) > 0) {
-            $prevRevisi = Revisi::with('dosen')->where('proposal_id', $proposal_id)->where('dosen_id', auth('dosen')->user()->id)->first();
-        } else {
-            $prevRevisi = null;
-        }
+        $prevRevisi = Revisi::where('proposal_id', $proposal_id)
+            ->where('dosen_id', auth('dosen')->user()->id)
+            ->where('jenis_revisi', 'sempro')
+            ->first();
 
         return view('dosen.penilaian.sempro.penilaian-sempro', compact([
             'proposal',
@@ -55,6 +52,7 @@ class PenilaianSemproController extends Controller
                 'proposal_id' => $proposalId,
                 'dosen_id' => $dosenId,
                 'catatan_revisi' => $catatanRevisi,
+                'jenis_revisi' => 'sempro',
             ]);
         } else {
             // update revisi sebelumnya yang sudah dibuat

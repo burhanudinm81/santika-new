@@ -7,7 +7,7 @@
                 <div class="col-sm-6">
                     <h1 class="m-0">Revisi Seminar Hasil</h1>
                 </div><!-- /.col -->
-            </div><!-- /.row -->
+        </div><!-- /.row -->
         </div><!-- /.container-fluid -->
     </div>
     <!-- /.content-header -->
@@ -47,12 +47,6 @@
                                     </div>
 
                                 </div>
-                                @if ($revisiPeng1 != null && $revisiPeng1->file_lembar_revisi_dosen)
-                                    <a href="{{ route('file-private-mahasiswa.view', ['filepath' => $revisiPeng1->file_lembar_revisi_dosen]) }}"
-                                        target="_blank">
-                                        file_proposal_revisi (klik file)
-                                    </a>
-                                @endif
                             </div>
                             <div class="form-group">
                                 <label for="exampleInputFile">Lembar Revisi Dosen Penguji 2 .pdf</label>
@@ -63,12 +57,6 @@
                                         <label class="custom-file-label" for="exampleInputFile">Choose file</label>
                                     </div>
                                 </div>
-                                @if ($revisiPeng2 != null && $revisiPeng2->file_lembar_revisi_dosen)
-                                    <a href="{{ route('file-private-mahasiswa.view', ['filepath' => $revisiPeng2->file_lembar_revisi_dosen]) }}"
-                                        target="_blank">
-                                        file_proposal_revisi (klik file)
-                                    </a>
-                                @endif
                             </div>
                             <div class="form-group">
                                 <label for="exampleInputFile">Proposal Telah di Revisi .pdf</label>
@@ -79,21 +67,14 @@
                                         <label class="custom-file-label" for="exampleInputFile">Choose file</label>
                                     </div>
                                 </div>
-                                @if ($revisiPeng1 != null && $revisiPeng1->file_proposal_revisi)
-                                    <a href="{{ route('file-private-mahasiswa.view', ['filepath' => $revisiPeng1->file_proposal_revisi]) }}"
-                                        target="_blank">
-                                        file_proposal_revisi (klik file)
-                                    </a>
-                                @endif
                             </div>
                             <div class="form-group">
                                 <label for="exampleInputFile">Status Revisi Semhas</label>
                                 <input type="text" class="form-control" name="status_revisi"
                                     value="
-                                        @if($revisiPeng1 != null)
-                                            {{ $revisiPeng1->status }}
-                                        @endif
-                                    " readonly>
+                                        @if ($revisiPeng1 != null) {{ $revisiPeng1->status }} @endif
+                                    "
+                                    readonly>
                             </div>
                         </div>
                         <!--end::Body-->

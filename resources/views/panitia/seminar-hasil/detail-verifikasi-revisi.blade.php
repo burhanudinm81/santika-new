@@ -38,48 +38,30 @@
                         <div class="card-body">
                             <div class="form-group">
                                 <label for="exampleInputFile">Lembar Revisi Dosen Penguji 1 .pdf</label>
-                                <div class="input-group">
-                                    <div class="custom-file">
-                                        @if ($revisi1->file_lembar_revisi_dosen)
-                                            <a href="{{ route('file-private.view', ['filepath' => $revisi1->file_lembar_revisi_dosen]) }}"
-                                                target="_blank">
-                                                file_lembar_revisi_dosen_penguji_1 (klik file)
-                                            </a>
-                                        @else
-                                            <span class="text-gray-500 italic">Belum ada file</span>
-                                        @endif
-                                    </div>
-                                </div>
+                                @if ($revisi1 != null && $revisi1->file_lembar_revisi_dosen)
+                                    <iframe src="{{ $revisi1->getPathLembarRevisiSemhas() }}" frameborder="2" width="88%"
+                                        height="700px" scrolling="yes"></iframe>
+                                @else
+                                    <span class="text-gray-500 italic">Belum ada file</span>
+                                @endif
                             </div>
                             <div class="form-group">
                                 <label for="exampleInputFile">Lembar Revisi Dosen Penguji 2 .pdf</label>
-                                <div class="input-group">
-                                    <div class="custom-file">
-                                        @if ($revisi2->file_lembar_revisi_dosen)
-                                            <a href="{{ route('file-private.view', ['filepath' => $revisi2->file_lembar_revisi_dosen]) }}"
-                                                target="_blank">
-                                                file_lembar_revisi_dosen_penguji_2 (klik file)
-                                            </a>
-                                        @else
-                                            <span class="text-gray-500 italic">Belum ada file</span>
-                                        @endif
-                                    </div>
-                                </div>
+                                @if ($revisi2 != null && $revisi2->file_lembar_revisi_dosen)
+                                    <iframe src="{{ $revisi2->getPathLembarRevisiSemhas() }}" frameborder="2" width="88%"
+                                        height="700px" scrolling="yes"></iframe>
+                                @else
+                                    <span class="text-gray-500 italic">Belum ada file</span>
+                                @endif
                             </div>
                             <div class="form-group">
                                 <label for="exampleInputFile">Proposal Telah di Revisi .pdf</label>
-                                <div class="input-group">
-                                    <div class="custom-file">
-                                        @if ($revisi1->file_proposal_revisi)
-                                            <a href="{{ route('file-private.view', ['filepath' => $revisi1->file_proposal_revisi]) }}"
-                                                target="_blank">
-                                                file_proposal_revisi (klik file)
-                                            </a>
-                                        @else
-                                            <span class="text-gray-500 italic">Belum ada file</span>
-                                        @endif
-                                    </div>
-                                </div>
+                                @if ($revisi1 != null && $revisi1->file_proposal_revisi)
+                                    <iframe src="{{ $revisi1->getPathRevisiProposalSemhas() }}" frameborder="2" width="88%"
+                                        height="700px" scrolling="yes"></iframe>
+                                @else
+                                    <span class="text-gray-500 italic">Belum ada file</span>
+                                @endif
                             </div>
                             <div class="form-group">
                                 <label for="exampleInputFile">Status Revisi</label>
