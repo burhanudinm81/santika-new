@@ -128,7 +128,12 @@ class JadwalSemproController extends Controller
         })->delete();
 
         $scheduler = new SemproSchedulerService();
+        $start = microtime(true);           // waktu mulai penjadwalan
         $jadwal = $scheduler->generate($proposals, $ruangs, $tanggals, $sesis, $dosenKuota, $waktuBerhalangan);
+        $end = microtime(true);             // waktu selesai penjadwalan
+        $waktuRespon = $end - $start;
+
+        Log::info("Waktu Respon Penjadwalan Sempro: " . $waktuRespon . " detik");
 
         // Urutkan jadwal berdasarkan tanggal dan waktu mulai (agar sesi 1 adalah waktu paling awal)
         usort($jadwal, function ($a, $b) {
@@ -196,10 +201,6 @@ class JadwalSemproController extends Controller
 
             $kuotaDosenPenguji2->save();
         }
-
-        Log::info('Jadwal seminar proposal berhasil digenerate', [
-            'jadwal' => $jadwal
-        ]);
 
         return redirect()
             ->route('jadwal-sempro.index')

@@ -22,7 +22,7 @@ class SemproSchedulerService
         $popSize = 30;
         $maxGen = 100;
         $selectionCount = round(1 / 3 * $popSize);
-        $crossoverRate = 0.8;
+        // $crossoverRate = 0.8;
         $mutationRate = 0.05;
         $population = $this->initPopulation($proposals, $ruangs, $tanggals, $sesis, $dosenKuota, $popSize);
         $bestJadwal = null;
@@ -52,32 +52,15 @@ class SemproSchedulerService
                 $newPopulation[] = $selectedPopulation[0];
             }
 
-            // // Buat sisa populasi dengan mutasi dari individu terbaik
-            // while (count($newPopulation) < $popSize) {
-            //     // Ambil parent acak dari popoulasi terpilih
-            //     $parent = $selectedPopulation[array_rand($selectedPopulation)];
-            //     // Buat children dengan memutasi parent
-            //     $child = $this->mutate($parent, $ruangs, $tanggals, $sesis, $dosenKuota, $mutationRate);
-            //     $newPopulation[] = $child;
-            // }
-
-            // Acak ulang sisanya
+            // Buat sisa populasi dengan mutasi dari individu terbaik
             while (count($newPopulation) < $popSize) {
-                // Pilih 2 parent secara acak dari populasi terpilih
-                $parent1 = $selectedPopulation[array_rand($selectedPopulation)];
-                $parent2 = $selectedPopulation[array_rand($selectedPopulation)];
-
-                // Lakukan Crossover jika lolos probabilitas
-                if ((mt_rand() / mt_getrandmax()) < $crossoverRate) {
-                    $offspring = $this->crossover($parent1, $parent2);
-                } else {
-                    // Jika tidak, salin dari parent1
-                    $offspring = $parent1;
-                }
-
-                $mutatedOffspring = $this->mutate($offspring, $ruangs, $tanggals, $sesis, $dosenKuota, $mutationRate);
-                $newPopulation[] = $mutatedOffspring;
+                // Ambil parent acak dari popoulasi terpilih
+                $parent = $selectedPopulation[array_rand($selectedPopulation)];
+                // Buat children dengan memutasi parent
+                $child = $this->mutate($parent, $ruangs, $tanggals, $sesis, $dosenKuota, $proposals, $mutationRate);
+                $newPopulation[] = $child;
             }
+
             $population = $newPopulation;
             if ($bestFitness == 0)
                 break; // solusi optimal ditemukan
@@ -187,8 +170,8 @@ class SemproSchedulerService
                 $ruang = $ruangs[array_rand($ruangs)];
                 $tanggal = $tanggals[array_rand($tanggals)];
                 $sesi = $sesis[array_rand($sesis)];
-                $penguji1 = $this->getAvailableDosen($tanggal, $sesi, $dosenKuota, 1);
-                $penguji2 = $this->getAvailableDosen($tanggal, $sesi, $dosenKuota, 2);
+                $penguji1 = $this->getAvailableDosen($tanggal, $sesi, $dosenKuota, 1, [], $proposal['bidang_minat_id']);
+                $penguji2 = $this->getAvailableDosen($tanggal, $sesi, $dosenKuota, 2, [], $proposal['bidang_minat_id']);
                 $jadwal[] = [
                     'proposal_id' => $proposal['id'],
                     'ruang' => $ruang,
@@ -213,13 +196,25 @@ class SemproSchedulerService
      * @param array $exclude daftar dosen_id yang tidak boleh dipilih
      * @return int|null dosen_id terpilih atau null jika tidak ada yang valid
      */
-    public function getAvailableDosen($tanggal, $sesi, $dosenKuota, $tipe = 1, $exclude = [])
+    public function getAvailableDosen($tanggal, $sesi, $dosenKuota, $tipe = 1, $exclude = [], $bidangMinat = null)
     {
         $field = $tipe == 1 ? 'kuota_penguji_sempro_1' : 'kuota_penguji_sempro_2';
         $candidates = [];
         foreach ($dosenKuota as $dosenId => $kuota) {
             if (in_array($dosenId, $exclude))
                 continue;
+            // Cek bidang minat jika diberikan
+            if ($bidangMinat) {
+                if (isset($kuota['bidang_minat_id']) && is_array($kuota['bidang_minat_id'])) {
+                    // Jika dosen punya banyak bidang minat
+                    if (!in_array($bidangMinat, $kuota['bidang_minat_id']))
+                        continue;
+                }
+                // Jika hanya satu bidang minat
+                elseif (isset($kuota['bidang_minat_id']) && $kuota['bidang_minat_id'] != $bidangMinat) {
+                    continue;
+                }
+            }
             if (($kuota[$field] ?? 0) > 0) {
                 $candidates[] = $dosenId;
             }
@@ -235,7 +230,7 @@ class SemproSchedulerService
      * @param float $mutationRate Peluang terjadinya mutasi
      * @return array Jadwal hasil mutasi
      */
-    public function mutate(array $jadwal, array $ruangs, array $tanggals, array $sesis, array $dosenKuota, float $mutationRate): array
+    public function mutate(array $jadwal, array $ruangs, array $tanggals, array $sesis, array $dosenKuota, array $proposals, float $mutationRate): array
     {
         $mutatedJadwal = $jadwal;
 
@@ -257,12 +252,12 @@ class SemproSchedulerService
 
             // Mutasi Penguji 1
             if ((mt_rand() / mt_getrandmax()) < $mutationRate) {
-                $item['penguji_1'] = $this->getAvailableDosen($item['tanggal'], $item['sesi'], $dosenKuota, 1);
+                $item['penguji_1'] = $this->getAvailableDosen($item['tanggal'], $item['sesi'], $dosenKuota, 1, [$item['moderator'], $item['penguji_2']], $proposals[$idx]['bidang_minat_id']);
             }
 
             // Mutasi Penguji 2
             if ((mt_rand() / mt_getrandmax()) < $mutationRate) {
-                $item['penguji_2'] = $this->getAvailableDosen($item['tanggal'], $item['sesi'], $dosenKuota, 2);
+                $item['penguji_2'] = $this->getAvailableDosen($item['tanggal'], $item['sesi'], $dosenKuota, 2, [$item['moderator'], $item['penguji_1']], $proposals[$idx]['bidang_minat_id']);
             }
         }
 
@@ -275,24 +270,24 @@ class SemproSchedulerService
      * @param array $parent2 Jadwal induk kedua
      * @return array Jadwal anak (offspring)
      */
-    public function crossover(array $parent1, array $parent2): array
-    {
-        $offspring = [];
-        $totalItems = count($parent1);
+    // public function crossover(array $parent1, array $parent2): array
+    // {
+    //     $offspring = [];
+    //     $totalItems = count($parent1);
 
-        // Tentukan titik potong (crossover point) secara acak
-        // Hindari titik 0 dan titik akhir agar persilangan bermakna
-        $crossoverPoint = mt_rand(1, $totalItems - 2);
+    //     // Tentukan titik potong (crossover point) secara acak
+    //     // Hindari titik 0 dan titik akhir agar persilangan bermakna
+    //     $crossoverPoint = mt_rand(1, $totalItems - 2);
 
-        // Ambil bagian "kepala" dari parent 1
-        $head = array_slice($parent1, 0, $crossoverPoint);
+    //     // Ambil bagian "kepala" dari parent 1
+    //     $head = array_slice($parent1, 0, $crossoverPoint);
 
-        // Ambil bagian "ekor" dari parent 2
-        $tail = array_slice($parent2, $crossoverPoint);
+    //     // Ambil bagian "ekor" dari parent 2
+    //     $tail = array_slice($parent2, $crossoverPoint);
 
-        // Gabungkan menjadi satu children
-        $offspring = array_merge($head, $tail);
+    //     // Gabungkan menjadi satu children
+    //     $offspring = array_merge($head, $tail);
 
-        return $offspring;
-    }
+    //     return $offspring;
+    // }
 }
