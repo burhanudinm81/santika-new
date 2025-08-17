@@ -15,6 +15,7 @@ use App\Models\Tahap;
 use App\Services\SemhasSchedulerService;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\View\View;
 
@@ -28,10 +29,10 @@ class JadwalSemhasController extends Controller
         // Ambil pasangan unik tahap dan periode dari jadwal sidang ujian akhir / semhas
         $pasangan = JadwalSeminarHasil::whereHas('proposal', function ($query) use ($prodi) {
             $query->where('prodi_id', $prodi->id);
-        })  
+        })
             ->with(['proposal.tahapSemhas', 'proposal.periodeSemhas'])
             ->get()
-            ->map(function($item){
+            ->map(function ($item) {
                 return [
                     "tahap_id" => $item->proposal->tahap_semhas_id,
                     "tahap" => $item->proposal->tahapSemhas->tahap,
@@ -39,10 +40,10 @@ class JadwalSemhasController extends Controller
                     "periode" => $item->proposal->periodeSemhas->tahun,
                 ];
             })
-            ->unique(function($item){
+            ->unique(function ($item) {
                 return $item['tahap_id'] . "-" . $item["periode_id"];
             })
-            ->sortBy(function($item) {
+            ->sortBy(function ($item) {
                 return $item['tahap_id'] . '-' . $item['periode_id'];
             })
             ->values();
@@ -87,7 +88,7 @@ class JadwalSemhasController extends Controller
         $periodeId = $request->integer("periode_id");
 
         // 3. Ambil proposal sesuai input
-        $proposals = Proposal::whereHas('pendaftaranSemhas', function($query){
+        $proposals = Proposal::whereHas('pendaftaranSemhas', function ($query) {
             $query->where('status_daftar_semhas_id', 1);
         })
             ->where('tahap_semhas_id', $request->tahap_id)
@@ -107,23 +108,25 @@ class JadwalSemhasController extends Controller
         }
 
         // 5. Ambil kuota dosen
-        $dosenKuota = KuotaDosen::all()->keyBy('dosen_id')->map(function ($item) use ($prodiPanitia) {
+        $dosenKuota = Dosen::with(['kuotaDosen', 'bidangMinats'])->get()->keyBy('id')->map(function ($dosen) use ($prodiPanitia) {
             return [
-                'kuota_penguji_sidang_TA_1' => $prodiPanitia == 1 ? $item->kuota_penguji_sidang_TA_1_D3 : $item->kuota_penguji_sidang_TA_1_D4,
-                'kuota_penguji_sidang_TA_2' => $prodiPanitia == 1 ? $item->kuota_penguji_sidang_TA_2_D3 : $item->kuota_penguji_sidang_TA_2_D4
+                'kuota_penguji_sidang_TA_1' => $prodiPanitia == 1 ? $dosen->kuotaDosen->kuota_penguji_sidang_TA_1_D3 : $dosen->kuotaDosen->kuota_penguji_sidang_TA_1_D4,
+                'kuota_penguji_sidang_TA_2' => $prodiPanitia == 1 ? $dosen->kuotaDosen->kuota_penguji_sidang_TA_2_D3 : $dosen->kuotaDosen->kuota_penguji_sidang_TA_2_D4,
+                'bidang_minat_id' => $dosen->bidangMinats->pluck('id')->toArray(),
             ];
         })->toArray();
 
         // Hapus Jadwal Semhas yang lama jika ada
-        $jadwalSemhasLama = JadwalSeminarHasil::whereHas('proposal', function($query) use ($tahapId, $periodeId, $prodiPanitia){
+        $jadwalSemhasLama = JadwalSeminarHasil::whereHas('proposal', function ($query) use ($tahapId, $periodeId, $prodiPanitia) {
             $query->where('tahap_semhas_id', $tahapId)
                 ->where('periode_semhas_id', $periodeId)
-                ->where('prodi_id', $prodiPanitia );
+                ->where('prodi_id', $prodiPanitia);
         })->delete();
 
         // 6. Generate jadwal menggunakan SemhasSchedulerService
         $scheduler = new SemhasSchedulerService();
 
+        $start = microtime(true);
         $jadwal = $scheduler->generate(
             $proposals,
             $request->ruang,
@@ -131,6 +134,9 @@ class JadwalSemhasController extends Controller
             $request->sesi, // $request->sesi harus berupa array sesi: [['waktu_mulai' => ..., 'waktu_selesai' => ...], ...]
             $dosenKuota
         );
+        $end = microtime(true);
+        $waktuRespon = $end - $start;
+        Log::info("Waktu Respon Penjadwalan Sidang Ujian Akhir: " . $waktuRespon . " detik");
 
         // Urutkan jadwal berdasarkan tanggal dan waktu mulai (agar sesi 1 adalah waktu paling awal)
         usort($jadwal, function ($a, $b) {
@@ -249,18 +255,18 @@ class JadwalSemhasController extends Controller
         $tahap = $validated["tahap_id"];
         $prodiPanitia = Panitia::firstWhere('dosen_id', auth('dosen')->id())->prodi_id;
 
-        $listDosenPenguji1 = Dosen::whereHas('kuotaDosen', function($query) use ($prodiPanitia){
-            if($prodiPanitia == 1){
+        $listDosenPenguji1 = Dosen::whereHas('kuotaDosen', function ($query) use ($prodiPanitia) {
+            if ($prodiPanitia == 1) {
                 $query->where("kuota_penguji_sidang_TA_1_D3", ">", 0);
-            } else if($prodiPanitia == 2){
+            } else if ($prodiPanitia == 2) {
                 $query->where("kuota_penguji_sidang_TA_1_D4", ">", 0);
             }
         })->get();
 
-        $listDosenPenguji2 = Dosen::whereHas('kuotaDosen', function($query) use ($prodiPanitia){
-            if($prodiPanitia == 1){
+        $listDosenPenguji2 = Dosen::whereHas('kuotaDosen', function ($query) use ($prodiPanitia) {
+            if ($prodiPanitia == 1) {
                 $query->where("kuota_penguji_sidang_TA_2_D3", ">", 0);
-            } else if($prodiPanitia == 2){
+            } else if ($prodiPanitia == 2) {
                 $query->where("kuota_penguji_sidang_TA_2_D4", ">", 0);
             }
         })->get();
@@ -278,8 +284,8 @@ class JadwalSemhasController extends Controller
                     'dosenPembimbing2',
                     'dosenPengujiSidangTA1',
                     'dosenPengujiSidangTA2'
-                    ]
-                )
+                ]
+            )
             ->get();
 
         return response()->json([
@@ -303,7 +309,7 @@ class JadwalSemhasController extends Controller
         $listWaktuSelesai = $request->waktu_selesai;
         $listDosenPenguji1Id = $request->dosen_penguji_1_id;
         $listDosenPenguji2Id = $request->dosen_penguji_2_id;
-        
+
         $prodiPanitia = Panitia::firstWhere('dosen_id', auth("dosen")->id())->prodi_id;
         $rowCount = count($listProposalId);
 
@@ -312,15 +318,15 @@ class JadwalSemhasController extends Controller
         $tahapId = $proposal->tahap_semhas_id;
 
         // Menghapus Jadwal Semhas Lama jika ada
-        $jadwalSemhasLama = JadwalSeminarHasil::whereHas('proposal', function($query) use ($periodeId, $tahapId, $prodiPanitia) {
+        $jadwalSemhasLama = JadwalSeminarHasil::whereHas('proposal', function ($query) use ($periodeId, $tahapId, $prodiPanitia) {
             $query->where('periode_semhas_id', $periodeId)
                 ->where('tahap_semhas_id', $tahapId)
                 ->where('prodi_id', $prodiPanitia);
         })->delete();
-        
-        for($i = 0; $i < $rowCount; $i++){
+
+        for ($i = 0; $i < $rowCount; $i++) {
             JadwalSeminarHasil::create([
-                'proposal_id'  => $listProposalId[$i],
+                'proposal_id' => $listProposalId[$i],
                 'ruang' => $listRuang[$i],
                 'tanggal' => $listTanggal[$i],
                 'sesi' => $listSesi[$i],
@@ -332,15 +338,15 @@ class JadwalSemhasController extends Controller
             $proposal->penguji_sidang_ta_1_id = $listDosenPenguji1Id[$i];
             $proposal->penguji_sidang_ta_2_id = $listDosenPenguji2Id[$i];
             $proposal->save();
- 
+
             // 
             // Mengurangi kuota dosen penguji sidang ta 1
             // 
             $kuotaDosenPenguji1 = KuotaDosen::firstWhere("dosen_id", $listDosenPenguji1Id[$i]);
 
-            if($prodiPanitia == 1)
+            if ($prodiPanitia == 1)
                 $kuotaDosenPenguji1->kuota_penguji_sidang_TA_1_D3--;
-            else if($prodiPanitia == 2)
+            else if ($prodiPanitia == 2)
                 $kuotaDosenPenguji1->kuota_penguji_sidang_TA_1_D4--;
 
             $kuotaDosenPenguji1->save();
@@ -350,9 +356,9 @@ class JadwalSemhasController extends Controller
             // 
             $kuotaDosenPenguji2 = KuotaDosen::firstWhere("dosen_id", $listDosenPenguji2Id[$i]);
 
-            if($prodiPanitia == 1)
+            if ($prodiPanitia == 1)
                 $kuotaDosenPenguji2->kuota_penguji_sidang_TA_2_D3--;
-            else if($prodiPanitia == 2)
+            else if ($prodiPanitia == 2)
                 $kuotaDosenPenguji2->kuota_penguji_sidang_TA_2_D4--;
 
             $kuotaDosenPenguji2->save();

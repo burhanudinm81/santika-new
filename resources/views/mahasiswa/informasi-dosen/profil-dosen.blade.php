@@ -135,4 +135,3 @@
     </div>
 @endsection
 <!-- /.content -->
-<script src="{{ url("/custom/js/back-to-previous-page.js") }}"></script>

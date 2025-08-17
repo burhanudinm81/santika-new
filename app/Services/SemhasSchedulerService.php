@@ -77,11 +77,13 @@ class SemhasSchedulerService
             $dosenPembimbing2 = $proposal->dosen_pembimbing_2_id;
 
             // Pilih dosen penguji 1 dan 2 (kuota harus cukup, tidak boleh bentrok dengan pembimbing)
-            $penguji1 = $this->pickPenguji($kuotaPenguji1, [$dosenPembimbing1, $dosenPembimbing2]);
-            if ($penguji1 !== null) $kuotaPenguji1[$penguji1]['kuota_penguji_sidang_TA_1']--;
+            $penguji1 = $this->pickPenguji($kuotaPenguji1, [$dosenPembimbing1, $dosenPembimbing2], $proposal->bidang_minat_id);
+            if ($penguji1 !== null)
+                $kuotaPenguji1[$penguji1]['kuota_penguji_sidang_TA_1']--;
 
-            $penguji2 = $this->pickPenguji($kuotaPenguji2, [$dosenPembimbing1, $dosenPembimbing2, $penguji1]);
-            if ($penguji2 !== null) $kuotaPenguji2[$penguji2]['kuota_penguji_sidang_TA_2']--;
+            $penguji2 = $this->pickPenguji($kuotaPenguji2, [$dosenPembimbing1, $dosenPembimbing2, $penguji1], $proposal->bidang_minat_id);
+            if ($penguji2 !== null)
+                $kuotaPenguji2[$penguji2]['kuota_penguji_sidang_TA_2']--;
 
             $jadwal[] = [
                 'proposal_id' => $proposal->id,
@@ -97,11 +99,20 @@ class SemhasSchedulerService
         return $jadwal;
     }
 
-    protected function pickPenguji($kuota, $exclude)
+    protected function pickPenguji($kuota, $exclude, $bidangMinat)
     {
         $candidates = [];
         foreach ($kuota as $dosen_id => $data) {
+            // Cek bidang minat dosen
+            $dosenBidang = $data['bidang_minat_id'] ?? null;
+            $cocok = false;
+
+            if (is_array($dosenBidang)) {
+                $cocok = in_array($bidangMinat, $dosenBidang);
+            }
+
             if (
+                $cocok &&
                 !in_array($dosen_id, $exclude) &&
                 (!isset($data['kuota_penguji_sidang_TA_1']) || $data['kuota_penguji_sidang_TA_1'] > 0) &&
                 (!isset($data['kuota_penguji_sidang_TA_2']) || $data['kuota_penguji_sidang_TA_2'] > 0)
@@ -109,7 +120,8 @@ class SemhasSchedulerService
                 $candidates[] = $dosen_id;
             }
         }
-        if (empty($candidates)) return null;
+        if (empty($candidates))
+            return null;
         return $candidates[array_rand($candidates)];
     }
 
@@ -136,7 +148,8 @@ class SemhasSchedulerService
                 $item['penguji_sidang_TA_2_id']
             ] as $dosen_id) {
                 if ($dosen_id) {
-                    if (!isset($dosenWaktu[$dosen_id])) $dosenWaktu[$dosen_id] = [];
+                    if (!isset($dosenWaktu[$dosen_id]))
+                        $dosenWaktu[$dosen_id] = [];
                     if (!in_array($waktuKey, $dosenWaktu[$dosen_id])) {
                         $dosenWaktu[$dosen_id][] = $waktuKey;
                         $score++;

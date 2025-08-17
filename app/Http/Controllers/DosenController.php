@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Exceptions\ImportDataException;
 use App\Http\Controllers\Controller;
+use App\Jobs\ProcessDosenImport;
 use App\Models\Dosen;
 use App\Models\BidangMinat;
 use App\Services\DosenImportService;
@@ -79,39 +80,32 @@ class DosenController extends Controller
             ], 422);
         }
 
-        $fileExcel = $request->file("file_excel");             // Mengambil file
-        $filename = time() . "_" . $fileExcel->getClientOriginalName();    // Membuat nama file
-
-        // Menyimpan file
-        $fileExcel->storeAs(
-            $this->excelFilePath,
-            $filename
-        );
-
         try {
-            // Panggil mahasiswaImportService
-            $this->dosenImportService->import(
+            $fileExcel = $request->file("file_excel");                    // Mengambil file
+            $filename = time() . "_" . $fileExcel->getClientOriginalName();    // Membuat nama file
+
+            // Menyimpan file
+            $fileExcel->storeAs(
+                $this->excelFilePath,
+                $filename
+            );
+
+            // Dispatch (kirim) Job ke ProcessDosenImport
+            ProcessDosenImport::dispatch(
                 $this->excelFilePath,
                 $filename
             );
 
             return response()->json([
                 "success" => true,
-                "message" => "Data Dosen berhasil diimpor!"
+                "message" => "Data Dosen Sedang Diimpor! Refresh secara berkala untuk melihat perubahan!"
             ]);
-        } catch (ImportDataException $e) {
-            // Tangkap error spesifik dari dosenImportService
-            return response()->json([
-                "success" => false,
-                "message" => $e->getMessage()
-            ], 422); // 422 Unprocessable Entity
-
         } catch (Exception $e) {
             // Tangkap error tak terduga lainnya
             Log::error("Import Gagal Total: " . $e->getMessage());
             return response()->json([
                 "success" => false,
-                "message" => "Terjadi kesalahan server saat mengimpor file."
+                "message" => "Terjadi kesalahan pada server saat mengimpor file."
             ], 500);
         }
     }
@@ -125,9 +119,11 @@ class DosenController extends Controller
         if ($bidangMinatId) {
             $dosenQuery->whereHas('bidangMinats', function ($query) use ($bidangMinatId) {
                 $query->where('bidang_minat.id', $bidangMinatId);
-            })->with(['bidangMinats' => function ($query) use ($bidangMinatId) {
-                $query->where('bidang_minat.id', $bidangMinatId);
-            }]);
+            })->with([
+                        'bidangMinats' => function ($query) use ($bidangMinatId) {
+                            $query->where('bidang_minat.id', $bidangMinatId);
+                        }
+                    ]);
         } else {
             $dosenQuery->with('bidangMinats');
         }
@@ -143,8 +139,8 @@ class DosenController extends Controller
 
     public function profilDosen($id)
     {
-        $dosen      = Dosen::with(['bidangMinats', 'kuotaDosen'])->find($id);
-        $userProdi  = data_get(auth('mahasiswa')->user(), 'prodi.prodi');
+        $dosen = Dosen::with(['bidangMinats', 'kuotaDosen'])->find($id);
+        $userProdi = data_get(auth('mahasiswa')->user(), 'prodi.prodi');
 
         return view('mahasiswa.informasi-dosen.profil-dosen', compact('dosen', 'userProdi'));
     }
