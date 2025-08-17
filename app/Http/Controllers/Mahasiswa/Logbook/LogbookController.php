@@ -38,13 +38,13 @@ class LogbookController extends Controller
             $dospem1Info = $proposalInfo->dosenPembimbing1()->first();
             $logbooksDospem1 = LogBook::with(['JenisKegiatanLogbook', 'statusLogbook'])->where('proposal_id', $proposalInfo->id)
                 ->where('dosen_id', $dospem1Info->id)
-                ->orderBy('created_at', 'desc')
+                ->orderBy('tanggal_kegiatan', 'asc')
                 ->get();
         } else if ($proposalInfo != null && $roleDospem == 2) {
             $dospem2Info = $proposalInfo->dosenPembimbing2()->first();
             $logbooksDospem2 = LogBook::with(['JenisKegiatanLogbook', 'statusLogbook'])->where('proposal_id', $proposalInfo->id)
                 ->where('dosen_id', $dospem2Info->id)
-                ->orderBy('created_at', 'desc')
+                ->orderBy('tanggal_kegiatan', 'asc')
                 ->get();
         }
 

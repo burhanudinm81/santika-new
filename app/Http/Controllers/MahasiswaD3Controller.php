@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Exceptions\ImportDataException;
 use App\Http\Controllers\Controller;
+use App\Jobs\ProcessMahasiswaImport;
 use App\Models\Periode;
 use App\Services\MahasiswaImportService;
 use Exception;
@@ -93,18 +94,18 @@ class MahasiswaD3Controller extends Controller implements MahasiswaControllerInt
             ], 422);
         }
 
-        $fileExcel = $request->file("file_excel");             // Mengambil file
-        $filename = time() . "_" . $fileExcel->getClientOriginalName();    // Membuat nama file
-
-        // Menyimpan file
-        $fileExcel->storeAs(
-            $this->excelFilePath,
-            $filename
-        );
-
         try {
-            // Panggil mahasiswaImportService
-            $this->mahasiswaImportService->import(
+            $fileExcel = $request->file("file_excel");                    // Mengambil file
+            $filename = time() . "_" . $fileExcel->getClientOriginalName();    // Membuat nama file
+
+            // Menyimpan file
+            $fileExcel->storeAs(
+                $this->excelFilePath,
+                $filename
+            );
+
+            // Dispatch (kirim) Job ke ProcessMahasiswaImport
+            ProcessMahasiswaImport::dispatch(
                 $this->excelFilePath,
                 $filename,
                 $this->prodi->id,
@@ -113,22 +114,14 @@ class MahasiswaD3Controller extends Controller implements MahasiswaControllerInt
 
             return response()->json([
                 "success" => true,
-                "message" => "Data mahasiswa berhasil diimpor!"
+                "message" => "Data Mahasiswa Sedang Diimpor! Refresh secara berkala untuk melihat perubahan!"
             ]);
-
-        } catch (ImportDataException $e) {
-            // Tangkap error spesifik dari mahasiswaImportService
-            return response()->json([
-                "success" => false,
-                "message" => $e->getMessage()
-            ], 422); // 422 Unprocessable Entity
-
         } catch (Exception $e) {
             // Tangkap error tak terduga lainnya
             Log::error("Import Gagal Total: " . $e->getMessage());
             return response()->json([
                 "success" => false,
-                "message" => "Terjadi kesalahan server saat mengimpor file."
+                "message" => "Terjadi kesalahan pada server saat mengimpor file."
             ], 500);
         }
     }

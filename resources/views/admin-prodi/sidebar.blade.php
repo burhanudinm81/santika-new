@@ -28,7 +28,7 @@
       <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
         <!-- Add icons to the links using the .nav-icon class
                with font-awesome or any other icon font library -->
-        <li id="dashboard-item" class="nav-item nav-ajax">
+        <li id="dashboard-item" class="nav-item ">
           <a href="{{ route("admin-prodi.dashboard") }}" class="nav-link">
             <i class="nav-icon fas fa-home"></i>
             <p>
@@ -46,13 +46,13 @@
             </p>
           </a>
           <ul class="nav nav-treeview">
-            <li id="mahasiswa-D4-item" class="nav-item nav-ajax">
+            <li id="mahasiswa-D4-item" class="nav-item ">
               <a href="{{ route("admin-prodi.mahasiswa.d4.page") }}" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Mahasiswa D4 JTD</p>
               </a>
             </li>
-            <li id="mahasiswa-D3-item" class="nav-item nav-ajax">
+            <li id="mahasiswa-D3-item" class="nav-item ">
               <a href="{{ route("admin-prodi.mahasiswa.d3.page") }}" class="nav-link">
                 <i class="far fa-circle nav-icon"></i>
                 <p>Mahasiswa D3 TT</p>
@@ -60,7 +60,7 @@
             </li>
           </ul>
 
-        <li id="data-dosen-item" class="nav-item nav-ajax">
+        <li id="data-dosen-item" class="nav-item ">
           <a href="{{ route("admin-prodi.dosen.page") }}" class="nav-link">
             <i class="nav-icon fas fa-solid fa-user"></i>
             <p>
@@ -69,7 +69,7 @@
           </a>
         </li>
 
-        <li id="panitia-tugas-akhir-item" class="nav-item nav-ajax">
+        <li id="panitia-tugas-akhir-item" class="nav-item ">
           <a href="{{ route("admin-prodi.panitia-tugas-akhir") }}" class="nav-link">
             <i class="nav-icon fas fa-solid fa-user-check"></i>
             <p>

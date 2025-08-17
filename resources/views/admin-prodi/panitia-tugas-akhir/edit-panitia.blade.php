@@ -1,16 +1,15 @@
-<!-- Content Header (Page header) -->
+@extends('admin-prodi.home')
+
+@section('content')
 <div class="content-header">
     <div class="container-fluid">
         <div class="row mb-2">
             <div class="col-sm-6">
                 <h1 class="m-0 font-weight-bold">Panitia Tugas Akhir</h1>
-            </div><!-- /.col -->
-        </div><!-- /.row -->
-    </div><!-- /.container-fluid -->
+            </div>
+        </div>
+    </div>
 </div>
-<!-- /.content-header -->
-
-<!-- Main content -->
 <div class="content">
     <div class="container-fluid">
         <div class="card card-default">
@@ -38,12 +37,15 @@
                     @endforeach
                 </div>
                 <div class="card-footer">
-                    <button type="button" class="btn btn-secondary" id="batal">Batal</button>
+                    <a href="/admin-prodi/panitia-tugas-akhir" class="btn btn-secondary" id="batal">Batal</a>
                     <button type="submit" class="btn btn-primary" id="simpan-perubahan">Simpan Perubahan</button>
                 </div>
             </form>
         </div>
     </div>
 </div>
-<!-- /.content -->
-<script src={{ url("/custom/js/kelola-panitia-ta/ubah-panitia.js") }}></script>
+@endsection
+
+@push('page-scripts')
+    <script src={{ url("/custom/js/kelola-panitia-ta/ubah-panitia.js") }}></script>
+@endpush

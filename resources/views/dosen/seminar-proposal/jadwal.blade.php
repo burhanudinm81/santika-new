@@ -76,8 +76,12 @@
                                                     <td>{{ $jadwal->proposal->dosenPembimbing1->nama ?? "-" }}</td>
                                                     <td>{{ $jadwal->proposal->dosenPengujiSempro1->nama ?? "-" }}</td>
                                                     <td>{{ $jadwal->proposal->dosenPengujiSempro2->nama ?? "-" }}</td>
-                                                    <td><a href="{{ route('dosen.penilaian-sempro', ['proposal_id' => $jadwal->proposal_id]) }}"
-                                                            class="btn btn-primary" style="width: 150px">Input Nilai</a></td>
+                                                    @if (auth("dosen")->id() != $jadwal->proposal->dosen_pembimbing_1_id)
+                                                        <td><a href="{{ route('dosen.penilaian-sempro', ['proposal_id' => $jadwal->proposal_id]) }}"
+                                                                class="btn btn-primary" style="width: 150px">Input Nilai</a></td>
+                                                    @else
+                                                        <td>-</td>
+                                                    @endif
                                                 </tr>
                                             @endforeach
                                         @endif
@@ -123,8 +127,12 @@
                                                     <td>{{ $jadwal->proposal->dosenPembimbing1->nama ?? "-" }}</td>
                                                     <td>{{ $jadwal->proposal->dosenPengujiSempro1->nama ?? "-" }}</td>
                                                     <td>{{ $jadwal->proposal->dosenPengujiSempro2->nama ?? "-" }}</td>
-                                                    <td><a href="{{ route('dosen.penilaian-sempro', ['proposal_id' => $jadwal->proposal_id]) }}"
-                                                            class="btn btn-primary" style="width: 150px">Input Nilai</a></td>
+                                                    @if (auth("dosen")->id() != $jadwal->proposal->dosen_pembimbing_1_id)
+                                                        <td><a href="{{ route('dosen.penilaian-sempro', ['proposal_id' => $jadwal->proposal_id]) }}"
+                                                                class="btn btn-primary" style="width: 150px">Input Nilai</a></td>
+                                                    @else
+                                                        <td>-</td>
+                                                    @endif
                                                 </tr>
                                             @endforeach
                                         @endif

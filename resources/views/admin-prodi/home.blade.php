@@ -26,7 +26,9 @@
         @include('admin-prodi.sidebar')
 
         <!-- Content Wrapper. Contains page content -->
-        <div class="content-wrapper"></div>
+        <div class="content-wrapper">
+            @yield('content')
+        </div>
 
         <!-- Control Sidebar -->
         <aside class="control-sidebar control-sidebar-dark">
@@ -178,9 +180,11 @@
 
     <!-- REQUIRED SCRIPTS -->
     @include('required-js')
-    <script src={{ url("/custom/js/load-content.js") }}></script>
+    <!-- <script src={{ url("/custom/js/load-content.js") }}></script> -->
     <script src={{ url("/custom/js/animate-custom-file-input.js") }}></script>
     <script src="{{ url("/custom/js/profile/change-password.js") }}"></script>
+
+    @stack('page-scripts')
 </body>
 
 </html>
