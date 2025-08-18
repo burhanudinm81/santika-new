@@ -216,17 +216,14 @@
                             <div class="mb-3">
                                 <label for="tujuan" class="form-label">Tujuan Proposal</label>
                                 <textarea class="form-control" id="tujuan" name="tujuan" rows="3"
-                                    @if ($isHavePendingPengajuan) disabled @endif>
-                                </textarea>
+                                    @if ($isHavePendingPengajuan) disabled @endif></textarea>
                             </div>
 
                             {{-- Input Latar Belakang --}}
                             <div class="mb-3">
                                 <label for="latar-belakang" class="form-label">Latar Belakang</label>
                                 <textarea class="form-control" id="latar-belakang" name="latar_belakang"
-                                    @if ($isHavePendingPengajuan) disabled @endif>
-
-                                </textarea>
+                                    @if ($isHavePendingPengajuan) disabled @endif></textarea>
                             </div>
 
                             {{-- Input Blok Diagram Sistem --}}

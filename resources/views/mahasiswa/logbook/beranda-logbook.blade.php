@@ -44,67 +44,77 @@
                                 </thead>
                                 <tbody>
                                     @if ($roleDospem == 1)
-                                        @foreach ($logbooksDospem1 as $logbook)
+                                        @if (is_null($logbooksDospem1))
                                             <tr>
-                                                <td>{{ $loop->iteration }}</td>
-                                                <td>{{ $dospem1Info->nama }}</td>
-                                                <td>{{ $logbook->jenisKegiatanLogbook->nama_kegiatan }}</td>
-                                                <td>{{ $logbook->nama_kegiatan }}</td>
-                                                <td>{{ $logbook->tanggal_kegiatan }}</td>
-                                                <td>
-                                                    @if($logbook->status_logbook_id == 1)
-                                                        <span class="badge badge-warning">{{ $logbook->statusLogbook->status }}</span>
-                                                    @elseif ($logbook->status_logbook_id == 2)
-                                                        <span class="badge badge-danger">{{ $logbook->statusLogbook->status }}</span>
-                                                    @elseif($logbook->status_logbook_id == 3)
-                                                        <span class="badge badge-success">{{ $logbook->statusLogbook->status }}</span>
-                                                    @endif
-                                                </td>
-                                                <td>
-                                                    <a href="{{ route('mahasiswa.logbook.detail', $logbook->id) }}"
-                                                        class="btn btn-sm btn-primary">Lihat Detail</a>
-                                                    <a onclick="event.preventDefault(); if (confirm('Apakah anda yakin ingin menghapus logbook ini?')) { document.getElementById('delete-logbook-{{ $logbook->id }}').submit(); }"
-                                                        href="" class="btn btn-sm btn-danger">Hapus</a>
-                                                </td>
-                                                <form id="delete-logbook-{{ $logbook->id }}"
-                                                    action="{{ route('mahasiswa.logbook.delete', $logbook->id) }}"
-                                                    method="POST">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                </form>
+                                                <td colspan="7" style="text-align: center">Anda Belum Mempunyai Dosen Pembimbing 1!</td>
                                             </tr>
-                                        @endforeach
+                                        @else
+                                            @foreach ($logbooksDospem1 as $logbook)
+                                                <tr>
+                                                    <td>{{ $loop->iteration }}</td>
+                                                    <td>{{ $dospem1Info->nama }}</td>
+                                                    <td>{{ $logbook->jenisKegiatanLogbook->nama_kegiatan }}</td>
+                                                    <td>{{ $logbook->nama_kegiatan }}</td>
+                                                    <td>{{ $logbook->tanggal_kegiatan }}</td>
+                                                    <td>
+                                                        @if($logbook->status_logbook_id == 1)
+                                                            <span class="badge badge-warning">{{ $logbook->statusLogbook->status }}</span>
+                                                        @elseif ($logbook->status_logbook_id == 2)
+                                                            <span class="badge badge-danger">{{ $logbook->statusLogbook->status }}</span>
+                                                        @elseif($logbook->status_logbook_id == 3)
+                                                            <span class="badge badge-success">{{ $logbook->statusLogbook->status }}</span>
+                                                        @endif
+                                                    </td>
+                                                    <td>
+                                                        <a href="{{ route('mahasiswa.logbook.detail', $logbook->id) }}"
+                                                            class="btn btn-sm btn-primary">Lihat Detail</a>
+                                                        <a onclick="event.preventDefault(); if (confirm('Apakah anda yakin ingin menghapus logbook ini?')) { document.getElementById('delete-logbook-{{ $logbook->id }}').submit(); }"
+                                                            href="" class="btn btn-sm btn-danger">Hapus</a>
+                                                    </td>
+                                                    <form id="delete-logbook-{{ $logbook->id }}"
+                                                        action="{{ route('mahasiswa.logbook.delete', $logbook->id) }}" method="POST">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                    </form>
+                                                </tr>
+                                            @endforeach
+                                        @endif
                                     @elseif($roleDospem == 2)
-                                        @foreach ($logbooksDospem2 as $logbook)
+                                        @if (is_null($logbooksDospem2))
                                             <tr>
-                                                <td>{{ $loop->iteration }}</td>
-                                                <td>{{ $dospem2Info->nama }}</td>
-                                                <td>{{ $logbook->jenisKegiatanLogbook->nama_kegiatan }}</td>
-                                                <td>{{ $logbook->nama_kegiatan }}</td>
-                                                <td>{{ $logbook->tanggal_kegiatan }}</td>
-                                                <td>
-                                                     @if($logbook->status_logbook_id == 1)
-                                                        <span class="badge badge-warning">{{ $logbook->statusLogbook->status }}</span>
-                                                    @elseif ($logbook->status_logbook_id == 2)
-                                                        <span class="badge badge-danger">{{ $logbook->statusLogbook->status }}</span>
-                                                    @elseif($logbook->status_logbook_id == 3)
-                                                        <span class="badge badge-success">{{ $logbook->statusLogbook->status }}</span>
-                                                    @endif
-                                                </td>
-                                                <td>
-                                                    <a href="{{ route('mahasiswa.logbook.detail', $logbook->id) }}"
-                                                        class="btn btn-sm btn-primary">Lihat Detail</a>
-                                                    <a onclick="event.preventDefault(); if (confirm('Apakah anda yakin ingin menghapus logbook ini?')) { document.getElementById('delete-logbook-{{ $logbook->id }}').submit(); }"
-                                                        href="" class="btn btn-sm btn-danger">Hapus</a>
-                                                </td>
-                                                <form id="delete-logbook-{{ $logbook->id }}"
-                                                    action="{{ route('mahasiswa.logbook.delete', $logbook->id) }}"
-                                                    method="POST">
-                                                    @csrf
-                                                    @method('DELETE')
-                                                </form>
+                                                <td colspan="7" style="text-align: center">Anda Belum Mempunyai Dosen Pembimbing 1!</td>
                                             </tr>
-                                        @endforeach
+                                        @else
+                                            @foreach ($logbooksDospem2 as $logbook)
+                                                <tr>
+                                                    <td>{{ $loop->iteration }}</td>
+                                                    <td>{{ $dospem2Info->nama }}</td>
+                                                    <td>{{ $logbook->jenisKegiatanLogbook->nama_kegiatan }}</td>
+                                                    <td>{{ $logbook->nama_kegiatan }}</td>
+                                                    <td>{{ $logbook->tanggal_kegiatan }}</td>
+                                                    <td>
+                                                        @if($logbook->status_logbook_id == 1)
+                                                            <span class="badge badge-warning">{{ $logbook->statusLogbook->status }}</span>
+                                                        @elseif ($logbook->status_logbook_id == 2)
+                                                            <span class="badge badge-danger">{{ $logbook->statusLogbook->status }}</span>
+                                                        @elseif($logbook->status_logbook_id == 3)
+                                                            <span class="badge badge-success">{{ $logbook->statusLogbook->status }}</span>
+                                                        @endif
+                                                    </td>
+                                                    <td>
+                                                        <a href="{{ route('mahasiswa.logbook.detail', $logbook->id) }}"
+                                                            class="btn btn-sm btn-primary">Lihat Detail</a>
+                                                        <a onclick="event.preventDefault(); if (confirm('Apakah anda yakin ingin menghapus logbook ini?')) { document.getElementById('delete-logbook-{{ $logbook->id }}').submit(); }"
+                                                            href="" class="btn btn-sm btn-danger">Hapus</a>
+                                                    </td>
+                                                    <form id="delete-logbook-{{ $logbook->id }}"
+                                                        action="{{ route('mahasiswa.logbook.delete', $logbook->id) }}" method="POST">
+                                                        @csrf
+                                                        @method('DELETE')
+                                                    </form>
+                                                </tr>
+                                            @endforeach
+                                        @endif
                                     @endif
                                 </tbody>
                             </table>
