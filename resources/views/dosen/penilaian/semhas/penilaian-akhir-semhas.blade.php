@@ -52,12 +52,14 @@
                                             'mainProposal' => $mainProposal,
                                             'nilaiAkhirMahasiswa1' => $nilaiAkhirMahasiswa1,
                                             'nilaiAkhirMahasiswa2' => $nilaiAkhirMahasiswa2,
+                                            'roleDosen'=> $roleDosen
                                         ])
                                     @elseif ($roleDosen == 'Dosen Pembimbing 1' || $roleDosen == 'Dosen Pembimbing 2')
                                         @include('dosen.penilaian.semhas.byDospem.penilaian-byDospem', [
                                             'mainProposal' => $mainProposal,
                                             'nilaiAkhirMahasiswa1' => $nilaiAkhirMahasiswa1,
                                             'nilaiAkhirMahasiswa2' => $nilaiAkhirMahasiswa2,
+                                            'roleDosen'=>$roleDosen 
                                         ])
                                     @endif
                                 </div>
