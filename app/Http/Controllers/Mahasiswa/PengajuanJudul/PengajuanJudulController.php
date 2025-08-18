@@ -84,7 +84,7 @@ class PengajuanJudulController extends Controller
             'jenis_judul_id' => $validated['jenis_judul_id'],
             'bidang_minat_id' => $validated['bidang_minat_id'],
             'calon_dosen_id' => $validated['calon_dosen_id'],
-            'topik' => $validated['topik'],
+            // 'topik' => $validated['topik'],
             'judul' => $validated['judul'],
             'tujuan' => $validated['tujuan'],
             'latar_belakang' => $validated['latar_belakang'],

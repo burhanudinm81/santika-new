@@ -72,11 +72,12 @@
                                                 <p>-</p>
                                             @endif
                                         </div>
-                                        <div>
-                                            <label for="" class="form-label mb-1">Profil</label>
-                                            <p>{{ $dosen->deskripsi_profil ?? '-' }}</p>
-                                        </div>
                                     </div>
+                                </div>
+                                <hr>
+                                <div>
+                                    <label for="" class="form-label mb-1">Profil</label>
+                                    <p>{{ $dosen->deskripsi_profil ?? '-' }}</p>
                                 </div>
                                 <hr>
                                 <div>

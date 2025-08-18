@@ -41,7 +41,7 @@ class SeminarProposalController extends Controller
             }
         }
 
-        if ($acceptedProposalMahasiswa1 != null &&  $acceptedProposalMahasiswa1->mahasiswa->prodi_id == 1) {
+        if ($acceptedProposalMahasiswa1 != null && $acceptedProposalMahasiswa1->mahasiswa->prodi_id == 1) {
 
             $acceptedProposalMahasiswa2 = ProposalDosenMahasiswa::with('mahasiswa', 'dosen')
                 ->where('proposal_id', $acceptedProposalMahasiswa1->proposal_id)
@@ -75,8 +75,12 @@ class SeminarProposalController extends Controller
         // membuat nama file yang unik
         $nameFileProposal = uniqid() . '.' . $fileProposal->getClientOriginalExtension();
         $nameLembarKonsultasi = uniqid() . '.' . $fileLembarKonsultasi->getClientOriginalExtension();
-        $nameLembarKerjaSamaMitra = uniqid() . '.' . $fileLembarKerjaSamaMitra->getClientOriginalExtension();
         $nameBuktiCekPlagiasi = uniqid() . '.' . $fileBuktiCekPlagiasi->getClientOriginalExtension();
+
+        // Jika jenis judulnya adalah Mitra, generate nama file untuk file lembar kerja sama mitra
+        if ($infoProposal->jenis_judul_id == 2) {
+            $nameLembarKerjaSamaMitra = uniqid() . '.' . $fileLembarKerjaSamaMitra->getClientOriginalExtension();
+        }
 
         // simpan ke folder
         $pathFileProposal = $fileProposal->storeAs(
@@ -89,23 +93,27 @@ class SeminarProposalController extends Controller
             $nameLembarKonsultasi,
             'local'
         );
-        $pathLembarKerjaSamaMitra = $fileLembarKerjaSamaMitra->storeAs(
-            'seminar-proposal/pendaftaran/lembar-kerjaSamaMitra',
-            $nameLembarKerjaSamaMitra,
-            'local'
-        );
         $pathBuktiCekPlagiasi = $fileBuktiCekPlagiasi->storeAs(
             'seminar-proposal/pendaftaran/bukti-cekPlagiasi',
             $nameBuktiCekPlagiasi,
             'local'
         );
 
+        // Jika jenis judulnya adalah Mitra, simpan file Lembar Kerja Sama Mitra
+        if ($infoProposal->jenis_judul_id == 2) {
+            $pathLembarKerjaSamaMitra = $fileLembarKerjaSamaMitra->storeAs(
+                'seminar-proposal/pendaftaran/lembar-kerjaSamaMitra',
+                $nameLembarKerjaSamaMitra,
+                'local'
+            );
+        }
+
         $newPendaftaranSempro = PendaftaranSeminarProposal::create([
             'proposal_id' => $validated['proposal_id'],
             'status_daftar_sempro_id' => 3,
             'file_proposal' => $pathFileProposal,
             'lembar_konsultasi' => $pathLembarKonsultasi,
-            'lembar_kerjasama_mitra' => $pathLembarKerjaSamaMitra,
+            'lembar_kerjasama_mitra' => $pathLembarKerjaSamaMitra ?? null,
             'bukti_cek_plagiasi' => $pathBuktiCekPlagiasi,
             'status_file_proposal' => false,
             'status_lembar_konsultasi' => false,
@@ -149,16 +157,76 @@ class SeminarProposalController extends Controller
 
     public function showUploadRevisi()
     {
+        $namaLembarRevisi1 = null;
+        $namaLembarRevisi2 = null;
+        $namaProposal = null;
+        $statusRevisi = null;
+
         $proposalInfo = ProposalDosenMahasiswa::with('proposal', 'mahasiswa')
             ->where('mahasiswa_id', auth('mahasiswa')->user()->id)
             ->where('status_proposal_mahasiswa_id', 1)
+            ->latest()
             ->first();
 
-        $mainProposalInfo = Proposal::with(['dosenPengujiSempro1', 'dosenPengujiSempro2', 'statusSemproPenguji1', 'statusSemproPenguji2'])
+        $mainProposalInfo = Proposal::with([
+            'dosenPengujiSempro1',
+            'dosenPengujiSempro2',
+            'statusSemproPenguji1',
+            'statusSemproPenguji2'
+        ])
             ->where('id', $proposalInfo->proposal_id)
             ->first();
 
-        return view('mahasiswa.seminar-proposal.upload-revisi', compact('mainProposalInfo'));
+        $revisiPenguji1 = Revisi::where('proposal_id', $mainProposalInfo->id)
+            ->where('dosen_id', $mainProposalInfo->dosenPengujiSempro1->id)
+            ->where('jenis_revisi', "sempro")
+            ->first();
+        $revisiPenguji2 = Revisi::where('proposal_id', $mainProposalInfo->id)
+            ->where('dosen_id', $mainProposalInfo->dosenPengujiSempro2->id)
+            ->where('jenis_revisi', "sempro")
+            ->first();
+
+        if (!is_null($revisiPenguji1)) {
+            $patternLembarRevisi1 = '/seminar-proposal\/revisi\/lembar-revisi-penguji-1\/(.*)$/';
+            $patternProposal = '/seminar-proposal\/revisi\/proposal\/(.*)$/';
+
+            // Jalankan pencocokan RegEx
+            preg_match($patternLembarRevisi1, $revisiPenguji1->file_lembar_revisi_dosen, $matchesLembarRevisi1);
+            preg_match($patternProposal, $revisiPenguji1->file_proposal_revisi, $matchesProposal);
+
+            if (isset($matchesLembarRevisi1[1]))
+                $namaLembarRevisi1 = $matchesLembarRevisi1[1];
+            if (isset($matchesProposal[1]))
+                $namaProposal = $matchesProposal[1];
+        }
+
+        if (!is_null($revisiPenguji1)) {
+            $patternLembarRevisi2 = '/seminar-proposal\/revisi\/lembar-revisi-penguji-2\/(.*)$/';
+
+            // Jalankan pencocokan RegEx
+            preg_match($patternLembarRevisi2, $revisiPenguji2->file_lembar_revisi_dosen, $matchesLembarRevisi2);
+
+            if (isset($matchesLembarRevisi2[1]))
+                $namaLembarRevisi2 = $matchesLembarRevisi2[1];
+        }
+
+        if($revisiPenguji1->status == "diterima" && $revisiPenguji2->status == "diterima")
+            $statusRevisi = "Diterima";
+        else
+            $statusRevisi = "Pending";
+
+        return view(
+            'mahasiswa.seminar-proposal.upload-revisi',
+            compact(
+                'mainProposalInfo',
+                'revisiPenguji1',
+                'revisiPenguji2',
+                'namaLembarRevisi1',
+                'namaLembarRevisi2',
+                'namaProposal',
+                'statusRevisi'
+            )
+        );
     }
 
     public function storeUploadRevisi(Request $request)

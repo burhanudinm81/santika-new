@@ -83,4 +83,20 @@ class Revisi extends Model
         }
         return null;
     }
+
+    public function getPathLembarRevisiSemproForMhs()
+    {
+        if ($this->file_lembar_revisi_dosen) {
+            return route('revisi-lembarRevisi-sempro-mhs.show', $this->id);
+        }
+        return null;
+    }
+
+    public function getPathRevisiProposalSemproForMhs()
+    {
+        if ($this->file_proposal_revisi) {
+            return route('revisi-proposal-sempro-mhs.show', $this->id);
+        }
+        return null;
+    }
 }

@@ -142,7 +142,7 @@
                                     <div class="input-group">
                                         <div class="custom-file">
                                             <input type="file" class="custom-file-input" id="exampleInputFile"
-                                                name="lembar_kerja_sama_mitra" required>
+                                                name="lembar_kerja_sama_mitra">
                                             <label class="custom-file-label" for="exampleInputFile">Choose file</label>
                                         </div>
                                     </div>
