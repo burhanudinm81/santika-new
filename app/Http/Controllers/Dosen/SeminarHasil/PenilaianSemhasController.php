@@ -165,6 +165,7 @@ class PenilaianSemhasController extends Controller
         $nilaiPenguasaanMateri1 = $request->input('penguasaanMateri1');
         $nilaiPresentasi1 = $request->input('presentasi1');
         $nilaiKaryaTulis1 = $request->input('karyaTulis1');
+        $nilaiRataRataPengujiMhs1 = $request->input('rata_rata_penguji1');
 
         if ($prodiId == 1) {
             $nilaiSikap2 = $request->input('sikap2');
@@ -176,6 +177,7 @@ class PenilaianSemhasController extends Controller
             $nilaiPenguasaanMateri2 = $request->input('penguasaanMateri2');
             $nilaiPresentasi2 = $request->input('presentasi2');
             $nilaiKaryaTulis2 = $request->input('karyaTulis2');
+            $nilaiRataRataPengujiMhs2 = $request->input('rata_rata_penguji2');
         }
 
         // cek data nilai akhir mahasiswa
@@ -236,23 +238,26 @@ class PenilaianSemhasController extends Controller
             }
         } else if ($roleDosen == 'Dosen Penguji Sidang TA 1') {
             $nilaiAkhirMahasiswa1->update([
-                'nilai_penguasaan_materi1' => $nilaiPenguasaanMateri1 ?? $nilaiAkhirMahasiswa1->nilaiPenguasaanMateri1,
-                'nilai_presentasi1' => $nilaiPresentasi1 ?? $nilaiAkhirMahasiswa1->nilaiPresentasi1,
-                'nilai_karya_tulis1' => $nilaiKaryaTulis1 ?? $nilaiAkhirMahasiswa1->nilaiKaryaTulis1,
+                'nilai_penguasaan_materi1' => $nilaiPenguasaanMateri1 ?? $nilaiAkhirMahasiswa1->nilai_penguasaan_materi1,
+                'nilai_presentasi1' => $nilaiPresentasi1 ?? $nilaiAkhirMahasiswa1->nilai_presentasi1,
+                'nilai_karya_tulis1' => $nilaiKaryaTulis1 ?? $nilaiAkhirMahasiswa1->nilai_karya_tulis1,
+                'avg_nilai_penguji1'=> $nilaiRataRataPengujiMhs1 ?? $nilaiAkhirMahasiswa1->avg_nilai_penguji1
             ]);
 
             if ($prodiId == 1) {
                 $nilaiAkhirMahasiswa2->update([
-                    'nilai_penguasaan_materi1' => $nilaiPenguasaanMateri1 ?? $nilaiAkhirMahasiswa2->nilaiPenguasaanMateri1,
-                    'nilai_presentasi1' => $nilaiPresentasi1 ?? $nilaiAkhirMahasiswa2->nilaiPresentasi1,
-                    'nilai_karya_tulis1' => $nilaiKaryaTulis1 ?? $nilaiAkhirMahasiswa2->nilaiKaryaTulis1,
+                    'nilai_penguasaan_materi1' => $nilaiPenguasaanMateri2 ?? $nilaiAkhirMahasiswa2->nilai_penguasaan_materi1,
+                    'nilai_presentasi1' => $nilaiPresentasi2 ?? $nilaiAkhirMahasiswa2->nilai_presentasi1,
+                    'nilai_karya_tulis1' => $nilaiKaryaTulis2 ?? $nilaiAkhirMahasiswa2->nilai_karya_tulis1,
+                    'avg_nilai_penguji1'=> $nilaiRataRataPengujiMhs2 ?? $nilaiAkhirMahasiswa2->avg_nilai_penguji1
                 ]);
             }
         } else if ($roleDosen == 'Dosen Penguji Sidang TA 2') {
             $nilaiAkhirMahasiswa1->update([
-                'nilai_penguasaan_materi2' => $nilaiPenguasaanMateri2 ?? $nilaiAkhirMahasiswa1->nilaiPenguasaanMateri2,
-                'nilai_presentasi2' => $nilaiPresentasi2 ?? $nilaiAkhirMahasiswa1->nilaiPresentasi2,
-                'nilai_karya_tulis2' => $nilaiKaryaTulis2 ?? $nilaiAkhirMahasiswa1->nilaiKaryaTulis2,
+                'nilai_penguasaan_materi2' => $nilaiPenguasaanMateri1 ?? $nilaiAkhirMahasiswa1->nilaiPenguasaanMateri2,
+                'nilai_presentasi2' => $nilaiPresentasi1 ?? $nilaiAkhirMahasiswa1->nilaiPresentasi2,
+                'nilai_karya_tulis2' => $nilaiKaryaTulis1 ?? $nilaiAkhirMahasiswa1->nilaiKaryaTulis2,
+                'avg_nilai_penguji2'=> $nilaiRataRataPengujiMhs1 ?? $nilaiAkhirMahasiswa1->avg_nilai_penguji2
             ]);
 
             if ($prodiId == 1) {
@@ -260,6 +265,7 @@ class PenilaianSemhasController extends Controller
                     'nilai_penguasaan_materi2' => $nilaiPenguasaanMateri2 ?? $nilaiAkhirMahasiswa2->nilaiPenguasaanMateri2,
                     'nilai_presentasi2' => $nilaiPresentasi2 ?? $nilaiAkhirMahasiswa2->nilaiPresentasi2,
                     'nilai_karya_tulis2' => $nilaiKaryaTulis2 ?? $nilaiAkhirMahasiswa2->nilaiKaryaTulis2,
+                    'avg_nilai_penguji2'=> $nilaiRataRataPengujiMhs2     ?? $nilaiAkhirMahasiswa2->avg_nilai_penguji2
                 ]);
             }
         }

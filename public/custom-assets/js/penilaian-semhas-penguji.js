@@ -10,7 +10,7 @@ let nilaiKaryaTulis2 = 0;
 let nilaiPenguasaanMateriMahasiswa1 = document.getElementById('penguasaanMateri1');
 let nilaiPresentasiMahasiswa1 = document.getElementById('presentasi1');
 let nilaiKaryaTulisMahasiswa1 = document.getElementById('karyaTulis1');
-let nilaiRataRataPengujiMahasiswa1 = document.getElementById('rata_rata_penguji2');
+let nilaiRataRataPengujiMahasiswa1 = document.getElementById('rata_rata_penguji1');
 let buttonHitungAvgPenguji1 = document.getElementById('countAveragePenguji1');
 
 nilaiPenguasaanMateriMahasiswa1.addEventListener('input', function () {
