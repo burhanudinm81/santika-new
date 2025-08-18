@@ -155,11 +155,11 @@ class PrivateFileController extends Controller
     {
         $pendaftaranSemhas = PendaftaranSemhas::findOrFail($id);
 
-        if (!$pendaftaranSemhas->file_rekom_dospem) {
+        if (!$pendaftaranSemhas->file_proposal_semhas) {
             abort(404, 'Blok diagram sistem tidak ditemukan');
         }
 
-        $filepath = $pendaftaranSemhas->file_rekom_dospem;
+        $filepath = $pendaftaranSemhas->file_proposal_semhas;
 
         if (!Storage::disk('local')->exists($filepath)) {
             abort(404, 'Blok diagram sistem tidak ditemukan');

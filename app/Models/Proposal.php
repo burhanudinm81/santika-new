@@ -161,4 +161,8 @@ class Proposal extends Model
     {
         return $this->hasOne(JadwalSeminarHasil::class, 'proposal_id');
     }
+    public function revisi(): HasMany
+    {
+        return $this->hasMany(Revisi::class, 'proposal_id');
+    }
 }

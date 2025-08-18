@@ -254,12 +254,19 @@ Route::middleware(["auth:mahasiswa", "auth.session", "password.changed"])->group
     Route::controller(JadwalSemhasMahasiswaController::class)->group(function () {
         Route::get('/mahasiswa/seminar-hasil/jadwal', 'showJadwalPage')->name('mahasiswa.seminar-hasil.jadwal');
     });
+   
+    Route::controller(PrivateFileController::class)->group(function(){
+        Route::get("/revisi-sempro/lembarRevisi/Mhs/{id}", "serveRevisiLembarRevisiSempro")
+            ->name('revisi-lembarRevisi-sempro-mhs.show');
+
+        Route::get('/revisi-proposal-sempro/Mhs/{id}', 'serveRevisiProposalSempro')
+            ->name('revisi-proposal-sempro-mhs.show');
+    });
 
     Route::get('/mahasiswa/profile', [MahasiswaController::class, 'showProfile'])->name('mahasiswa.profile');
     Route::post('/mahasiswa/profile/edit-email', [MahasiswaController::class, 'updateEmail'])->name('mahasiswa.profile.edit-email');
     Route::post('/mahasiswa/profile/edit-image', [MahasiswaController::class, 'updateFotoProfil'])->name('mahasiswa.profile.edit-image');
     Route::post('/mahasiswa/profile/change-password', [MahasiswaController::class, 'changePassword'])->name('mahasiswa.profile.change-password');
-
 
     // Route untuk serving file yang private, dalam bentuk link path
     Route::get('/file-private-mahasiswa/{filepath}', function ($filepath) {

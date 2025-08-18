@@ -29,7 +29,19 @@
                             </div>
                             <div class="mb-3">
                                 <label for="StatusNilaiPenguji1" class="form-label">Status Nilai Dosen Penguji 1</label>
-                                <input type="text" class="form-control" id="StatusNilaiPenguji1"
+                                <input 
+                                    type="text" 
+                                    @if ( $mainProposalInfo->statusSemproPenguji1->status == "Ditolak")
+                                        class="form-control bg-danger"
+                                    @elseif ( 
+                                        $mainProposalInfo->statusSemproPenguji1->status == "Diterima tanpa revisi" ||
+                                        $mainProposalInfo->statusSemproPenguji1->status == "Diterima dengan revisi"
+                                    )
+                                        class="form-control bg-success"
+                                    @else
+                                        class="form-control"
+                                    @endif
+                                    id="StatusNilaiPenguji1"
                                     aria-describedby="StatusNilaiPenguji1" value="{{ $mainProposalInfo->statusSemproPenguji1->status ?? ''}}" readonly/>
                             </div>
                             <div class="mb-3">
@@ -44,7 +56,19 @@
                             </div>
                             <div class="mb-3">
                                 <label for="StatusNilaiPenguji2" class="form-label">Status Nilai Dosen Penguji 2</label>
-                                <input type="text" class="form-control" id="StatusNilaiPenguji2"
+                                <input 
+                                    type="text" 
+                                    @if ( $mainProposalInfo->statusSemproPenguji2->status == "Ditolak")
+                                        class="form-control bg-danger"
+                                    @elseif ( 
+                                        $mainProposalInfo->statusSemproPenguji2->status == "Diterima tanpa revisi" ||
+                                        $mainProposalInfo->statusSemproPenguji2->status == "Diterima dengan revisi"
+                                    )
+                                        class="form-control bg-success"
+                                    @else
+                                        class="form-control"
+                                    @endif
+                                    id="StatusNilaiPenguji2"
                                     aria-describedby="StatusNilaiPenguji2" value="{{ $mainProposalInfo->statusSemproPenguji2->status ?? '' }}" readonly />
                             </div>
                             <div class="mb-3">

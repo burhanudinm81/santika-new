@@ -96,13 +96,6 @@
                         </div>
 
                         <div class="mb-2">
-                            <label for="Topik/TemaProposal" class="form-label">Topik/Tema Proposal</label>
-                            <input type="text" class="form-control" id="Topik/TemaProposal"
-                                value="{{ $permohonanProposalMahasiswa->first()->proposal->topik }}"
-                                aria-describedby="Topik/TemaProposal" aria-label="readonly input example" readonly>
-                        </div>
-
-                        <div class="mb-2">
                             <label for="Tujuan" class="form-label">Tujuan</label>
                             <input type="text" class="form-control" id="Tujuan"
                                 value="{{ $permohonanProposalMahasiswa->first()->proposal->tujuan }}"

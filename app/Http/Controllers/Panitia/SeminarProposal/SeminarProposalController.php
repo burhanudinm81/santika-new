@@ -76,16 +76,36 @@ class SeminarProposalController extends Controller
             'status_bukti_cek_plagiasi' => $statusBuktiCekPlagiasi
         ]);
 
-        // jika status verifikasi semua diterima, maka status sempro di update menjadi diterima
-        if ($statusProposal == 1 && $statusLembarKonsultasi == 1 && $statusLembarKerjasama == 1 && $statusBuktiCekPlagiasi == 1) {
-            $pendaftaranSempro->update([
-                'status_daftar_sempro_id' => 1
-            ]);
-        } // jika status verifikasi semua ditolak, maka status sempro di update menjadi ditolak
-        else if ($pendaftaranSempro->status_file_proposal == 0 && $pendaftaranSempro->status_lembar_konsultasi == 0 && $pendaftaranSempro->status_lembar_kerjasama_mitra == 0 && $pendaftaranSempro->status_bukti_cek_plagiasi == 0) {
-            $pendaftaranSempro->update([
-                'status_daftar_sempro_id' => 2
-            ]);
+        // Ambil Proposal
+        $proposal = Proposal::find($pendaftaranSempro->proposal_id);
+
+        // Jika Jenis Judul Mitra
+        if ($proposal->jenis_judul_id == 2) {
+            // jika status verifikasi semua diterima, maka status sempro di update menjadi diterima
+            if ($statusProposal == 1 && $statusLembarKonsultasi == 1 && $statusLembarKerjasama == 1 && $statusBuktiCekPlagiasi == 1) {
+                $pendaftaranSempro->update([
+                    'status_daftar_sempro_id' => 1
+                ]);
+            } // jika status verifikasi semua ditolak, maka status sempro di update menjadi ditolak
+            else if ($pendaftaranSempro->status_file_proposal == 0 && $pendaftaranSempro->status_lembar_konsultasi == 0 && $pendaftaranSempro->status_lembar_kerjasama_mitra == 0 && $pendaftaranSempro->status_bukti_cek_plagiasi == 0) {
+                $pendaftaranSempro->update([
+                    'status_daftar_sempro_id' => 2
+                ]);
+            }
+        } else if ($proposal->jenis_judul_id == 1 || $proposal->jenis_judul_id == 3) {
+            // Jika jenis judul bukan mitra
+
+            // jika status verifikasi semua diterima (kecual lembar kerja sama mitra), maka status sempro di update menjadi diterima
+            if ($statusProposal == 1 && $statusLembarKonsultasi == 1 && $statusBuktiCekPlagiasi == 1) {
+                $pendaftaranSempro->update([
+                    'status_daftar_sempro_id' => 1
+                ]);
+            } // jika status verifikasi semua ditolak (kecuali lembar kerja sama mitra), maka status sempro di update menjadi ditolak
+            else if ($pendaftaranSempro->status_file_proposal == 0 && $pendaftaranSempro->status_lembar_konsultasi == 0 && $pendaftaranSempro->status_bukti_cek_plagiasi == 0) {
+                $pendaftaranSempro->update([
+                    'status_daftar_sempro_id' => 2
+                ]);
+            }
         }
 
         // kembali ke halaman pendaftaran sempro dengan pesan sukses

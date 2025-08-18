@@ -204,19 +204,6 @@
                                 </div>
                             </div>
 
-                            {{-- Input Topik/Tema Proposal  --}}
-                            <div class="mb-3">
-                                <label for="topik" class="form-label">Topik/Tema Proposal</label>
-                                <input type="text" class="form-control" id="topik" name="topik"
-                                    @if ($isHavePendingPengajuan) disabled @endif
-                                    aria-describedby="Topik/Tema Proposal" required />
-                                @if ($errors->has('topik'))
-                                    <span class="invalid-feedback" role="alert">
-                                        <strong>{{ $errors->first('topik') }}</strong>
-                                    </span>
-                                @endif
-                            </div>
-
                             {{-- Input Judul Proposal --}}
                             <div class="mb-3">
                                 <label for="judul" class="form-label">Judul Proposal</label>
