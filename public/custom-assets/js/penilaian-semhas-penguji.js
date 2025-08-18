@@ -6,6 +6,12 @@ let nilaiPenguasaanMateri2 = 0;
 let nilaiPresentasi2 = 0;
 let nilaiKaryaTulis2 = 0;
 
+function hitungAverageNilaiByPenguji(nilaiPenguasaanMateri, nilaiPresentasi, nilaiKaryaTulis) {
+    let total = parseFloat(nilaiPenguasaanMateri) + parseFloat(nilaiPresentasi) + parseFloat(nilaiKaryaTulis);
+    let average = total / 3;
+    return average;
+}
+
 // mahasiswa 1
 let nilaiPenguasaanMateriMahasiswa1 = document.getElementById('penguasaanMateri1');
 let nilaiPresentasiMahasiswa1 = document.getElementById('presentasi1');
@@ -56,5 +62,4 @@ buttonHitungAvgPenguji2.addEventListener('click', function () {
     let average = hitungAverageNilaiByPenguji(nilaiPenguasaanMateri2, nilaiPresentasi2, nilaiKaryaTulis2);
     nilaiRataRataPengujiMahasiswa2.value = average.toFixed(2);
 });
-
 

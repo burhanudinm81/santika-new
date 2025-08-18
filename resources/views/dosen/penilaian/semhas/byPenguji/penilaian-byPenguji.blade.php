@@ -170,7 +170,7 @@
         </div>
         <div class="form-group">
             <label for="karyaTulis">Karya Tulis:</label>
-            <input type="number" class="form-control" id="karyaTulis1" name="karyaTulis" min="0"
+            <input type="number" class="form-control" id="karyaTulis1" name="karyaTulis1" min="0"
                 @if($roleDosen == 'Dosen Penguji Sidang TA 1') 
                     value="{{ $nilaiAkhirMahasiswa1->nilai_karya_tulis1 ?? '' }}" 
                 @else 
