@@ -38,7 +38,7 @@
                                 <div class="form-group">
                                     <label for="status_kelulusan">Status Kelulusan:</label>
                                     <input type="text" class="form-control bg-info"
-                                        value="{{ $mainProposal->statusSemhasTotal->status }}" readonly>
+                                        value="{{ $mainProposal->statusSemhasTotal->status ?? "-" }}" readonly>
                                 </div>
 
                                 {{-- input hidden --}}
