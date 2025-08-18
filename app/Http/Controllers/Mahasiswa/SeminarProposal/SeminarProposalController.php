@@ -135,28 +135,41 @@ class SeminarProposalController extends Controller
 
     public function showHasilSempro()
     {
+        $proposalInfo = null;
+        $mainProposalInfo = null;
+        $revisiDosen1 = null;
+        $revisiDosen2 = null;
+
         $proposalInfo = ProposalDosenMahasiswa::with('proposal', 'mahasiswa')
             ->where('mahasiswa_id', auth('mahasiswa')->user()->id)
             ->where('status_proposal_mahasiswa_id', 1)
             ->first();
 
-        $mainProposalInfo = Proposal::with(['dosenPengujiSempro1', 'dosenPengujiSempro1', 'statusSemproPenguji1', 'statusSemproPenguji2'])
-            ->where('id', $proposalInfo->proposal_id)
-            ->first();
+        if (!is_null($proposalInfo)) {
+            $mainProposalInfo = Proposal::with(['dosenPengujiSempro1', 'dosenPengujiSempro1', 'statusSemproPenguji1', 'statusSemproPenguji2'])
+                ->where('id', $proposalInfo->proposal_id)
+                ->first();
+        }
 
-        $revisiDosen1 = Revisi::where('proposal_id', $mainProposalInfo->id)
-            ->where('dosen_id', $mainProposalInfo->dosenPengujiSempro1->id)
-            ->first();
+        if (!is_null($mainProposalInfo)) {
+            $revisiDosen1 = Revisi::where('proposal_id', $mainProposalInfo->id)
+                ->where('dosen_id', $mainProposalInfo->dosenPengujiSempro1->id)
+                ->first();
 
-        $revisiDosen2 = Revisi::where('proposal_id', $mainProposalInfo->id)
-            ->where('dosen_id', $mainProposalInfo->dosenPengujiSempro2->id)
-            ->first();
+            $revisiDosen2 = Revisi::where('proposal_id', $mainProposalInfo->id)
+                ->where('dosen_id', $mainProposalInfo->dosenPengujiSempro2->id)
+                ->first();
+        }
 
         return view('mahasiswa.seminar-proposal.hasil-sempro', compact(['proposalInfo', 'mainProposalInfo', 'revisiDosen1', 'revisiDosen2']));
     }
 
     public function showUploadRevisi()
     {
+        $proposalInfo = null;
+        $mainProposalInfo = null;
+        $revisiPenguji1 = null;
+        $revisiPenguji2 = null;
         $namaLembarRevisi1 = null;
         $namaLembarRevisi2 = null;
         $namaProposal = null;
@@ -168,23 +181,27 @@ class SeminarProposalController extends Controller
             ->latest()
             ->first();
 
-        $mainProposalInfo = Proposal::with([
-            'dosenPengujiSempro1',
-            'dosenPengujiSempro2',
-            'statusSemproPenguji1',
-            'statusSemproPenguji2'
-        ])
-            ->where('id', $proposalInfo->proposal_id)
-            ->first();
+        if (!is_null($proposalInfo)) {
+            $mainProposalInfo = Proposal::with([
+                'dosenPengujiSempro1',
+                'dosenPengujiSempro2',
+                'statusSemproPenguji1',
+                'statusSemproPenguji2'
+            ])
+                ->where('id', $proposalInfo->proposal_id)
+                ->first();
+        }
 
-        $revisiPenguji1 = Revisi::where('proposal_id', $mainProposalInfo->id)
-            ->where('dosen_id', $mainProposalInfo->dosenPengujiSempro1->id)
-            ->where('jenis_revisi', "sempro")
-            ->first();
-        $revisiPenguji2 = Revisi::where('proposal_id', $mainProposalInfo->id)
-            ->where('dosen_id', $mainProposalInfo->dosenPengujiSempro2->id)
-            ->where('jenis_revisi', "sempro")
-            ->first();
+        if (!is_null($mainProposalInfo)) {
+            $revisiPenguji1 = Revisi::where('proposal_id', $mainProposalInfo->id)
+                ->where('dosen_id', $mainProposalInfo->dosenPengujiSempro1->id)
+                ->where('jenis_revisi', "sempro")
+                ->first();
+            $revisiPenguji2 = Revisi::where('proposal_id', $mainProposalInfo->id)
+                ->where('dosen_id', $mainProposalInfo->dosenPengujiSempro2->id)
+                ->where('jenis_revisi', "sempro")
+                ->first();
+        }
 
         if (!is_null($revisiPenguji1)) {
             $patternLembarRevisi1 = '/seminar-proposal\/revisi\/lembar-revisi-penguji-1\/(.*)$/';
@@ -210,7 +227,7 @@ class SeminarProposalController extends Controller
                 $namaLembarRevisi2 = $matchesLembarRevisi2[1];
         }
 
-        if($revisiPenguji1->status == "diterima" && $revisiPenguji2->status == "diterima")
+        if ($revisiPenguji1 && $revisiPenguji1->status == "diterima" && $revisiPenguji2->status == "diterima")
             $statusRevisi = "Diterima";
         else
             $statusRevisi = "Pending";
