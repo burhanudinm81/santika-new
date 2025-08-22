@@ -24,7 +24,7 @@
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                 data-accordion="false">
                 <li class="nav-item nav-ajax">
-                    <a href="/panitia/dashboard" class="nav-link" id="dashboard-item">
+                    <a href="/" class="nav-link" id="dashboard-item">
                         <i class="nav-icon fas fa-home"></i>
                         <p>
                             Dashboard

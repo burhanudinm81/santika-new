@@ -32,6 +32,7 @@ use App\Http\Controllers\Panitia\SeminarHasil\SeminarHasilPanitiaController;
 use App\Http\Controllers\Panitia\SeminarProposal\JadwalSemproController as JadwalSemproPanitiaController;
 use App\Http\Controllers\Panitia\SeminarProposal\SeminarProposalController as SeminarProposalPanitiaController;
 use App\Http\Controllers\PanitiaController;
+use App\Http\Controllers\PengujianPenjadwalanAG;
 use App\Http\Controllers\PrivateFileController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -564,3 +565,5 @@ Route::middleware(["auth:dosen", "auth.session", "password.changed", "is.panitia
             Route::post('/tambah-periode', 'tambahPeriode')->name('tambah-periode');
         });
 });
+
+// Route::get("/hyper-parameter-tuning", [PengujianPenjadwalanAG::class, "pengujianHyperTuningParameter"]);
