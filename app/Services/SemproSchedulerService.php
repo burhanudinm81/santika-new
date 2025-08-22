@@ -5,9 +5,56 @@ namespace App\Services;
 use App\Models\Proposal;
 use App\Models\Dosen;
 use App\Models\KuotaDosen;
+use Illuminate\Support\Facades\Log;
 
 class SemproSchedulerService
 {
+    public function hyperparameterTuning(array $proposals, array $ruangs, array $tanggals, array $sesis, array $dosenKuota, array $waktuBerhalangan = [])
+    {
+        $popSizes = [50, 100, 150];
+        $maxGens = [100, 200, 300];
+        $mutationRates = [0.01, 0.05, 0.1];
+
+        $results = [];
+
+        foreach ($popSizes as $popSize) {
+            foreach ($maxGens as $maxGen) {
+                foreach ($mutationRates as $mutationRate) {
+                    $service = new SemproSchedulerService();
+                    // Set parameter dinamis
+                    $service->popSize = $popSize;
+                    $service->maxGen = $maxGen;
+                    $service->mutationRate = $mutationRate;
+
+                    // Jalankan penjadwalan
+                    $start = microtime(true); 
+                    $jadwal = $service->generate($proposals, $ruangs, $tanggals, $sesis, $dosenKuota, $waktuBerhalangan);
+                    $end = microtime(true); 
+                    $executionTime = $end - $start;
+
+                    // Hitung fitness
+                    $fitness = $service->fitness($jadwal, $dosenKuota, $waktuBerhalangan, $proposals);
+                    Log::info("Fitness: $fitness, Execution Time: $executionTime");
+
+                    $results[] = [
+                        'popSize' => $popSize,
+                        'maxGen' => $maxGen,
+                        'mutationRate' => $mutationRate,
+                        'fitness' => $fitness,
+                        'executionTime' => $executionTime,
+                    ];
+                }
+            }
+        }
+
+        // Urutkan hasil dari fitness terbaik ke terburuk
+        // usort($results, fn($a, $b) => $a['fitness'] <=> $b['fitness']);
+
+        // Tampilkan hasil
+        foreach ($results as $idx => $result) {
+            echo "$idx. popSize: {$result['popSize']}, maxGen: {$result['maxGen']}, mutationRate: {$result['mutationRate']}, fitness: {$result['fitness']}, executionTime: {$result['executionTime']} <br>\n";
+        }
+    }
     /**
      * Generate seminar proposal schedule using genetic algorithm (GA)
      * @param array $proposals List of proposal data
@@ -65,13 +112,15 @@ class SemproSchedulerService
             if ($bestFitness == 0)
                 break; // solusi optimal ditemukan
         }
+
+        // Log::info("Nilai Fitness Terbaik: $bestFitness");
         return $bestJadwal;
     }
 
     /**
      * Contoh fungsi evaluasi fitness (penalti constraint)
      */
-    public function fitness(array $jadwal, array $dosenKuota, array $waktuBerhalangan = [])
+    public function fitness(array $jadwal, array $dosenKuota, array $waktuBerhalangan = [], array $proposals = [])
     {
         $penalti = 0;
         $ruangWaktu = [];
@@ -79,7 +128,7 @@ class SemproSchedulerService
         $kuotaPenguji1 = [];
         $kuotaPenguji2 = [];
 
-        foreach ($jadwal as $item) {
+        foreach ($jadwal as $idx => $item) {
             // Gabungkan waktu mulai dan selesai menjadi string unik sesi
             $sesiStr = is_array($item['sesi'])
                 ? ($item['sesi']['waktu_mulai'] . '-' . $item['sesi']['waktu_selesai'])
@@ -94,15 +143,15 @@ class SemproSchedulerService
                 $penalti += 10; // penalti ruang bentrok
             }
 
-            // 2. Dosen tidak boleh bentrok pada waktu yang sama
-            $dosenList = [$item['moderator'], $item['penguji_1'], $item['penguji_2']];
-            foreach ($dosenList as $dosenId) {
+            // 2. Dosen tidak boleh bentrok pada waktu yang sama (lintas proposal/peran)
+            foreach (['moderator', 'penguji_1', 'penguji_2'] as $role) {
+                $dosenId = $item[$role];
                 $keyDosen = $dosenId . '|' . $item['tanggal'] . '|' . $sesiStr;
                 if (!isset($dosenWaktu[$keyDosen])) {
                     $dosenWaktu[$keyDosen] = 1;
                 } else {
                     $dosenWaktu[$keyDosen]++;
-                    $penalti += 10; // penalti dosen bentrok
+                    $penalti += 20; // penalti dosen bentrok lintas proposal/peran
                 }
                 // Penalti jika dosen berhalangan pada waktu ini
                 if (!empty($waktuBerhalangan)) {
@@ -129,16 +178,37 @@ class SemproSchedulerService
             if (!isset($kuotaPenguji2[$item['penguji_2']]))
                 $kuotaPenguji2[$item['penguji_2']] = 0;
             $kuotaPenguji2[$item['penguji_2']]++;
+
+            // 5. Penalti jika bidang minat penguji tidak sesuai proposal
+            if (!empty($proposals)) {
+                $proposal = $proposals[$idx] ?? null;
+                if ($proposal) {
+                    $bidangMinat = $proposal['bidang_minat_id'];
+                    foreach (['penguji_1', 'penguji_2'] as $role) {
+                        $dosenId = $item[$role];
+                        $dosenBidang = $dosenKuota[$dosenId]['bidang_minat_id'] ?? [];
+                        if (is_array($dosenBidang)) {
+                            if (!in_array($bidangMinat, $dosenBidang)) {
+                                $penalti += 100; // penalti besar
+                            }
+                        } else {
+                            if ($dosenBidang != $bidangMinat) {
+                                $penalti += 100; // penalti besar
+                            }
+                        }
+                    }
+                }
+            }
         }
 
-        // 5. Cek kuota dosen penguji 1
+        // 6. Cek kuota dosen penguji 1
         foreach ($kuotaPenguji1 as $dosenId => $terpakai) {
             $kuota = $dosenKuota[$dosenId]['kuota_penguji_sempro_1'] ?? 0;
             if ($terpakai > $kuota) {
                 $penalti += ($terpakai - $kuota) * 20; // penalti kuota penguji 1 habis
             }
         }
-        // 6. Cek kuota dosen penguji 2
+        // 7. Cek kuota dosen penguji 2
         foreach ($kuotaPenguji2 as $dosenId => $terpakai) {
             $kuota = $dosenKuota[$dosenId]['kuota_penguji_sempro_2'] ?? 0;
             if ($terpakai > $kuota) {
@@ -146,8 +216,7 @@ class SemproSchedulerService
             }
         }
 
-        // 7. Moderator harus sama dengan dosen_pembimbing_1_id (diasumsikan sudah benar di inisialisasi)
-        // 8. Dosen penguji tidak boleh sama dengan moderator
+        // 8. Dosen penguji tidak boleh sama dengan moderator atau satu sama lain
         foreach ($jadwal as $item) {
             if ($item['penguji_1'] == $item['moderator'] || $item['penguji_2'] == $item['moderator'] || $item['penguji_1'] == $item['penguji_2']) {
                 $penalti += 10;
@@ -170,8 +239,8 @@ class SemproSchedulerService
                 $ruang = $ruangs[array_rand($ruangs)];
                 $tanggal = $tanggals[array_rand($tanggals)];
                 $sesi = $sesis[array_rand($sesis)];
-                $penguji1 = $this->getAvailableDosen($tanggal, $sesi, $dosenKuota, 1, [], $proposal['bidang_minat_id']);
-                $penguji2 = $this->getAvailableDosen($tanggal, $sesi, $dosenKuota, 2, [], $proposal['bidang_minat_id']);
+                $penguji1 = $this->getAvailableDosen($tanggal, $sesi, $dosenKuota, 1, [], $proposal['bidang_minat_id'], $jadwal);
+                $penguji2 = $this->getAvailableDosen($tanggal, $sesi, $dosenKuota, 2, [$penguji1], $proposal['bidang_minat_id'], $jadwal);
                 $jadwal[] = [
                     'proposal_id' => $proposal['id'],
                     'ruang' => $ruang,
@@ -196,22 +265,39 @@ class SemproSchedulerService
      * @param array $exclude daftar dosen_id yang tidak boleh dipilih
      * @return int|null dosen_id terpilih atau null jika tidak ada yang valid
      */
-    public function getAvailableDosen($tanggal, $sesi, $dosenKuota, $tipe = 1, $exclude = [], $bidangMinat = null)
+    public function getAvailableDosen($tanggal, $sesi, $dosenKuota, $tipe = 1, $exclude = [], $bidangMinat = null, $jadwalSaatIni = [])
     {
         $field = $tipe == 1 ? 'kuota_penguji_sempro_1' : 'kuota_penguji_sempro_2';
         $candidates = [];
+
+        // Kumpulkan dosen yang sudah terjadwal pada tanggal & sesi ini di proposal lain
+        $dosenTerjadwal = [];
+        foreach ($jadwalSaatIni as $item) {
+            // Cek waktu sama
+            $sesiStr = is_array($item['sesi'])
+                ? ($item['sesi']['waktu_mulai'] . '-' . $item['sesi']['waktu_selesai'])
+                : $item['sesi'];
+            $sesiStrInput = is_array($sesi)
+                ? ($sesi['waktu_mulai'] . '-' . $sesi['waktu_selesai'])
+                : $sesi;
+            if ($item['tanggal'] == $tanggal && $sesiStr == $sesiStrInput) {
+                foreach (['moderator', 'penguji_1', 'penguji_2'] as $role) {
+                    $dosenTerjadwal[] = $item[$role];
+                }
+            }
+        }
+
         foreach ($dosenKuota as $dosenId => $kuota) {
             if (in_array($dosenId, $exclude))
+                continue;
+            if (in_array($dosenId, $dosenTerjadwal))
                 continue;
             // Cek bidang minat jika diberikan
             if ($bidangMinat) {
                 if (isset($kuota['bidang_minat_id']) && is_array($kuota['bidang_minat_id'])) {
-                    // Jika dosen punya banyak bidang minat
                     if (!in_array($bidangMinat, $kuota['bidang_minat_id']))
                         continue;
-                }
-                // Jika hanya satu bidang minat
-                elseif (isset($kuota['bidang_minat_id']) && $kuota['bidang_minat_id'] != $bidangMinat) {
+                } elseif (isset($kuota['bidang_minat_id']) && $kuota['bidang_minat_id'] != $bidangMinat) {
                     continue;
                 }
             }
@@ -252,17 +338,19 @@ class SemproSchedulerService
 
             // Mutasi Penguji 1
             if ((mt_rand() / mt_getrandmax()) < $mutationRate) {
-                $item['penguji_1'] = $this->getAvailableDosen($item['tanggal'], $item['sesi'], $dosenKuota, 1, [$item['moderator'], $item['penguji_2']], $proposals[$idx]['bidang_minat_id']);
+                $item['penguji_1'] = $this->getAvailableDosen($item['tanggal'], $item['sesi'], $dosenKuota, 1, [$item['moderator'], $item['penguji_2']], $proposals[$idx]['bidang_minat_id'], $mutatedJadwal);
             }
 
             // Mutasi Penguji 2
             if ((mt_rand() / mt_getrandmax()) < $mutationRate) {
-                $item['penguji_2'] = $this->getAvailableDosen($item['tanggal'], $item['sesi'], $dosenKuota, 2, [$item['moderator'], $item['penguji_1']], $proposals[$idx]['bidang_minat_id']);
+                $item['penguji_2'] = $this->getAvailableDosen($item['tanggal'], $item['sesi'], $dosenKuota, 2, [$item['moderator'], $item['penguji_1']], $proposals[$idx]['bidang_minat_id'], $mutatedJadwal);
             }
         }
 
         return $mutatedJadwal;
     }
+
+
 
     /**
      * Menggabungkan dua parent menjadi satu offspring menggunakan single-point crossover

@@ -13,7 +13,6 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // User::factory(10)->create();
         $this->call([
             ProdiSeeder::class,
             JabatanPanitiaSeeder::class,
@@ -27,6 +26,7 @@ class DatabaseSeeder extends Seeder
             StatusDosenBidangMinatSeeder::class,
             StatusLogbookSeeder::class,
             JenisKegiatanLogbookSeeder::class,
+            // PengujianPenjadwalanSeeder::class,      // hanya untuk pengujian burhan
             DosenForJadwalSeeder::class,
             DosenSeeder::class,
             KuotaDosenSeeder::class,
