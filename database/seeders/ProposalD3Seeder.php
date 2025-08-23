@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use App\Models\Proposal;
 use App\Models\DosenBidangMinat;
 use Illuminate\Database\Seeder;
+use Faker\Factory as Faker;
 
 class ProposalD3Seeder extends Seeder
 {
@@ -13,6 +14,8 @@ class ProposalD3Seeder extends Seeder
      */
     public function run(): void
     {
+        $faker = Faker::create("id_ID");
+
         // Ambil mapping dosen_id berdasarkan bidang_minat_id (hanya dosen id 1-35)
         $dosenBidang = DosenBidangMinat::whereBetween('dosen_id', [1, 35])->get();
         $dosenByBidang = [];
@@ -24,10 +27,10 @@ class ProposalD3Seeder extends Seeder
             $bidang_minat_id = rand(1, 3);
             $jenis_judul_id = rand(1, 3);
             $judul = "Judul $id";
-            $topik = fake()->sentence(6);
+            $topik = $faker->sentence(6);
             $tujuan = "Tujuan $id";
             $latar_belakang = "Latar Belakang $id";
-            $blok_diagram_sistem = fake()->sentence(8);
+            $blok_diagram_sistem = $faker->sentence(8);
             if ($id <= 20) {
                 $tahap_id = 1;
             } elseif ($id <= 50) {
@@ -62,10 +65,10 @@ class ProposalD3Seeder extends Seeder
             $bidang_minat_id = rand(1, 3);
             $jenis_judul_id = rand(1, 3);
             $judul = "Judul $id";
-            $topik = fake()->sentence(6);
+            $topik = $faker->sentence(6);
             $tujuan = "Tujuan $id";
             $latar_belakang = "Latar Belakang $id";
-            $blok_diagram_sistem = fake()->sentence(8);
+            $blok_diagram_sistem = $faker->sentence(8);
             $tahap_id = 4;
 
             // Pilih dosen_pembimbing_1_id yang bidang minatnya sama

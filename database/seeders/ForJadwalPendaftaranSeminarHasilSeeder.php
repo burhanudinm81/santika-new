@@ -6,6 +6,7 @@ use App\Models\DosenBidangMinat;
 use App\Models\Proposal;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Faker\Factory as Faker;
 
 class ForJadwalPendaftaranSeminarHasilSeeder extends Seeder
 {
@@ -14,7 +15,9 @@ class ForJadwalPendaftaranSeminarHasilSeeder extends Seeder
      */
     public function run(): void
     {
-        Proposal::all()->each(function ($proposal) {
+        $faker = Faker::create("id_ID");
+
+        Proposal::all()->each(function ($proposal) use ($faker) {
             if ($proposal->id <= 216) {
                 // Mengisi periode_semhas_id dan tahap_semhas_id
                 $proposal->periode_semhas_id = $proposal->periode_id;
@@ -35,12 +38,12 @@ class ForJadwalPendaftaranSeminarHasilSeeder extends Seeder
                 // Buat pendaftaran seminar hasil
                 $proposal->pendaftaranSemhas()->create([
                     'status_daftar_semhas_id' => 1,
-                    'file_rekom_dospem' => fake()->sentence(),
-                    'file_proposal_semhas' => fake()->sentence(),
-                    'file_draft_jurnal' => fake()->sentence(),
-                    'file_IA_mitra' => $proposal->jenis_judul_id == 2 ? fake()->sentence() : null,
-                    'file_bebas_tanggungan_pkl' => fake()->sentence(),
-                    'file_skla' => fake()->sentence(),
+                    'file_rekom_dospem' => $faker->sentence(),
+                    'file_proposal_semhas' => $faker->sentence(),
+                    'file_draft_jurnal' => $faker->sentence(),
+                    'file_IA_mitra' => $proposal->jenis_judul_id == 2 ? $faker->sentence() : null,
+                    'file_bebas_tanggungan_pkl' => $faker->sentence(),
+                    'file_skla' => $faker->sentence(),
                     'status_file_rekom_dosen' => true,
                     'status_file_proposal_semhas' => true,
                     'status_file_draft_jurnal' => true,
