@@ -9,11 +9,11 @@ class ProdiPolicy
 {
     public function createPanitia(AdminProdi $adminProdi, Prodi $prodi): bool
     {
-        return $adminProdi->prodi_id === $prodi->id;
+        return $adminProdi->prodi_id == $prodi->id;
     }
 
     public function editPanitia(AdminProdi $adminProdi, Prodi $prodi): bool
     {
-        return $adminProdi->prodi_id === $prodi->id;
+        return $adminProdi->prodi_id == $prodi->id;
     }
 }
