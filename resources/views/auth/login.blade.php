@@ -4,7 +4,7 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>STAKOM | Log in</title>
+    <title>SANTIKA | Log in</title>
 
     <!-- Google Font: Source Sans Pro -->
     <link rel="stylesheet"
@@ -44,11 +44,10 @@
                     </div>
                 @endif
 
-               <form  id="loginForm" action={{route("login.auth")}} method="post">
+                <form id="loginForm" action={{route("login.auth")}} method="post">
                     @csrf
                     <div class="input-group mb-3">
-                        <input type="text" id="username" class="form-control" name="username"
-                            placeholder="Masukkan NIM atau NIDN" />
+                        <input type="text" id="username" class="form-control" name="username" placeholder="Username" />
                         <div class="input-group-append">
                             <div class="input-group-text">
                                 <span class="fas fa-envelope"></span>
@@ -58,10 +57,10 @@
                     <div class="input-group mb-3">
                         <input type="password" id="password" class="form-control" name="password"
                             placeholder="Password" />
-                        <div class="input-group-append">
-                            <div class="input-group-text">
-                                <span class="fas fa-lock"></span>
-                            </div>
+                        <div class="input-group-append toggle-password" data-target="#password">
+                            <span class="input-group-text" style="cursor: pointer;">
+                                <i class="fas fa-eye"></i>
+                            </span>
                         </div>
                     </div>
                     <div class="row">
@@ -71,29 +70,24 @@
                                 <label for="remember"> Remember Me </label>
                             </div>
                         </div>
-                        <!-- /.col -->
                     </div>
-                    <!-- Sign In Button -->
                     <div class="row">
                         <div class="col-12">
                             <button type="submit" class="btn btn-primary btn-block">
                                 Sign In
                             </button>
                         </div>
-                        <!-- /.col -->
                     </div>
                 </form>
-                <p class="mt-2">
+                <!-- <p class="mt-2">
                     <a href="#">Lupa Password</a>
-                </p>
+                </p> -->
             </div>
-            <!-- /.card-body -->
         </div>
-        <!-- /.card -->
     </div>
-    <!-- /.login-box -->
 
     @include('required-js')
+    <script src={{ url("/custom/js/auth/login.js") }}></script>
 </body>
 
 </html>

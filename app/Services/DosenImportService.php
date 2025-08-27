@@ -39,8 +39,8 @@ class DosenImportService
                 $dataDosenToInsert[] = [
                     "nama" => $sheet->getCell([$namaColumnIndex, $row])->getValue(),
                     "password" => Hash::make($nidn),
-                    "NIDN" => $sheet->getCell([$NIDNColumnIndex, $row])->getValue(),
-                    "NIP" => $sheet->getCell([$NIPColumnIndex, $row])->getValue()
+                    "NIDN" => (string) $sheet->getCell([$NIDNColumnIndex, $row])->getValue(),
+                    "NIP" => (string) $sheet->getCell([$NIPColumnIndex, $row])->getValue()
                 ];
             }
 
