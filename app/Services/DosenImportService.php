@@ -32,15 +32,19 @@ class DosenImportService
 
             $dataDosenToInsert = [];
             for ($row = 3; $row <= $highestRow; $row++) {
-                $nidn = $sheet->getCell([$NIDNColumnIndex, $row])->getValue();
+                $nidn = (string) $sheet->getCell([$NIDNColumnIndex, $row])->getValue();
+                $nip = (string) $sheet->getCell([$NIPColumnIndex, $row])->getValue();
+
+                Log::info("NIDN: $nidn, NIP: $nip");
+
                 if (empty(trim($nidn)))
                     continue;
 
                 $dataDosenToInsert[] = [
                     "nama" => $sheet->getCell([$namaColumnIndex, $row])->getValue(),
                     "password" => Hash::make($nidn),
-                    "NIDN" => (string) $sheet->getCell([$NIDNColumnIndex, $row])->getValue(),
-                    "NIP" => (string) $sheet->getCell([$NIPColumnIndex, $row])->getValue()
+                    "NIDN" => $nidn,
+                    "NIP" => $nip
                 ];
             }
 
