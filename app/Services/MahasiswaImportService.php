@@ -32,7 +32,7 @@ class MahasiswaImportService
 
             $dataToInsert = [];
             for ($row = 3; $row <= $highestRow; $row++) {
-                $nim = $sheet->getCell([$NIMColumnIndex, $row])->getValue();
+                $nim = (string) $sheet->getCell([$NIMColumnIndex, $row])->getValue();
                 if (empty(trim($nim)))
                     continue;
 
