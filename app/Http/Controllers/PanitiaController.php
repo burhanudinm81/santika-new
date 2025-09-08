@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\AdminProdi;
 use App\Models\Dosen;
 use App\Models\JabatanPanitia;
 use App\Models\Panitia;
@@ -11,6 +12,7 @@ use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\View\View;
 
@@ -108,10 +110,45 @@ class PanitiaController extends Controller
             ], 422);
         }
 
-        $validated = $validator->validated();
+        $data = $validator->validated();
+        $prodiAdmin = AdminProdi::find(auth('admin-prodi')->id())->prodi_id;
+        $listIdDosen = $data['panitia_dosen'];
+
+        // Cek apakah panitia yang dipilih sudah terpilih sebagai panitia di prodi lainnya
+        if ($prodiAdmin == 1) {
+            $duplicatedDosenId = Panitia::where('prodi_id', 2)
+                ->whereIn('dosen_id', $listIdDosen)
+                ->pluck('dosen_id');
+        } else if ($prodiAdmin == 2) {
+            $duplicatedDosenId = Panitia::where('prodi_id', 1)
+                ->whereIn('dosen_id', $listIdDosen)
+                ->pluck('dosen_id');
+        }
+
+        $dosenCount = count($duplicatedDosenId);
+
+        if ($dosenCount > 0) {
+            $duplicatedDosenName = Dosen::whereIn("id", $duplicatedDosenId)->pluck('nama');
+            $errorMessage = "";
+
+            $namaDosen = $dosenCount > 1 
+                ? $duplicatedDosenName->join(', ', ' dan ')
+                : $duplicatedDosenName[0];
+
+            if ($prodiAdmin == 1) {
+                $errorMessage = $namaDosen . " sudah terpilih menjadi Panitia di Prodi D4 JTD";
+            } else if ($prodiAdmin == 2) {
+                $errorMessage = $namaDosen . " sudah terpilih menjadi Panitia di Prodi D3 JTD";
+            }
+
+            return response()->json([
+                "success" => false,
+                "message" => $errorMessage
+            ], 422);
+        }
 
         // Panggil method untuk menyimpan, sekarang dengan data yang benar
-        $this->createOrUpdatePanitia($validated['panitia_dosen'], $prodi->id);
+        $this->createOrUpdatePanitia($data['panitia_dosen'], $prodi->id);
 
         return response()->json([
             "success" => true,
@@ -119,7 +156,7 @@ class PanitiaController extends Controller
         ], 201);
     }
 
-    public function edit(Request $request, Prodi $prodi): View
+    public function edit(Request $request, Prodi $prodi): View|JsonResponse
     {
         // Otorisasi, pastikan user bisa mengedit
         if ($request->user()->cannot("editPanitia", $prodi)) {
@@ -170,9 +207,44 @@ class PanitiaController extends Controller
             ], 422);
         }
 
-        $validated = $validator->validated();
+        $data = $validator->validated();
+        $prodiAdmin = AdminProdi::find(auth('admin-prodi')->id())->prodi_id;
+        $listIdDosen = $data['panitia_dosen'];
 
-        $this->createOrUpdatePanitia($validated['panitia_dosen'], $prodi->id);
+        // Cek apakah panitia yang dipilih sudah terpilih sebagai panitia di prodi lainnya
+        if ($prodiAdmin == 1) {
+            $duplicatedDosenId = Panitia::where('prodi_id', 2)
+                ->whereIn('dosen_id', $listIdDosen)
+                ->pluck('dosen_id');
+        } else if ($prodiAdmin == 2) {
+            $duplicatedDosenId = Panitia::where('prodi_id', 1)
+                ->whereIn('dosen_id', $listIdDosen)
+                ->pluck('dosen_id');
+        }
+
+        $dosenCount = count($duplicatedDosenId);
+
+        if ($dosenCount > 0) {
+            $duplicatedDosenName = Dosen::whereIn("id", $duplicatedDosenId)->pluck('nama');
+            $errorMessage = "";
+
+            $namaDosen = $dosenCount > 1 
+                ? $duplicatedDosenName->join(', ', ' dan ')
+                : $duplicatedDosenName[0];
+
+            if ($prodiAdmin == 1) {
+                $errorMessage = $namaDosen . " sudah terpilih menjadi Panitia di Prodi D4 JTD";
+            } else if ($prodiAdmin == 2) {
+                $errorMessage = $namaDosen . " sudah terpilih menjadi Panitia di Prodi D3 JTD";
+            }
+
+            return response()->json([
+                "success" => false,
+                "message" => $errorMessage
+            ], 422);
+        }
+
+        $this->createOrUpdatePanitia($data['panitia_dosen'], $prodi->id);
 
         return response()->json([
             "success" => true,

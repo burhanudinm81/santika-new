@@ -107,7 +107,9 @@ class JadwalSemproController extends Controller
             return back()->withErrors(['error' => "Jumlah ruang, tanggal dan sesi tidak cukup. Pastikan perkalian jumlah ruang, tanggal dan sesi lebih dari $jumlahProposal"])->withInput();
         }
 
-        $dosenKuota = KuotaDosen::all()->keyBy('dosen_id')->map(function ($item) use ($prodiPanitia) {
+        $dosenKuota = KuotaDosen::whereHas('dosen', function($query){
+            $query->whereNull('deleted_at');
+        })->get()->keyBy('dosen_id')->map(function ($item) use ($prodiPanitia) {
             return [
                 'kuota_penguji_sempro_1' => $prodiPanitia == 1 ? $item->kuota_penguji_sempro_1_D3 : $item->kuota_penguji_sempro_1_D4,
                 'kuota_penguji_sempro_2' => $prodiPanitia == 1 ? $item->kuota_penguji_sempro_2_D3 : $item->kuota_penguji_sempro_2_D4

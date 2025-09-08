@@ -27,10 +27,11 @@ $(document).ready(function () {
                     $.each(data, function (index, dosen) {
                         const row = `
                             <tr>
-                                <td>${index + 1}</td>
-                                <td>${dosen.NIDN}</td>
-                                <td>${dosen.NIP}</td>
-                                <td>${dosen.nama}</td>
+                                <td class="text-center">${index + 1}</td>
+                                <td class="text-center">${dosen.NIDN}</td>
+                                <td class="text-center">${dosen.NIP}</td>
+                                <td class="text-center">${dosen.nama}</td>
+                                <td class="d-flex justify-content-center align-items-center"><button type="button" class="btn btn-danger btn-hapus-dosen" data-id="${dosen.id}">Hapus</button></td>
                             </tr>
                         `;
                         tableBody.append(row);

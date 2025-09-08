@@ -11,6 +11,7 @@
     <link rel="stylesheet"
         href="https://fonts.googleapis.com/css?family=Source+Sans+Pro:300,400,400i,700&display=fallback">
     @include('required-css')
+    @yield('page-style')
 </head>
 
 <body class="hold-transition sidebar-mini">
@@ -175,6 +176,8 @@
                 </div>
             </div>
         </div>
+
+        @yield('modals')
     </div>
     <!-- ./wrapper -->
 

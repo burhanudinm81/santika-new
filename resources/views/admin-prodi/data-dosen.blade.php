@@ -37,10 +37,11 @@
                                 data-url="{{ route("admin-prodi.dosen") }}">
                                 <thead>
                                     <tr>
-                                        <th>No</th>
-                                        <th>NIDN</th>
-                                        <th>NIP</th>
-                                        <th>Nama</th>
+                                        <th class="text-center">No</th>
+                                        <th class="text-center">NIDN</th>
+                                        <th class="text-center">NIP</th>
+                                        <th class="text-center">Nama</th>
+                                        <th class="text-center">Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody id="dosen-table-body">
@@ -71,6 +72,9 @@
                                             <button id="upload-btn" type="submit" class="btn btn-success">Upload</button>
                                         </div>
                                     </div>
+                                    <a href="{{ asset('/templates/template-impor-data-dosen.xlsx') }}"
+                                        id="download-template" class="form-text text-primary">Download template Impor Data
+                                        Dosen</a>
                                 </div>
                             </form>
                         </div>
@@ -83,8 +87,34 @@
     </div>
 @endsection
 
+@section('modals')
+    <div id="modal-hapus-dosen" class="modal" tabindex="-1">
+        <div class="modal-dialog">
+            <form action="{{ route('admin-prodi.dosen.delete') }}" id="form-hapus-dosen" class="modal-content" method="post">
+                @csrf
+                @method('DELETE')
+                <input type="hidden" name="dosen_id">
+                <div class="modal-header">
+                    <h5 class="modal-title font-weight-bold text-center">Konfirmasi</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Apakah anda yakin ingin menghapus data ini?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-danger">Ya, Hapus</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tidak</button>
+                </div>
+            </form>
+        </div>
+    </div>
+@endsection
+
 @push('page-scripts')
     <script src="{{ url("/custom/js/dosen/load-data-dosen.js") }}"></script>
+    <script src="{{ url("/custom/js/dosen/delete-dosen.js") }}"></script>
     <script src="{{ url("/custom/js/dosen/search-dosen.js") }}"></script>
     <script src="{{ url("/custom/js/dosen/impor-data-excel.js") }}"></script>
     <script src="{{ url("/custom/js/animate-custom-file-input.js") }}"></script>

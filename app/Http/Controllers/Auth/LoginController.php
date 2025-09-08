@@ -75,7 +75,8 @@ class LoginController extends Controller
     {
         return Auth::guard("dosen")->attempt([
             "nidn" => $credentials["username"],
-            "password" => $credentials["password"]
+            "password" => $credentials["password"],
+            "deleted_at" => null
         ], $rememberMe);
     }
 }
