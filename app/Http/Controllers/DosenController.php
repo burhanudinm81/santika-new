@@ -33,7 +33,7 @@ class DosenController extends Controller
 
     public function showAllDataDosen(): JsonResponse
     {
-        $dosen = Dosen::select("nidn as NIDN", "nip as NIP", "nama")->get();
+        $dosen = Dosen::select("id", "nidn as NIDN", "nip as NIP", "nama")->get();
 
 
         return response()->json([
@@ -50,7 +50,7 @@ class DosenController extends Controller
 
         $searchInput = $request->input("search");
 
-        $dosen = Dosen::select("nidn as NIDN", "nip as NIP", "nama")
+        $dosen = Dosen::select("id", "nidn as NIDN", "nip as NIP", "nama")
             ->where(function (Builder $query) use ($searchInput) {
                 $query->whereLike("nama", "%$searchInput%")
                     ->orWhereLike("nidn", "%$searchInput%")
@@ -143,5 +143,44 @@ class DosenController extends Controller
         $userProdi = data_get(auth('mahasiswa')->user(), 'prodi.prodi');
 
         return view('mahasiswa.informasi-dosen.profil-dosen', compact('dosen', 'userProdi'));
+    }
+
+    public function deleteDosen(Request $request)
+    {
+        $request->validate(
+            [
+                "dosen_id" => "required|exists:dosen,id|unique:panitia,dosen_id"
+            ],
+            [
+                "dosen_id.unique" => "Dosen masih berstatus sebagai panitia, tidak dapat dihapus!"
+            ]
+        );
+
+        $dosenId = $request->input("dosen_id");
+
+        try {
+            $dosen = Dosen::find($dosenId);
+
+            if (!$dosen) {
+                return response()->json([
+                    "success" => false,
+                    "message" => "Data Dosen Tidak Ditemukan"
+                ], 404);
+            }
+
+            $dosen->delete();
+            Log::info("Hapus Dosen Berhasil: ID Dosen $dosenId telah dihapus.");
+
+            return response()->json([
+                "success" => true,
+                "message" => "Data Dosen Berhasil Dihapus"
+            ]);
+        } catch (Exception $e) {
+            Log::error("Hapus Dosen Gagal Total: " . $e->getMessage());
+            return response()->json([
+                "success" => false,
+                "message" => "Terjadi kesalahan pada server saat menghapus data dosen."
+            ], 500);
+        }
     }
 }

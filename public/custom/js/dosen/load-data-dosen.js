@@ -4,7 +4,7 @@ $("document").ready(function () {
     const tableBody = $('#dosen-table-body');
 
     // Tampilkan loading state
-    tableBody.html('<tr><td colspan="4" class="text-center">Memuat...</td></tr>');
+    tableBody.html('<tr><td colspan="5" class="text-center">Memuat...</td></tr>');
 
     $.get(url)
         .done(function (response) {
@@ -18,10 +18,11 @@ $("document").ready(function () {
                 // Buat baris tabel (tr) baru menggunakan template literal
                 const row = `
                                 <tr>
-                                    <td>${index + 1}</td>
-                                    <td>${dosen.NIDN}</td>
-                                    <td>${dosen.NIP}</td>
-                                    <td>${dosen.nama}</td>
+                                    <td class="text-center">${index + 1}</td>
+                                    <td class="text-center">${dosen.NIDN}</td>
+                                    <td class="text-center">${dosen.NIP}</td>
+                                    <td class="text-center">${dosen.nama}</td>
+                                    <td class="d-flex justify-content-center align-items-center"><button type="button" class="btn btn-danger btn-hapus-dosen" data-id="${dosen.id}">Hapus</button></td>
                                 </tr>
                     `;
 

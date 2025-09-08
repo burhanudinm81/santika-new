@@ -1,5 +1,10 @@
 @extends('admin-prodi.home')
 
+@section('page-style')
+    <link href="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/css/select2.min.css" rel="stylesheet" />
+    <link href="https://cdn.jsdelivr.net/npm/@ttskch/select2-bootstrap4-theme@1.5.2/dist/select2-bootstrap4.min.css" rel="stylesheet" />
+@endsection
+
 @section('content')
 <div class="content-header">
     <div class="container-fluid">
@@ -23,7 +28,7 @@
                     @foreach ($jabatanPanitia as $jabatan)
                         <div class="mb-3">
                             <label class="form-label">{{ $jabatan->jabatan }}</label>
-                            <select class="custom-select" name="panitia_dosen[{{ $jabatan->id }}]" required>
+                            <select class="custom-select select-panitia" name="panitia_dosen[{{ $jabatan->id }}]" required>
                                 <option value="">-- Pilih Dosen --</option>
                                 @foreach ($dosen as $dsn)
                                     <option value="{{ $dsn->id }}"
@@ -47,5 +52,6 @@
 @endsection
 
 @push('page-scripts')
+    <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
     <script src={{ url("/custom/js/kelola-panitia-ta/ubah-panitia.js") }}></script>
 @endpush

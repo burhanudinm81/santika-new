@@ -167,6 +167,10 @@ Route::middleware(["auth:admin-prodi", "auth.session"])->group(function () {
         // Route untuk impor data Dosen menggunakan data Excel
         Route::post("/admin-prodi/dosen/import", "importDosen")
             ->name("admin-prodi.dosen.import");
+
+        // Route untuk menghapus dosen
+        Route::delete("/admin-prodi/dosen/delete", "deleteDosen")
+            ->name("admin-prodi.dosen.delete");
     });
 
     Route::controller(PanitiaController::class)->group(function () {

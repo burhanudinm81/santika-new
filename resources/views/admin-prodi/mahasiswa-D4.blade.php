@@ -90,6 +90,9 @@
                                                 <button id="upload-btn" type="submit" class="btn btn-success">Upload</button>
                                             </div>
                                         </div>
+                                        <a href="{{ asset('/templates/template-impor-data-mahasiswa.xlsx') }}"
+                                            id="download-template" class="form-text text-primary">Download template Impor Data
+                                            Mahasiswa</a>
                                     </div>
                                 </form>
                             </div>

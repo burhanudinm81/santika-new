@@ -2,6 +2,14 @@ $("document").ready(function () {
     let daftarPanitiaTAUrl = "/admin-prodi/panitia-tugas-akhir";
     const $loadingOverlay = $('#loading-overlay');
 
+    // Select2 untuk dropdown dosen
+    $('.select-panitia').select2({
+        theme: 'bootstrap4',
+        width: '100%',
+        placeholder: '-- Pilih Dosen --',
+        allowClear: true
+    });
+
     // Jika Form Panitia TA disubmit, simpan data Panitia TA yang dikirim
     $(".form-panitia").submit(function (event) {
         event.preventDefault();
@@ -47,7 +55,7 @@ $("document").ready(function () {
                 $loadingOverlay.fadeOut(200);
 
                 // Jika Modal/Pop Up Sukses atau Pop Up Error ditutup kembalikan ke halaman Daftar Panitia TA
-                $("#modal-popup-sukses, #modal-popup-error").on("hidden.bs.modal", function () {
+                $("#modal-popup-sukses").on("hidden.bs.modal", function () {
                     document.location.href = daftarPanitiaTAUrl;
                 });
             }
