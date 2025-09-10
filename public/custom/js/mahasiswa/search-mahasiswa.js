@@ -12,7 +12,7 @@ $(document).ready(function() {
     // Fungsi untuk menjalankan pencarian dan memperbarui tabel
     function performSearch(query) {
         // Tampilkan loading state
-        tableBody.html('<tr><td colspan="6" class="text-center">Mencari...</td></tr>');
+        tableBody.html('<tr><td colspan="8" class="text-center">Mencari...</td></tr>');
 
         $.get(searchUrl, { search: query }) // Kirim query sebagai ?search=...
             .done(function(response) {
@@ -27,14 +27,23 @@ $(document).ready(function() {
                     $.each(data, function(index, mahasiswa) {
                         const row = `
                             <tr>
-                                <td>${index + 1}</td>
-                                <td>${mahasiswa.periode.tahun}</td>
-                                <td>${mahasiswa.NIM}</td>
-                                <td>${mahasiswa.nama}</td>
-                                <td>${mahasiswa.prodi.prodi}</td>
-                                <td>${mahasiswa.kelas}</td>
-                                <td>${mahasiswa.angkatan}</td>
-                            </tr>
+                                    <td class="text-center">${index + 1}</td>
+                                    <td class="text-center">${mahasiswa.periode.tahun}</td>
+                                    <td class="text-center">${mahasiswa.NIM}</td>
+                                    <td class="text-center">${mahasiswa.nama}</td>
+                                    <td class="text-center">${mahasiswa.prodi.prodi}</td> 
+                                    <td class="text-center">${mahasiswa.kelas}</td>
+                                    <td class="text-center">${mahasiswa.angkatan}</td>
+                                    <td class="d-flex justify-content-center align-items-center">
+                                        <div class="dropdown">
+                                            <button type="button" class="btn btn-dark dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Aksi</button>
+                                            <div class="dropdown-menu">
+                                                <a class="btn btn-hapus-data d-block w-100" data-id="${mahasiswa.id}" data-nama="${mahasiswa.nama}">Hapus</a>
+                                                <a class="btn btn-ganti-password d-block w-100" data-id="${mahasiswa.id}" data-nama="${mahasiswa.nama}">Ganti Password</a>
+                                            </div>
+                                        </div>
+                                    </td>
+                                </tr>
                         `;
                         tableBody.append(row);
                     });

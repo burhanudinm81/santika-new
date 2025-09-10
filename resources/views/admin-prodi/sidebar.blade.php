@@ -19,7 +19,7 @@
         @endif
       </div>
       <div class="info">
-        <a href="#" id="profile-link" class="d-block">{{ auth()->user()->nama }}</a>
+        <a href="{{ route('admin-prodi.profile') }}" id="profile-link" class="d-block">{{ auth()->user()->nama }}</a>
       </div>
     </div>
 

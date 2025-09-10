@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Exceptions\ImportDataException;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\AdminChangePasswordRequest;
 use App\Jobs\ProcessDosenImport;
 use App\Models\Dosen;
 use App\Models\BidangMinat;
@@ -12,6 +13,7 @@ use Exception;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\View\View;
@@ -145,7 +147,7 @@ class DosenController extends Controller
         return view('mahasiswa.informasi-dosen.profil-dosen', compact('dosen', 'userProdi'));
     }
 
-    public function deleteDosen(Request $request)
+    public function deleteDosen(Request $request): JsonResponse
     {
         $request->validate(
             [
@@ -182,5 +184,26 @@ class DosenController extends Controller
                 "message" => "Terjadi kesalahan pada server saat menghapus data dosen."
             ], 500);
         }
+    }
+
+    public function adminChangePasswordDosen(AdminChangePasswordRequest $request): JsonResponse
+    {
+        $data = $request->validated();
+
+        $dosen = Dosen::find($data["dosen_id"]);
+        $dosen->password = Hash::make($data["new_password"]);
+        $savedDosen = $dosen->save();
+
+        if(!$savedDosen){
+            return response()->json([
+                "success" => false,
+                "message" => "Server Gagal mengganti Password Dosen!"
+            ], 422);
+        }
+
+        return response()->json([
+            "success" => true,
+            "message" => "Berhasil mengganti password!"
+        ]);
     }
 }

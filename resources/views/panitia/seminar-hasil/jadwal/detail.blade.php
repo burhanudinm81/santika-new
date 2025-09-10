@@ -58,13 +58,13 @@
                                         <td>{{ $index + 1 }}</td>
                                         <td>{{ $jadwal->ruang }}</td>
                                         @if (empty($printed[$key]))
-                                            <td rowspan="{{ $rowspanMap[$key] }}">{{ $jadwal->tanggal->isoFormat("dddd, DD-MM-YYYY") }}</td>
-                                            <td rowspan="{{ $rowspanMap[$key] }}">{{ $jadwal->sesi }}</td>
-                                            <td rowspan="{{ $rowspanMap[$key] }}">{{ $jadwal->waktu_mulai->isoFormat("HH:mm") . ' - ' . $jadwal->waktu_selesai->isoFormat("HH:mm") }}</td>
+                                            <td rowspan="{{ $rowspanMap[$key] }}">{{ $jadwal->tanggal->isoFormat("dddd, DD-MM-YYYY") ?? "-" }}</td>
+                                            <td rowspan="{{ $rowspanMap[$key] }}">{{ $jadwal->sesi ?? "-" }}</td>
+                                            <td rowspan="{{ $rowspanMap[$key] }}">{{ $jadwal->waktu_mulai->isoFormat("HH:mm") ?? "-" . ' - ' . $jadwal->waktu_selesai->isoFormat("HH:mm") ?? "-" }}</td>
                                             @php $printed[$key] = true; @endphp
                                         @endif
                                         <td>{{ $jadwal->proposal->judul }}</td>
-                                        <td>{{ $jadwal->proposal->proposalMahasiswas[0]->mahasiswa->nama }}</td>
+                                        <td>{{ $jadwal->proposal->proposalMahasiswas[0]->mahasiswa->nama ?? "-" }}</td>
                                         @if ($prodi->id == 1)
                                             @if (empty($jadwal->proposal->proposalMahasiswas[1]))
                                                 <td> - </td>
@@ -72,10 +72,10 @@
                                                 <td>{{ $jadwal->proposal->proposalMahasiswas[1]->mahasiswa->nama }}</td>
                                             @endif
                                         @endif
-                                        <td>{{ $jadwal->proposal->dosenPembimbing1->nama }}</td>
-                                        <td>{{ $jadwal->proposal->dosenPembimbing2->nama }}</td>
-                                        <td>{{ $jadwal->proposal->dosenPengujiSidangTA1->nama }}</td>
-                                        <td>{{ $jadwal->proposal->dosenPengujiSidangTA2->nama }}</td>
+                                        <td>{{ $jadwal->proposal->dosenPembimbing1->nama ?? "-" }}</td>
+                                        <td>{{ $jadwal->proposal->dosenPembimbing2->nama ?? "-" }}</td>
+                                        <td>{{ $jadwal->proposal->dosenPengujiSidangTA1->nama ?? "-" }}</td>
+                                        <td>{{ $jadwal->proposal->dosenPengujiSidangTA2->nama ?? "-" }}</td>
                                     </tr>
                                 @endforeach
                             @endif

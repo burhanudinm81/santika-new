@@ -1,8 +1,60 @@
 $("document").ready(function () {
-    function loadAllMahasiswa() {
-        const url = $("#tabel-mahasiswa").data("url");
-        // Elemen tbody
-        const tableBody = $('#mahasiswa-table-body');
+    const modalHapusMahasiswa = $("#modal-hapus-mahasiswa");
+    const tableBody = $('#mahasiswa-table-body');
+    const formHapusMahasiswa = $("#form-hapus-mahasiswa");
+    const tabelMahasiswa = $("#tabel-mahasiswa");
+
+    tableBody.on('click', '.btn-hapus-data', function () {
+        const mahasiswaId = $(this).data("id");
+        const namaMahasiswa = $(this).data("nama");
+        modalHapusMahasiswa.find("input[name='mahasiswa_id']").val(mahasiswaId);
+        modalHapusMahasiswa.find(".modal-body").text(`Apakah Anda yakin ingin menghapus ${namaMahasiswa}?`);
+        modalHapusMahasiswa.modal("show");
+    });
+
+    formHapusMahasiswa.submit(function (event) {
+        // Mencegah form submit secara default
+        event.preventDefault();
+
+        modalHapusMahasiswa.modal("hide");
+
+        const url = formHapusMahasiswa.attr("action");
+        const method = "delete";
+        const formData = formHapusMahasiswa.serialize();
+
+        $.ajax({
+            url: url,
+            method: method,
+            data: formData,
+            dataType: "json",
+            success: function (response) {
+                const message = response.message;
+
+                // Menampilkan pop up sukses
+                $("#modal-popup-sukses .modal-body").text(message);
+                $("#modal-popup-sukses").modal();
+            },
+            error: function (jqXHR, status, error) {
+                const errorMessage = jqXHR.responseJSON.message;
+
+                // Reset isi modal error
+                $("#modal-popup-error .modal-body").text("");
+
+                // Menampilkan pop up error
+                $("#modal-popup-error .modal-body").text(errorMessage);
+                $("#modal-popup-error").modal();
+            },
+            complete: function () {
+                // Jika Modal/Pop Up Sukses atau Pop Up Error ditutup kembalikan ke halaman Daftar Panitia TA
+                $("#modal-popup-sukses").on("hidden.bs.modal", function () {
+                    muatUlangTabelMahasiswa();
+                });
+            }
+        });
+    });
+
+    function muatUlangTabelMahasiswa() {
+        const url = tabelMahasiswa.data("url");
 
         // Tampilkan loading state
         tableBody.html('<tr><td colspan="8" class="text-center">Memuat...</td></tr>');
@@ -13,7 +65,7 @@ $("document").ready(function () {
 
                 // Mengkosongkan tbody
                 tableBody.html("");
-                
+
                 // Iterasi (loop) pada setiap data mahasiswa
                 $.each(dataMahasiswa, function (index, mahasiswa) {
                     // Buat baris tabel (tr) baru menggunakan template literal
@@ -46,6 +98,4 @@ $("document").ready(function () {
                 console.log("Gagal Memuat Data");
             });
     }
-
-    loadAllMahasiswa();
 });

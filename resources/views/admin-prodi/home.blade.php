@@ -121,62 +121,6 @@
             </div>
         </div>
 
-        <!-- Modal Ganti Password -->
-        <div class="modal fade" id="modal-ubah-password" tabindex="-1" role="dialog"
-            aria-labelledby="modal-ganti-password-label" aria-hidden="true">
-            <div class="modal-dialog" role="document">
-                <div class="modal-content">
-                    <div class="modal-header">
-                        <h5 class="modal-title" id="modal-ganti-password-label">Ubah Password</h5>
-                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                            <span aria-hidden="true">&times;</span>
-                        </button>
-                    </div>
-                    <div class="modal-body">
-                        <!-- route("admin-prodi.change-password") -->
-                        <form action="#" method="post" id="form-ubah-password">
-                            @csrf
-                            <div class="form-group">
-                                <label for="current-password">Password Lama</label>
-                                <div class="input-group">
-                                    <input type="password" class="form-control" id="current-password"
-                                        name="current_password" placeholder="Masukkan password lama">
-                                    <div class="input-group-append" id="show-current-password">
-                                        <span class="input-group-text"><i class="fas fa-eye"></i></span>
-                                    </div>
-                                </div>
-
-                            </div>
-                            <div class="form-group">
-                                <label for="new-password">Password Baru</label>
-                                <div class="input-group">
-                                    <input type="password" class="form-control" id="new-password" name="new_password"
-                                        placeholder="Masukkan password baru">
-                                    <div class="input-group-append" id="show-new-password">
-                                        <span class="input-group-text"><i class="fas fa-eye"></i></span>
-                                    </div>
-                                </div>
-                            </div>
-                            <div class="form-group">
-                                <label for="confirm-password">Konfirmasi Password Baru</label>
-                                <div class="input-group">
-                                    <input type="password" class="form-control" id="confirm-password"
-                                        name="new_password_confirmation" placeholder="Konfirmasi password baru">
-                                    <div class="input-group-append" id="show-confirm-password">
-                                        <span class="input-group-text"><i class="fas fa-eye"></i></span>
-                                    </div>
-                                </div>
-                            </div>
-                        </form>
-                    </div>
-                    <div class="modal-footer">
-                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
-                        <button type="button" class="btn btn-primary" id="save-password-btn">Simpan</button>
-                    </div>
-                </div>
-            </div>
-        </div>
-
         @yield('modals')
     </div>
     <!-- ./wrapper -->

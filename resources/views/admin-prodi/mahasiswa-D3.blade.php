@@ -43,13 +43,14 @@
                                 data-url="{{ route("admin-prodi.mahasiswa.d3") }}">
                                 <thead>
                                     <tr>
-                                        <th>No</th>
-                                        <th>Periode</th>
-                                        <th>NIM</th>
-                                        <th>Nama</th>
-                                        <th>Program Studi</th>
-                                        <th>Kelas</th>
-                                        <th>Angkatan</th>
+                                        <th class="text-center">No</th>
+                                        <th class="text-center">Periode</th>
+                                        <th class="text-center">NIM</th>
+                                        <th class="text-center">Nama</th>
+                                        <th class="text-center">Program Studi</th>
+                                        <th class="text-center">Kelas</th>
+                                        <th class="text-center">Angkatan</th>
+                                        <th class="text-center">Aksi</th>
                                     </tr>
                                 </thead>
                                 <tbody id="mahasiswa-table-body">
@@ -92,7 +93,9 @@
                                                 <button id="upload-btn" type="submit" class="btn btn-success">Upload</button>
                                             </div>
                                         </div>
-                                        <a href="{{ asset('/templates/template-impor-data-mahasiswa.xlsx') }}" id="download-template" class="form-text text-primary">Download template Impor Data Mahasiswa</a>
+                                        <a href="{{ asset('/templates/template-impor-data-mahasiswa.xlsx') }}"
+                                            id="download-template" class="form-text text-primary">Download template Impor Data
+                                            Mahasiswa</a>
                                     </div>
                                 </form>
                             </div>
@@ -108,9 +111,87 @@
     </div>
 @endsection
 
+@section('modals')
+    <div id="modal-hapus-mahasiswa" class="modal" tabindex="-1">
+        <div class="modal-dialog">
+            <form action="{{ route('admin-prodi.mahasiswa.d3.delete') }}" id="form-hapus-mahasiswa" class="modal-content"
+                method="post">
+                @csrf
+                @method('DELETE')
+                <input type="hidden" name="mahasiswa_id">
+                <div class="modal-header">
+                    <h5 class="modal-title font-weight-bold text-center">Konfirmasi</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Apakah anda yakin ingin menghapus data ini?</p>
+                </div>
+                <div class="modal-footer">
+                    <button type="submit" class="btn btn-danger">Ya, Hapus</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tidak</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    <div id="modal-ganti-password-mahasiswa" class="modal" tabindex="-1">
+        <div class="modal-dialog">
+            <form action="{{ route("admin-prodi.mahasiswa.d3.change-password")  }}" id="form-ganti-password-mahasiswa"
+                class="modal-content" method="post">
+                @csrf
+                @method('PATCH')
+                <input type="hidden" name="mahasiswa_id">
+                <div class="modal-header">
+                    <h5 class="modal-title font-weight-bold text-center">Ganti Password Mahasiswa</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="nama-dosen">Mahasiswa</label>
+                        <input type="text" class="form-control" id="nama-mahasiswa" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="new-password">Password Baru</label>
+                        <div class="input-group">
+                            <input type="password" class="form-control" id="new-password" name="new_password"
+                                placeholder="Masukkan password baru" required>
+                            <div class="input-group-append toggle-password" data-target="#new-password">
+                                <span class="input-group-text" style="cursor: pointer;">
+                                    <i class="fas fa-eye"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="new-password-confirmation">Konfirmasi Password</label>
+                        <div class="input-group">
+                            <input type="password" class="form-control" id="new-password-confirmation"
+                                name="new_password_confirmation" placeholder="Konfirmasi password baru" required>
+                            <div class="input-group-append toggle-password" data-target="#new-password-confirmation">
+                                <span class="input-group-text" style="cursor: pointer;">
+                                    <i class="fas fa-eye"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-success">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
+@endsection
+
 @push('page-scripts')
     <script src="{{ url("/custom/js/animate-custom-file-input.js") }}"></script>
     <script src="{{ url("/custom/js/mahasiswa/load-data-mahasiswa.js") }}"></script>
     <script src="{{ url("/custom/js/mahasiswa/search-mahasiswa.js") }}"></script>
+    <script src="{{ url("/custom/js/mahasiswa/delete-mahasiswa.js") }}"></script>
+    <script src="{{ url("/custom/js/mahasiswa/change-password-mahasiswa.js") }}"></script>
     <script src={{ url("/custom/js/mahasiswa/impor-data-excel.js") }}></script>
 @endpush
