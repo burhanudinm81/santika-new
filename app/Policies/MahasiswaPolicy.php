@@ -3,7 +3,9 @@
 namespace App\Policies;
 
 use App\Models\AdminProdi;
+use App\Models\Mahasiswa;
 use App\Models\Prodi;
+use Illuminate\Auth\Access\Response;
 
 class MahasiswaPolicy
 {
@@ -19,5 +21,19 @@ class MahasiswaPolicy
         $prodiD4 = Prodi::firstWhere("prodi", "D4 Jaringan Telekomunikasi Digital");
 
         return $adminProdi->prodi_id == $prodiD4->id;
+    }
+
+    public function deleteMahasiswa(AdminProdi $adminProdi, Mahasiswa $mahasiswa): Response
+    {
+        return $adminProdi->prodi_id == $mahasiswa->prodi_id
+            ? Response::allow()
+            : Response::deny("Anda tidak bisa menghapus Mahasiswa Prodi lain");
+    }
+
+    public function changePassword(AdminProdi $adminProdi, Mahasiswa $mahasiswa): Response
+    {
+        return $adminProdi->prodi_id == $mahasiswa->prodi_id
+            ? Response::allow()
+            : Response::deny("Anda tidak bisa mengganti password Mahasiswa Prodi lain");
     }
 }

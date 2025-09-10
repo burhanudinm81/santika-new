@@ -22,7 +22,15 @@ $("document").ready(function () {
                                     <td class="text-center">${dosen.NIDN}</td>
                                     <td class="text-center">${dosen.NIP}</td>
                                     <td class="text-center">${dosen.nama}</td>
-                                    <td class="d-flex justify-content-center align-items-center"><button type="button" class="btn btn-danger btn-hapus-dosen" data-id="${dosen.id}">Hapus</button></td>
+                                    <td class="d-flex justify-content-center align-items-center">
+                                        <div class="dropdown">
+                                            <button type="button" class="btn btn-dark dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Aksi</button>
+                                            <div class="dropdown-menu">
+                                                <a class="btn btn-hapus-data d-block w-100" data-id="${dosen.id}" data-nama="${dosen.nama}">Hapus</a>
+                                                <a class="btn btn-ganti-password d-block w-100" data-id="${dosen.id}" data-nama="${dosen.nama}">Ganti Password</a>
+                                            </div>
+                                        </div>
+                                    </td>
                                 </tr>
                     `;
 

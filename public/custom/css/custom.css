@@ -18,3 +18,13 @@
     justify-content: center;
     align-items: center;
 }
+
+.btn-hapus-data:hover{
+    background-color: rgba(255, 0, 0, 0.8);
+    color: white;
+}
+
+.btn-ganti-password:hover{
+    background-color: rgba(0, 123, 255, 1);
+    color: white;
+}

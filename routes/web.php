@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminProdiController;
 use App\Http\Controllers\Auth\ChangePasswordController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\Dosen\SeminarProposal\JadwalSemproController as JadwalSemproDosenController;
@@ -109,6 +110,19 @@ Route::middleware(["auth:admin-prodi", "auth.session"])->group(function () {
             ->name("admin-prodi.home");
     });
 
+    Route::controller(AdminProdiController::class)->group(function () {
+        // Route untuk memuat halaman profil Admin Prodi
+        Route::get("/admin-prodi/profile", "showProfile")->name("admin-prodi.profile");
+
+        // Route untuk mengupdate email Admin Prodi
+        Route::patch("/admin-prodi/profile/edit-email", "updateEmail")
+            ->name("admin-prodi.profile.edit-email");
+
+        // Route untuk mengupdate password Admin Prodi
+        Route::patch("/admin-prodi/profile/change-password", "updatePassword")
+            ->name("admin-prodi.profile.change-password");
+    });
+
     Route::controller(DashboardController::class)->group(function () {
         // Route untuk menampilkan Dashboard Admin Prodi
         Route::get("/admin-prodi/dashboard", "showDashboardPage")
@@ -131,6 +145,14 @@ Route::middleware(["auth:admin-prodi", "auth.session"])->group(function () {
         // Route untuk impor data Mahasiswa D3 TT menggunakan data Excel
         Route::post("/admin-prodi/mahasiswa/d3/import", "importMahasiswa")
             ->name("admin-prodi.mahasiswa.d3.import");
+
+        // Route untuk menghapus Data Mahasiswa D3 TT
+        Route::delete("/admin-prodi/mahasiswa/d3/delete", "deleteMahasiswa")
+            ->name("admin-prodi.mahasiswa.d3.delete");
+
+        // Route untuk mengganti password Mahasiswa D3 TT
+        Route::patch("/admin-prodi/mahasiswa/d3/change-password", "adminChangePasswordMahasiswa")
+            ->name("admin-prodi.mahasiswa.d3.change-password");
     });
 
     Route::controller(MahasiswaD4Controller::class)->group(function () {
@@ -149,6 +171,14 @@ Route::middleware(["auth:admin-prodi", "auth.session"])->group(function () {
         // Route untuk impor data Mahasiswa D4 JTD menggunakan data Excel
         Route::post("/admin-prodi/mahasiswa/d4/import", "importMahasiswa")
             ->name("admin-prodi.mahasiswa.d4.import");
+
+        // Route untuk menghapus Data Mahasiswa D4 JTD
+        Route::delete("/admin-prodi/mahasiswa/d4/delete", "deleteMahasiswa")
+            ->name("admin-prodi.mahasiswa.d4.delete");
+
+        // Route untuk mengganti password Mahasiswa D4 JTD
+        Route::patch("/admin-prodi/mahasiswa/d4/change-password", "adminChangePasswordMahasiswa")
+            ->name("admin-prodi.mahasiswa.d4.change-password");
     });
 
     Route::controller(DosenController::class)->group(function () {
@@ -171,6 +201,10 @@ Route::middleware(["auth:admin-prodi", "auth.session"])->group(function () {
         // Route untuk menghapus dosen
         Route::delete("/admin-prodi/dosen/delete", "deleteDosen")
             ->name("admin-prodi.dosen.delete");
+
+        // Route untuk mengganti password dosen
+        Route::patch("/admin-prodi/dosen/change-password", "adminChangePasswordDosen")
+            ->name("admin-prodi.dosen.change-password");
     });
 
     Route::controller(PanitiaController::class)->group(function () {
@@ -259,8 +293,8 @@ Route::middleware(["auth:mahasiswa", "auth.session", "password.changed"])->group
     Route::controller(JadwalSemhasMahasiswaController::class)->group(function () {
         Route::get('/mahasiswa/seminar-hasil/jadwal', 'showJadwalPage')->name('mahasiswa.seminar-hasil.jadwal');
     });
-   
-    Route::controller(PrivateFileController::class)->group(function(){
+
+    Route::controller(PrivateFileController::class)->group(function () {
         Route::get("/revisi-sempro/lembarRevisi/Mhs/{id}", "serveRevisiLembarRevisiSempro")
             ->name('revisi-lembarRevisi-sempro-mhs.show');
 
@@ -499,7 +533,7 @@ Route::middleware(["auth:dosen", "auth.session", "password.changed", "is.panitia
             // Route::get('/edit/{id}', 'edit')->name('edit');
             // Route::put('/update/{id}', 'update')->name('update');
             // Route::delete('/delete/{id}', 'delete')->name('delete');
-
+    
             //  Route untuk melihat detail jadwal sempro
             Route::get('/detail/tahap/{tahap_id}/periode/{periode_id}', 'detail')->name('detail');
 

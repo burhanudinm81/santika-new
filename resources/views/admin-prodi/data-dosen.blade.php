@@ -1,5 +1,9 @@
 @extends('admin-prodi.home')
 
+@section('page-style')
+    <link rel="stylesheet" href="{{ url('/custom/css/custom.css') }}">
+@endsection
+
 @section('content')
     <div class="content-header">
         <div class="container-fluid">
@@ -90,7 +94,8 @@
 @section('modals')
     <div id="modal-hapus-dosen" class="modal" tabindex="-1">
         <div class="modal-dialog">
-            <form action="{{ route('admin-prodi.dosen.delete') }}" id="form-hapus-dosen" class="modal-content" method="post">
+            <form action="{{ route('admin-prodi.dosen.delete') }}" id="form-hapus-dosen" class="modal-content"
+                method="post">
                 @csrf
                 @method('DELETE')
                 <input type="hidden" name="dosen_id">
@@ -110,11 +115,61 @@
             </form>
         </div>
     </div>
+    <div id="modal-ganti-password-dosen" class="modal" tabindex="-1">
+        <div class="modal-dialog">
+            <form action="{{ route('admin-prodi.dosen.change-password') }}" id="form-ganti-password-dosen" class="modal-content" method="post">
+                @csrf
+                @method('PATCH')
+                <input type="hidden" name="dosen_id">
+                <div class="modal-header">
+                    <h5 class="modal-title font-weight-bold text-center">Ganti Password Dosen</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <div class="form-group">
+                        <label for="nama-dosen">Dosen</label>
+                        <input type="text" class="form-control" id="nama-dosen" readonly>
+                    </div>
+                    <div class="form-group">
+                        <label for="new-password">Password Baru</label>
+                        <div class="input-group">
+                            <input type="password" class="form-control" id="new-password" name="new_password"
+                                placeholder="Masukkan password baru" required>
+                            <div class="input-group-append toggle-password" data-target="#new-password">
+                                <span class="input-group-text" style="cursor: pointer;">
+                                    <i class="fas fa-eye"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="form-group">
+                        <label for="new-password-confirmation">Konfirmasi Password</label>
+                        <div class="input-group">
+                            <input type="password" class="form-control" id="new-password-confirmation"
+                                name="new_password_confirmation" placeholder="Konfirmasi password baru" required>
+                            <div class="input-group-append toggle-password" data-target="#new-password-confirmation">
+                                <span class="input-group-text" style="cursor: pointer;">
+                                    <i class="fas fa-eye"></i>
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                    <button type="submit" class="btn btn-success">Simpan</button>
+                </div>
+            </form>
+        </div>
+    </div>
 @endsection
 
 @push('page-scripts')
     <script src="{{ url("/custom/js/dosen/load-data-dosen.js") }}"></script>
     <script src="{{ url("/custom/js/dosen/delete-dosen.js") }}"></script>
+    <script src="{{ url("/custom/js/dosen/change-password-dosen.js") }}"></script>
     <script src="{{ url("/custom/js/dosen/search-dosen.js") }}"></script>
     <script src="{{ url("/custom/js/dosen/impor-data-excel.js") }}"></script>
     <script src="{{ url("/custom/js/animate-custom-file-input.js") }}"></script>

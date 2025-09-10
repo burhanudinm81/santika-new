@@ -34,7 +34,7 @@ class ChangePasswordController extends Controller
 
             // Cek Password Lama
             if (!password_verify($request->input('current_password'), $mahasiswa->password)) {
-                return back()->withErrors(['current_password' => 'Current password is incorrect.']);
+                return back()->withErrors(['current_password' => 'Password Lama Salah']);
             }
 
             $mahasiswa->password = Hash::make($request->input('new_password'));

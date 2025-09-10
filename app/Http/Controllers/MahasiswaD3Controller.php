@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Exceptions\ImportDataException;
 use App\Http\Controllers\Controller;
+use App\Http\Requests\AdminChangePasswordRequest;
 use App\Jobs\ProcessMahasiswaImport;
 use App\Models\Periode;
 use App\Services\MahasiswaImportService;
@@ -12,7 +13,10 @@ use Illuminate\Database\Eloquent\Builder;
 use App\Interfaces\MahasiswaControllerInterface;
 use App\Models\Mahasiswa;
 use App\Models\Prodi;
+use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Gate;
+use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\View\View;
@@ -37,7 +41,7 @@ class MahasiswaD3Controller extends Controller implements MahasiswaControllerInt
     public function showAllMahasiswa()
     {
         // Query Semua Data Mahasiswa D3
-        $mahasiswaD3 = Mahasiswa::select("periode_id", "NIM", "nama", "prodi_id", "kelas", "angkatan")
+        $mahasiswaD3 = Mahasiswa::select("id", "periode_id", "NIM", "nama", "prodi_id", "kelas", "angkatan")
             ->with(["periode", "prodi"])
             ->where("prodi_id", $this->prodi->id)
             ->get();
@@ -124,5 +128,63 @@ class MahasiswaD3Controller extends Controller implements MahasiswaControllerInt
                 "message" => "Terjadi kesalahan pada server saat mengimpor file."
             ], 500);
         }
+    }
+
+    public function deleteMahasiswa(Request $request): JsonResponse
+    {
+        $data = $request->validate(
+            [
+                "mahasiswa_id" => "required|exists:mahasiswa,id"
+            ]
+        );
+
+        $mahasiswaId = $data["mahasiswa_id"];
+        $mahasiswa = Mahasiswa::find($mahasiswaId);
+
+        // Memeriksa Hak Akses Admin Prodi
+        Gate::authorize("deleteMahasiswa", $mahasiswa);
+
+        try {
+            if (!$mahasiswa) {
+                return response()->json([
+                    "success" => false,
+                    "message" => "Data Mahasiswa Tidak Ditemukan"
+                ], 404);
+            }
+
+            $mahasiswa->delete();
+            Log::info("Hapus Mahasiswa Berhasil: ID Mahasiswa $mahasiswaId telah dihapus.");
+
+            return response()->json([
+                "success" => true,
+                "message" => "Data Mahasiswa Berhasil Dihapus"
+            ]);
+        } catch (Exception $e) {
+            Log::error("Hapus Mahasiswa Gagal Total: " . $e->getMessage());
+            return response()->json([
+                "success" => false,
+                "message" => "Terjadi kesalahan pada server saat menghapus data mahasiswa."
+            ], 500);
+        }
+    }
+    public function adminChangePasswordMahasiswa(AdminChangePasswordRequest $request): JsonResponse
+    {
+        $data = $request->validated();
+
+        $mahasiswa = Mahasiswa::find($data["mahasiswa_id"]);
+        $mahasiswa->password = Hash::make($data["new_password"]);
+        $savedMahasiswa = $mahasiswa->save();
+
+        if(!$savedMahasiswa){
+            return response()->json([
+                "success" => false,
+                "message" => "Server Gagal mengganti Password Mahasiswa!"
+            ], 422);
+        }
+
+        return response()->json([
+            "success" => true,
+            "message" => "Berhasil mengganti password!"
+        ]);
     }
 }

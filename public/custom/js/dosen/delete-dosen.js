@@ -4,9 +4,11 @@ $("document").ready(function () {
     const formHapusDosen = $("#form-hapus-dosen");
     const tabelDosen = $("#tabel-dosen");
 
-    tableBody.on('click', '.btn-hapus-dosen', function () {
+    tableBody.on('click', '.btn-hapus-data', function () {
         const dosenId = $(this).data("id");
+        const namaDosen = $(this).data("nama");
         modalHapusDosen.find("input[name='dosen_id']").val(dosenId);
+        modalHapusDosen.find(".modal-body").text(`Apakah Anda yakin ingin menghapus ${namaDosen}?`);
         modalHapusDosen.modal("show");
     });
 
@@ -34,6 +36,9 @@ $("document").ready(function () {
             },
             error: function (jqXHR, status, error) {
                 const errorMessage = jqXHR.responseJSON.message;
+
+                // Reset isi modal error
+                $("#modal-popup-error .modal-body").text("");
 
                 // Menampilkan pop up error
                 $("#modal-popup-error .modal-body").text(errorMessage);
@@ -70,7 +75,15 @@ $("document").ready(function () {
                                     <td class="text-center">${dosen.NIDN}</td>
                                     <td class="text-center">${dosen.NIP}</td>
                                     <td class="text-center">${dosen.nama}</td>
-                                    <td class="d-flex justify-content-center align-items-center"><button type="button" class="btn btn-danger btn-hapus-dosen" data-id="${dosen.id}">Hapus</button></td>
+                                    <td class="d-flex justify-content-center align-items-center">
+                                        <div class="dropdown">
+                                            <button type="button" class="btn btn-dark dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Aksi</button>
+                                            <div class="dropdown-menu">
+                                                <a class="btn btn-hapus-dosen d-block w-100" data-id="${dosen.id}" data-nama="${dosen.nama}">Hapus</a>
+                                                <a class="btn btn-ganti-password d-block w-100" data-id="${dosen.id}" data-nama="${dosen.nama}">Ganti Password</a>
+                                            </div>
+                                        </div>
+                                    </td>
                                 </tr>
                     `;
 
