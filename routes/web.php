@@ -253,6 +253,7 @@ Route::middleware(["auth:mahasiswa", "auth.session", "password.changed"])->group
         Route::get('/mahasiswa/seminar-proposal/hasil-sempro', 'showHasilSempro')->name('mahasiswa.seminar-proposal.hasil-sempro');
         Route::get('/mahasiswa/seminar-proposal/revisi', 'showUploadRevisi')->name('mahasiswa.seminar-proposal.revisi');
         Route::post('/mahasiswa/seminar-proposal/revisi-store', 'storeUploadRevisi')->name('mahasiswa.seminar-proposal.revisi-store');
+        Route::get('/mahasiswa/seminar-proposal/riwayat', 'riwayat')->name('mahasiswa.seminar-proposal.riwayat');
     });
 
     Route::controller(SeminarHasilController::class)->group(function () {
@@ -261,6 +262,7 @@ Route::middleware(["auth:mahasiswa", "auth.session", "password.changed"])->group
         Route::get('/mahasiswa/seminar-hasil/hasil-semhas-sementara', 'showHasilSementaraSemhas')->name('mahasiswa.seminar-hasil.hasil-semhas-sementara');
         Route::get('/mahasiswa/seminar-hasil/revisi', 'showUploadRevisi')->name('mahasiswa.seminar-hasil.revisi');
         Route::post('/mahasiswa/seminar-hasil/revisi-store', 'storeUploadRevisi')->name('mahasiswa.seminar-hasil.revisi-store');
+        Route::get('/mahasiswa/seminar-hasil/riwayat', 'riwayat')->name('mahasiswa.seminar-hasil.riwayat');
     });
 
     Route::controller(LogbookController::class)->group(function () {
@@ -598,10 +600,25 @@ Route::middleware(["auth:dosen", "auth.session", "password.changed", "is.panitia
         ->name('panitia.kelola-periode-tahap.')
         ->group(function () {
             // Route untuk tambah tahap baru
-            Route::get("/tambah-tahap", "tambahTahap")->name('tambah-tahap');
+            Route::post("/tambah-tahap", "tambahTahap")->name('tambah-tahap');
             // Route untuk tambah periode
             Route::post('/tambah-periode', 'tambahPeriode')->name('tambah-periode');
+            // Route untuk  membuka halaman pengaturan Seminar
+            Route::get("/pengaturan-seminar", "showPengaturanPeriodeTahap")->name('pengaturan-seminar');
+
+            // Route untuk mengganti periode aktif
+            Route::post('/ganti-periode-aktif', 'gantiPeriodeAktif')->name('ganti-periode-aktif');
+            // Route untuk mengganti tahap sempro aktif
+            Route::post('/ubah-tahap-sempro-aktif', 'aturTahapSemproAktif')->name('ubah-tahap-sempro-aktif');
+            // Route untuk mengganti tahap sidang tugas akhir aktif
+            Route::post('/ubah-tahap-sidang-ta-aktif', 'aturTahapSidangTAAktif')->name('ubah-tahap-sidang-ta-aktif');
+            // Route untuk menonaktifkan tahap sempro
+            Route::get("/nonaktifkan-tahap-sempro", "nonaktifkanTahapSempro")->name("nonaktifkan-tahap-sempro");
+            // Route untuk menonaktifkan tahap sidang TA
+            Route::get("/nonaktifkan-tahap-sidang-ta", "nonaktifkanTahapSidangTA")->name("nonaktifkan-tahap-sidang-ta");
+            // Route untuk menghapus tahap
+            Route::delete("/hapus-tahap", "hapusTahap")->name("hapus-tahap");
         });
 });
 
-// Route::get("/hyper-parameter-tuning", [PengujianPenjadwalanAG::class, "pengujianHyperTuningParameter"]);
+Route::get("/hyper-parameter-tuning", [PengujianPenjadwalanAG::class, "pengujianHyperTuningParameter"]);

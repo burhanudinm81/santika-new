@@ -7,9 +7,11 @@ use App\Http\Requests\StoreLogbookRequest;
 use App\Models\Dosen;
 use App\Models\JenisKegiatanLogbook;
 use App\Models\LogBook;
+use App\Models\Notifikasi;
 use App\Models\Proposal;
 use App\Models\ProposalDosenMahasiswa;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class LogbookController extends Controller
 {
@@ -42,10 +44,12 @@ class LogbookController extends Controller
                 ->get();
         } else if ($proposalInfo != null && $roleDospem == 2) {
             $dospem2Info = $proposalInfo->dosenPembimbing2()->first();
-            $logbooksDospem2 = LogBook::with(['JenisKegiatanLogbook', 'statusLogbook'])->where('proposal_id', $proposalInfo->id)
-                ->where('dosen_id', $dospem2Info->id)
-                ->orderBy('tanggal_kegiatan', 'asc')
-                ->get();
+            if ($dospem2Info) {
+                $logbooksDospem2 = LogBook::with(['JenisKegiatanLogbook', 'statusLogbook'])->where('proposal_id', $proposalInfo->id)
+                    ->where('dosen_id', $dospem2Info->id)
+                    ->orderBy('tanggal_kegiatan', 'asc')
+                    ->get();
+            }
         }
 
         return view('mahasiswa.logbook.beranda-logbook', compact(['roleDospem', 'dospem1Info', 'dospem2Info', 'proposalInfo', 'logbooksDospem1', 'logbooksDospem2']));
@@ -87,27 +91,44 @@ class LogbookController extends Controller
 
     public function storeLogbook(StoreLogbookRequest $request)
     {
-        $dosenId = (int) $request->dosenPembimbingId;
-        $mahasiswaId = (int) $request->mahasiswaId;
         $roleDospem = (int) $request->roleDospem;
-        $jenisKegiatanId = (int) $request->validated()['jenisKegiatanId'];
-        $namaKegiatan = $request->validated()['namaKegiatan'];
-        $tanggalKegiatan = $request->validated()['tanggalKegiatan'];
-        $hasilKegiatan = $request->validated()['hasilKegiatan'];
 
-        $proposalMahasiswa = ProposalDosenMahasiswa::where('mahasiswa_id', $mahasiswaId)
-            ->latest()
-            ->first();
+        DB::transaction(function () use ($request) {
+            $dosenId = (int) $request->dosenPembimbingId;
+            $mahasiswaId = (int) $request->mahasiswaId;
 
-        LogBook::create([
-            'proposal_id' => $proposalMahasiswa->proposal_id,
-            'dosen_id'=> $dosenId,
-            'mahasiswa_id'=> $mahasiswaId,
-            'jenis_kegiatan_id'=> $jenisKegiatanId,
-            'nama_kegiatan'=> $namaKegiatan,
-            'tanggal_kegiatan'=> $tanggalKegiatan,
-            'hasil_kegiatan'=> $hasilKegiatan,
-        ]);
+            $jenisKegiatanId = (int) $request->validated()['jenisKegiatanId'];
+            $namaKegiatan = $request->validated()['namaKegiatan'];
+            $tanggalKegiatan = $request->validated()['tanggalKegiatan'];
+            $hasilKegiatan = $request->validated()['hasilKegiatan'];
+
+            $proposalMahasiswa = ProposalDosenMahasiswa::where('mahasiswa_id', $mahasiswaId)
+                ->latest()
+                ->first();
+
+            $logbook = LogBook::create([
+                'proposal_id' => $proposalMahasiswa->proposal_id,
+                'dosen_id' => $dosenId,
+                'mahasiswa_id' => $mahasiswaId,
+                'jenis_kegiatan_id' => $jenisKegiatanId,
+                'nama_kegiatan' => $namaKegiatan,
+                'tanggal_kegiatan' => $tanggalKegiatan,
+                'hasil_kegiatan' => $hasilKegiatan,
+            ]);
+
+            Notifikasi::create([
+                'dosen_id' => $dosenId,
+                'keterangan' => sprintf(
+                    '<span class="mr-2"><b>%s</b> telah mengisi logbook bimbingan.</span>
+        <a href="%s" class="btn btn-sm btn-primary">Lihat Logbook</a>',
+                    $proposalMahasiswa->mahasiswa->nama,
+                    route('dosen.bimbingan.detail-logbook-mahasiswa', [
+                        'mahasiswa' => $mahasiswaId,
+                        'logbook' => $logbook->id,
+                    ])
+                ),
+            ]);
+        });
 
         return redirect()->route('mahasiswa.logbook.beranda', ['roleDospem' => $roleDospem])
             ->with('success', 'Logbook berhasil ditambahkan.');

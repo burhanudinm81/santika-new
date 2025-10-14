@@ -11,38 +11,42 @@ class SemproSchedulerService
 {
     public function hyperparameterTuning(array $proposals, array $ruangs, array $tanggals, array $sesis, array $dosenKuota, array $waktuBerhalangan = [])
     {
-        $popSizes = [50, 100, 150];
-        $maxGens = [100, 200, 300];
-        $mutationRates = [0.01, 0.05, 0.1];
+        // $popSizes = [50, 100, 150, 200, 250, 300];
+        // $maxGens = [100, 200, 300, 400, 500];
+        // $mutationRates = [0.01, 0.05, 0.1, 0.2];
+        $crossoverRates = [0.7, 0.8, 0.9, 0.95];
+
+        $popSizes = [100];
+        $maxGens = [100];
+        $mutationRates = [0.05];
+        // $crossoverRates = [0.8];
 
         $results = [];
+
+        Log::info("--------------------------------------------------");
+        Log::info("Memulai Hyperparameter Tuning...");
+        Log::info("--------------------------------------------------");
 
         foreach ($popSizes as $popSize) {
             foreach ($maxGens as $maxGen) {
                 foreach ($mutationRates as $mutationRate) {
-                    $service = new SemproSchedulerService();
-                    // Set parameter dinamis
-                    $service->popSize = $popSize;
-                    $service->maxGen = $maxGen;
-                    $service->mutationRate = $mutationRate;
-
-                    // Jalankan penjadwalan
-                    $start = microtime(true); 
-                    $jadwal = $service->generate($proposals, $ruangs, $tanggals, $sesis, $dosenKuota, $waktuBerhalangan);
-                    $end = microtime(true); 
-                    $executionTime = $end - $start;
-
-                    // Hitung fitness
-                    $fitness = $service->fitness($jadwal, $dosenKuota, $waktuBerhalangan, $proposals);
-                    Log::info("Fitness: $fitness, Execution Time: $executionTime");
-
-                    $results[] = [
-                        'popSize' => $popSize,
-                        'maxGen' => $maxGen,
-                        'mutationRate' => $mutationRate,
-                        'fitness' => $fitness,
-                        'executionTime' => $executionTime,
-                    ];
+                    foreach($crossoverRates as $crossoverRate){
+                        $startTime = microtime(true);
+                        $jadwal = $this->generate($proposals, $ruangs, $tanggals, $sesis, $dosenKuota, $waktuBerhalangan, $popSize, $maxGen, $crossoverRate, $mutationRate);
+                        $endTime = microtime(true);
+                        $executionTime = round($endTime - $startTime, 2);
+                        $fitness = $this->fitness($jadwal, $dosenKuota, $waktuBerhalangan, $proposals);
+                        Log::info("Pop Size: $popSize, Max Gen: $maxGen, Crossover Rate: $crossoverRate, Mutation Rate: $mutationRate => Fitness: $fitness, Execution Time: {$executionTime}s");
+                        $results[] = [
+                            'popSize' => $popSize,
+                            'maxGen' => $maxGen,
+                            'crossoverRate' => $crossoverRate,
+                            'mutationRate' => $mutationRate,
+                            'fitness' => $fitness,
+                            'executionTime' => $executionTime
+                        ];
+                    }
+                    
                 }
             }
         }
@@ -55,6 +59,8 @@ class SemproSchedulerService
             echo "$idx. popSize: {$result['popSize']}, maxGen: {$result['maxGen']}, mutationRate: {$result['mutationRate']}, fitness: {$result['fitness']}, executionTime: {$result['executionTime']} <br>\n";
         }
     }
+
+    
     /**
      * Generate seminar proposal schedule using genetic algorithm (GA)
      * @param array $proposals List of proposal data
@@ -64,17 +70,23 @@ class SemproSchedulerService
      * @param array $dosenKuota List of dosen beserta kuotanya
      * @return array Jadwal hasil penjadwalan
      */
-    public function generate(array $proposals, array $ruangs, array $tanggals, array $sesis, array $dosenKuota, array $waktuBerhalangan = [])
-    {
-        $popSize = 30;
-        $maxGen = 100;
+    public function generate(
+        array $proposals,
+        array $ruangs,
+        array $tanggals,
+        array $sesis,
+        array $dosenKuota,
+        array $waktuBerhalangan = [],
+        int $popSize = 150,
+        int $maxGen = 200,
+        float $crossoverRate = 0,
+        float $mutationRate = 0.01
+    ) {
         $selectionCount = round(1 / 3 * $popSize);
-        // $crossoverRate = 0.8;
-        $mutationRate = 0.05;
         $population = $this->initPopulation($proposals, $ruangs, $tanggals, $sesis, $dosenKuota, $popSize);
         $bestJadwal = null;
         $bestFitness = PHP_INT_MAX;
-
+        
         for ($gen = 0; $gen < $maxGen; $gen++) {
             $fitnessList = [];
             foreach ($population as $idx => $jadwal) {
@@ -100,11 +112,29 @@ class SemproSchedulerService
             }
 
             // Buat sisa populasi dengan mutasi dari individu terbaik
+            // while (count($newPopulation) < $popSize) {
+            //     // Ambil parent acak dari popoulasi terpilih
+            //     $parent = $selectedPopulation[array_rand($selectedPopulation)];
+            //     // Buat children dengan memutasi parent
+            //     $child = $this->mutate($parent, $ruangs, $tanggals, $sesis, $dosenKuota, $proposals, $mutationRate);
+            //     $newPopulation[] = $child;
+            // }
+
+
             while (count($newPopulation) < $popSize) {
-                // Ambil parent acak dari popoulasi terpilih
-                $parent = $selectedPopulation[array_rand($selectedPopulation)];
-                // Buat children dengan memutasi parent
-                $child = $this->mutate($parent, $ruangs, $tanggals, $sesis, $dosenKuota, $proposals, $mutationRate);
+                // Pilih dua parent acak dari populasi terpilih
+                $parent1 = $selectedPopulation[array_rand($selectedPopulation)];
+                $parent2 = $selectedPopulation[array_rand($selectedPopulation)];
+
+                if ((mt_rand() / mt_getrandmax()) < $crossoverRate) {
+                    $offspring = $this->crossover($parent1, $parent2);
+                } else {
+                    $offspring = $parent1; // atau parent2
+                }
+
+                // Mutasi offspring
+                $child = $this->mutate($offspring, $ruangs, $tanggals, $sesis, $dosenKuota, $proposals, $mutationRate);
+
                 $newPopulation[] = $child;
             }
 
@@ -113,7 +143,8 @@ class SemproSchedulerService
                 break; // solusi optimal ditemukan
         }
 
-        // Log::info("Nilai Fitness Terbaik: $bestFitness");
+        Log::info("------------------------");
+        Log::info("Nilai Fitness Terbaik: $bestFitness");
         return $bestJadwal;
     }
 
@@ -358,24 +389,24 @@ class SemproSchedulerService
      * @param array $parent2 Jadwal induk kedua
      * @return array Jadwal anak (offspring)
      */
-    // public function crossover(array $parent1, array $parent2): array
-    // {
-    //     $offspring = [];
-    //     $totalItems = count($parent1);
+    public function crossover(array $parent1, array $parent2): array
+    {
+        $offspring = [];
+        $totalItems = count($parent1);
 
-    //     // Tentukan titik potong (crossover point) secara acak
-    //     // Hindari titik 0 dan titik akhir agar persilangan bermakna
-    //     $crossoverPoint = mt_rand(1, $totalItems - 2);
+        // Tentukan titik potong (crossover point) secara acak
+        // Hindari titik 0 dan titik akhir agar persilangan bermakna
+        $crossoverPoint = mt_rand(1, $totalItems - 2);
 
-    //     // Ambil bagian "kepala" dari parent 1
-    //     $head = array_slice($parent1, 0, $crossoverPoint);
+        // Ambil bagian "kepala" dari parent 1
+        $head = array_slice($parent1, 0, $crossoverPoint);
 
-    //     // Ambil bagian "ekor" dari parent 2
-    //     $tail = array_slice($parent2, $crossoverPoint);
+        // Ambil bagian "ekor" dari parent 2
+        $tail = array_slice($parent2, $crossoverPoint);
 
-    //     // Gabungkan menjadi satu children
-    //     $offspring = array_merge($head, $tail);
+        // Gabungkan menjadi satu children
+        $offspring = array_merge($head, $tail);
 
-    //     return $offspring;
-    // }
+        return $offspring;
+    }
 }

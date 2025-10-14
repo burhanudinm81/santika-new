@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Panitia\PlottingPembimbing;
 use App\Http\Controllers\Controller;
 use App\Models\Dosen;
 use App\Models\KuotaDosen;
+use App\Models\Periode;
 use App\Models\Proposal;
 use Illuminate\Http\Request;
 
@@ -13,8 +14,10 @@ class PlottingPembimbingController extends Controller
     // Membuka halaman plotting pembimbing
     public function index()
     {
+        $periodeAktif = Periode::where('aktif_sempro', 1)->first();
+
         $listProposalD3 = Proposal::where('prodi_id', 1)
-            ->where('periode_id', 1)
+            ->where('periode_id', $periodeAktif->id)
             ->where(function ($query) {
                 $query->where('status_sempro_proposal_id', 1)           // Status proposal yang diterima tanpa revisi
                     ->orWhere('status_sempro_proposal_id', 2);        // Status proposal yang diterima dengan revisi
@@ -23,7 +26,7 @@ class PlottingPembimbingController extends Controller
             ->get();
 
         $listProposalD4 = Proposal::where('prodi_id', 2)
-            ->where('periode_id', 1)
+            ->where('periode_id', $periodeAktif->id)
             ->where(function ($query) {
                 $query->where('status_sempro_proposal_id', 1)           // Status proposal yang diterima tanpa revisi
                     ->orWhere('status_sempro_proposal_id', 2);        // Status proposal yang diterima dengan revisi
@@ -57,21 +60,18 @@ class PlottingPembimbingController extends Controller
         if ($dosenPembimbing1Id != $proposal->dosen_pembimbing_1_id) {
             // Mengubah Dosen Pembimbing 1
             $proposal->dosen_pembimbing_1_id = $dosenPembimbing1Id;
-            
-            if($prodiId == 1) {
-                if($kuotaDosenPembimbing1->kuota_pembimbing_1_D3 <= 0){
+
+            if ($prodiId == 1) {
+                if ($kuotaDosenPembimbing1->kuota_pembimbing_1_D3 <= 0) {
                     return back()->withErrors(['error' => 'Kuota pembimbing D3 untuk dosen ini sudah habis.']);
-                }
-                else{
+                } else {
                     // Mengurangi Kuota Dosen Pembimbing 1 D3
                     $kuotaDosenPembimbing1->kuota_pembimbing_1_D3--;
                 }
-                
             } elseif ($prodiId == 2) {
-                if($kuotaDosenPembimbing1->kuota_pembimbing_1_D4 <= 0){
+                if ($kuotaDosenPembimbing1->kuota_pembimbing_1_D4 <= 0) {
                     return back()->withErrors(['error' => 'Kuota pembimbing D4 untuk dosen ini sudah habis.']);
-                }
-                else{
+                } else {
                     // Mengurangi Kuota Dosen Pembimbing 1 D4
                     $kuotaDosenPembimbing1->kuota_pembimbing_1_D4--;
                 }
@@ -81,20 +81,17 @@ class PlottingPembimbingController extends Controller
             // Mengubah Dosen Pembimbing 2
             $proposal->dosen_pembimbing_2_id = $dosenPembimbing2Id;
 
-            if($prodiId == 1) {
-                if($kuotaDosenPembimbing2->kuota_pembimbing_2_D3 <= 0){
+            if ($prodiId == 1) {
+                if ($kuotaDosenPembimbing2->kuota_pembimbing_2_D3 <= 0) {
                     return back()->withErrors(['error' => 'Kuota pembimbing D3 untuk dosen ini sudah habis.']);
-                }
-                else{
+                } else {
                     // Mengurangi Kuota Dosen Pembimbing 1 D3
                     $kuotaDosenPembimbing2->kuota_pembimbing_2_D3--;
                 }
-                
             } elseif ($prodiId == 2) {
-                if($kuotaDosenPembimbing2->kuota_pembimbing_2_D4 <= 0){
+                if ($kuotaDosenPembimbing2->kuota_pembimbing_2_D4 <= 0) {
                     return back()->withErrors(['error' => 'Kuota pembimbing D4 untuk dosen ini sudah habis.']);
-                }
-                else{
+                } else {
                     // Mengurangi Kuota Dosen Pembimbing 1 D4
                     $kuotaDosenPembimbing2->kuota_pembimbing_2_D4--;
                 }

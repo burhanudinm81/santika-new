@@ -130,6 +130,9 @@
                                         <input type="hidden"
                                             value="{{ $permohonanProposalMahasiswa->first()->proposal_id }}"
                                             name="proposal_id">
+                                        <input type="hidden"
+                                            value="{{ $permohonanProposalMahasiswa->first()->mahasiswa_id }}"
+                                            name="mahasiswa_id">
 
                                         <div class="col">
                                             <button class="btn text-bold" type="submit" value="1"

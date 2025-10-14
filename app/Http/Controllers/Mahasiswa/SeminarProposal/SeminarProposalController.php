@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Mahasiswa\SeminarProposal;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePendaftaranSemproRequest;
 use App\Models\Mahasiswa;
+use App\Models\Notifikasi;
 use App\Models\PendaftaranSeminarProposal;
 use App\Models\Periode;
 use App\Models\Proposal;
@@ -12,6 +13,7 @@ use App\Models\ProposalDosenMahasiswa;
 use App\Models\Tahap;
 use App\Models\Revisi;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class SeminarProposalController extends Controller
 {
@@ -108,27 +110,46 @@ class SeminarProposalController extends Controller
             );
         }
 
-        $newPendaftaranSempro = PendaftaranSeminarProposal::create([
-            'proposal_id' => $validated['proposal_id'],
-            'status_daftar_sempro_id' => 3,
-            'file_proposal' => $pathFileProposal,
-            'lembar_konsultasi' => $pathLembarKonsultasi,
-            'lembar_kerjasama_mitra' => $pathLembarKerjaSamaMitra ?? null,
-            'bukti_cek_plagiasi' => $pathBuktiCekPlagiasi,
-            'status_file_proposal' => false,
-            'status_lembar_konsultasi' => false,
-            'status_lembar_kerjasama_mitra' => false,
-            'status_bukti_cek_plagiasi' => false,
-        ]);
+        DB::transaction(function () use ($validated, $infoProposal, $pathFileProposal, $pathLembarKonsultasi, $pathBuktiCekPlagiasi) {
+            $newPendaftaranSempro = PendaftaranSeminarProposal::create([
+                'proposal_id' => $validated['proposal_id'],
+                'status_daftar_sempro_id' => 3,
+                'file_proposal' => $pathFileProposal,
+                'lembar_konsultasi' => $pathLembarKonsultasi,
+                'lembar_kerjasama_mitra' => $pathLembarKerjaSamaMitra ?? null,
+                'bukti_cek_plagiasi' => $pathBuktiCekPlagiasi,
+                'status_file_proposal' => false,
+                'status_lembar_konsultasi' => false,
+                'status_lembar_kerjasama_mitra' => false,
+                'status_bukti_cek_plagiasi' => false,
+            ]);
 
-        $periodeAktif = Periode::firstWhere('aktif_sempro', true);
-        $tahapAktif = Tahap::firstWhere('aktif_sempro', true);
+            $periodeAktif = Periode::firstWhere('aktif_sempro', true);
+            $tahapAktif = Tahap::firstWhere('aktif_sempro', true);
 
-        $infoProposal->update([
-            'pendaftaran_sempro_id' => $newPendaftaranSempro->id,
-            'periode_id' => $periodeAktif->id,
-            'tahap_id' => $tahapAktif->id
-        ]);
+            $infoProposal->update([
+                'pendaftaran_sempro_id' => $newPendaftaranSempro->id,
+                'periode_id' => $periodeAktif->id,
+                'tahap_id' => $tahapAktif->id
+            ]);
+
+            $proposalInfo = ProposalDosenMahasiswa::with('proposal', 'mahasiswa')
+                ->where('mahasiswa_id', auth('mahasiswa')->user()->id)
+                ->where('status_proposal_mahasiswa_id', 1)
+                ->first();
+
+            Notifikasi::create([
+                'dosen_id' => $proposalInfo->dosen_id,
+                'mahasiswa_id' => $proposalInfo->mahasiswa_id,
+                'tipe' => 'panitia',
+                'keterangan' => sprintf(
+                    '<span class="mr-2"><b>%s</b> telah mengajukan pendaftaran ujian.</span>
+    <a href="%s" class="btn btn-sm btn-primary">Lihat Detail</a>',
+                    $proposalInfo->mahasiswa->nama,
+                    route('panitia.seminar-proposal.verifikasi-daftar', $newPendaftaranSempro->id)
+                ),
+            ]);
+        });
 
         return redirect()->back()->with('success', 'Pendaftaran Sempro Berhasil Dibuat');
     }
@@ -293,5 +314,22 @@ class SeminarProposalController extends Controller
         ]);
 
         return redirect()->back()->with('success', 'Revisi Berhasil Diupload');
+    }
+
+    public function riwayat()
+    {
+        $data = ProposalDosenMahasiswa::with('dosen', 'proposal')
+            ->where('mahasiswa_id', auth('mahasiswa')->user()->id)
+            ->where('status_proposal_mahasiswa_id', 1)
+            ->latest()
+            ->get();
+
+        $statusPendaftaran = [
+            1 => 'Diterima',
+            2 => 'Ditolak',
+            3 => 'Belum Dicek',
+        ];
+
+        return view('mahasiswa.seminar-proposal.riwayat', compact('data', 'statusPendaftaran'));
     }
 }

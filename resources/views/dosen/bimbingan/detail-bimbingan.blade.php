@@ -43,7 +43,7 @@
                             <p class="text-muted">{{ $proposalSemproInfo->dosenPembimbing1->nama }}</p>
 
                             <strong></i>Dosen Pembimbing 2</strong>
-                            <p class="text-muted">{{ $proposalSemproInfo->dosenPembimbing2->nama }}</p>
+                            <p class="text-muted">{{ $proposalSemproInfo?->dosenPembimbing2?->nama ?? 'Menyusul' }}</p>
                         </div>
 
                         <div class="card-body">

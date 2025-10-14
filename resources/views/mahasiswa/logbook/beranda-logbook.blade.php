@@ -82,7 +82,7 @@
                                     @elseif($roleDospem == 2)
                                         @if (is_null($logbooksDospem2))
                                             <tr>
-                                                <td colspan="7" style="text-align: center">Anda Belum Mempunyai Dosen Pembimbing 1!</td>
+                                                <td colspan="7" style="text-align: center">Anda Belum Mempunyai Dosen Pembimbing 2!</td>
                                             </tr>
                                         @else
                                             @foreach ($logbooksDospem2 as $logbook)

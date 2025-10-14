@@ -12,7 +12,7 @@
     </div>
     <div class="content">
         <div class="container-fluid">
-            @if($isPendaftaranClose)
+            @if ($isPendaftaranClose)
                 <div class="alert alert-danger" role="alert">
                     <h4 class="alert-heading"><strong>Maaf, anda belum bisa mendaftar Sidang Ujian Akhir</strong></h4>
                     <p>Pendaftaran Sidang Ujian Akhir Belum Dibuka</p>
@@ -55,12 +55,14 @@
                                 <div class="form-group">
                                     <label for="JudulProposal" class="form-label" style="font-size: 22px">Status Pendaftaran
                                         Seminar</label>
-                                    <input type="text" class="
+                                    <input type="text"
+                                        class="
                                         form-control
                                          @if ($infoPendaftaranSemhas != null && $infoPendaftaranSemhas->status_daftar_semhas_id == 3) bg-warning
                                          @elseif($infoPendaftaranSemhas != null && $infoPendaftaranSemhas->status_daftar_semhas_id == 1) bg-success
                                          @else bg-info @endif
-                                        " id="JudulProposal" aria-describedby="JudulProposal"
+                                        "
+                                        id="JudulProposal" aria-describedby="JudulProposal"
                                         value=" @if ($infoPendaftaranSemhas != null) {{ $infoPendaftaranSemhas->statusDaftarSeminar->status }}@else Anda belum mendaftar Sidang Ujian Akhir @endif"
                                         readonly />
                                 </div>
@@ -74,7 +76,8 @@
                                 <div class="mb-3">
                                     <label for="exampleDataList" class="form-label">Dosen Pembimbing 2</label>
                                     <input class="form-control" list="datalistOptions" id="exampleDataList"
-                                        placeholder="Pilih Dosen Pembimbing 2" value="{{ $infoDospem2->nama }}" readonly>
+                                        placeholder="Pilih Dosen Pembimbing 2"
+                                        value="{{ $infoDospem2?->nama ?? 'Menyusul' }}" readonly>
 
                                 </div>
 
@@ -82,26 +85,29 @@
                                 @if ($infoProposal->prodi_id == 1)
                                     <div class="mb-3">
                                         <label for="NamaMahasiswa" class="form-label">Nama Mahasiswa 1</label>
-                                        <input value="{{ $infoMahasiswaAll[0]->mahasiswa->nama }}" type="text" class="form-control"
-                                            id="NamaMahasiswa" aria-describedby="NamaMahasiswa" readonly />
+                                        <input value="{{ $infoMahasiswaAll[0]->mahasiswa->nama }}" type="text"
+                                            class="form-control" id="NamaMahasiswa" aria-describedby="NamaMahasiswa"
+                                            readonly />
                                     </div>
                                     <div class="mb-3">
                                         <label for="NamaMahasiswa" class="form-label">Nama Mahasiswa 2</label>
-                                        <input value="{{ $infoMahasiswaAll[1]->mahasiswa->nama }}" type="text" class="form-control"
-                                            id="NamaMahasiswa" aria-describedby="NamaMahasiswa" readonly />
+                                        <input value="{{ $infoMahasiswaAll[1]->mahasiswa->nama }}" type="text"
+                                            class="form-control" id="NamaMahasiswa" aria-describedby="NamaMahasiswa"
+                                            readonly />
                                     </div>
                                 @elseif ($infoProposal->prodi_id == 2)
                                     <div class="mb-3">
                                         <label for="NamaMahasiswa" class="form-label">Nama Mahasiswa</label>
-                                        <input type="text" class="form-control" id="NamaMahasiswa" aria-describedby="NamaMahasiswa"
+                                        <input type="text" class="form-control" id="NamaMahasiswa"
+                                            aria-describedby="NamaMahasiswa"
                                             value="{{ $infoMahasiswaAll->first()->mahasiswa->nama }}" readonly />
                                     </div>
                                 @endif
 
                                 <div class="mb-3">
                                     <label for="JudulProposal" class="form-label">Judul Proposal</label>
-                                    <input type="text" class="form-control" id="JudulProposal" aria-describedby="JudulProposal"
-                                        value="{{ $infoProposal->judul }}" readonly />
+                                    <input type="text" class="form-control" id="JudulProposal"
+                                        aria-describedby="JudulProposal" value="{{ $infoProposal->judul }}" readonly />
                                 </div>
                                 <div class="mb-3">
                                     <label for="exampleDataList" class="form-label">Bidang Keahlihan</label>
@@ -113,11 +119,10 @@
                                     <label for="exampleInputFile">Surat Rekomendasi Pembimbing .pdf</label>
                                     <div class="input-group">
                                         <div class="custom-file">
-                                            <input type="file" class="custom-file-input" id="exampleInputFile" @if (
-                                                $infoPendaftaranSemhas != null &&
-                                                ($infoPendaftaranSemhas->status_daftar_semhas_id == 3 || $infoPendaftaranSemhas->status_daftar_semhas_id == 1)
-                                            ) disabled @endif
-                                                name="file_rekom_dospem">
+                                            <input type="file" class="custom-file-input" id="exampleInputFile"
+                                                @if (
+                                                    $infoPendaftaranSemhas != null &&
+                                                        ($infoPendaftaranSemhas->status_daftar_semhas_id == 3 || $infoPendaftaranSemhas->status_daftar_semhas_id == 1)) disabled @endif name="file_rekom_dospem">
                                             <label class="custom-file-label" for="exampleInputFile">Choose file</label>
                                         </div>
                                     </div>
@@ -126,10 +131,10 @@
                                     <label for="exampleInputFile">File Proposal .pdf</label>
                                     <div class="input-group">
                                         <div class="custom-file">
-                                            <input type="file" class="custom-file-input" id="exampleInputFile" @if (
-                                                $infoPendaftaranSemhas != null &&
-                                                ($infoPendaftaranSemhas->status_daftar_semhas_id == 3 || $infoPendaftaranSemhas->status_daftar_semhas_id == 1)
-                                            ) disabled @endif
+                                            <input type="file" class="custom-file-input" id="exampleInputFile"
+                                                @if (
+                                                    $infoPendaftaranSemhas != null &&
+                                                        ($infoPendaftaranSemhas->status_daftar_semhas_id == 3 || $infoPendaftaranSemhas->status_daftar_semhas_id == 1)) disabled @endif
                                                 name="file_proposal_semhas">
                                             <label class="custom-file-label" for="exampleInputFile">Choose file</label>
                                         </div>
@@ -139,10 +144,10 @@
                                     <label for="exampleInputFile">Draft Jurnal .pdf</label>
                                     <div class="input-group">
                                         <div class="custom-file">
-                                            <input type="file" class="custom-file-input" id="exampleInputFile" @if (
-                                                $infoPendaftaranSemhas != null &&
-                                                ($infoPendaftaranSemhas->status_daftar_semhas_id == 3 || $infoPendaftaranSemhas->status_daftar_semhas_id == 1)
-                                            ) disabled @endif
+                                            <input type="file" class="custom-file-input" id="exampleInputFile"
+                                                @if (
+                                                    $infoPendaftaranSemhas != null &&
+                                                        ($infoPendaftaranSemhas->status_daftar_semhas_id == 3 || $infoPendaftaranSemhas->status_daftar_semhas_id == 1)) disabled @endif
                                                 name="file_draft_jurnal">
                                             <label class="custom-file-label" for="exampleInputFile">Choose file</label>
                                         </div>
@@ -152,11 +157,10 @@
                                     <label for="exampleInputFile">Surat IA Mitra .pdf (Judul Mitra)</label>
                                     <div class="input-group">
                                         <div class="custom-file">
-                                            <input type="file" class="custom-file-input" id="exampleInputFile" @if (
-                                                $infoPendaftaranSemhas != null &&
-                                                ($infoPendaftaranSemhas->status_daftar_semhas_id == 3 || $infoPendaftaranSemhas->status_daftar_semhas_id == 1)
-                                            ) disabled @endif
-                                                name="file_IA_mitra">
+                                            <input type="file" class="custom-file-input" id="exampleInputFile"
+                                                @if (
+                                                    $infoPendaftaranSemhas != null &&
+                                                        ($infoPendaftaranSemhas->status_daftar_semhas_id == 3 || $infoPendaftaranSemhas->status_daftar_semhas_id == 1)) disabled @endif name="file_IA_mitra">
                                             <label class="custom-file-label" for="exampleInputFile">Choose file</label>
                                         </div>
                                     </div>
@@ -165,10 +169,10 @@
                                     <label for="exampleInputFile">Surat Bebas Tanggungan PKL .pdf</label>
                                     <div class="input-group">
                                         <div class="custom-file">
-                                            <input type="file" class="custom-file-input" id="exampleInputFile" @if (
-                                                $infoPendaftaranSemhas != null &&
-                                                ($infoPendaftaranSemhas->status_daftar_semhas_id == 3 || $infoPendaftaranSemhas->status_daftar_semhas_id == 1)
-                                            ) disabled @endif
+                                            <input type="file" class="custom-file-input" id="exampleInputFile"
+                                                @if (
+                                                    $infoPendaftaranSemhas != null &&
+                                                        ($infoPendaftaranSemhas->status_daftar_semhas_id == 3 || $infoPendaftaranSemhas->status_daftar_semhas_id == 1)) disabled @endif
                                                 name="file_bebas_tanggungan_pkl">
                                             <label class="custom-file-label" for="exampleInputFile">Choose file</label>
                                         </div>
@@ -178,11 +182,10 @@
                                     <label for="exampleInputFile">Surat Keterangan Lulus Akademik (SKLA) .pdf</label>
                                     <div class="input-group">
                                         <div class="custom-file">
-                                            <input type="file" class="custom-file-input" id="exampleInputFile" @if (
-                                                $infoPendaftaranSemhas != null &&
-                                                ($infoPendaftaranSemhas->status_daftar_semhas_id == 3 || $infoPendaftaranSemhas->status_daftar_semhas_id == 1)
-                                            ) disabled @endif
-                                                name="file_skla">
+                                            <input type="file" class="custom-file-input" id="exampleInputFile"
+                                                @if (
+                                                    $infoPendaftaranSemhas != null &&
+                                                        ($infoPendaftaranSemhas->status_daftar_semhas_id == 3 || $infoPendaftaranSemhas->status_daftar_semhas_id == 1)) disabled @endif name="file_skla">
                                             <label class="custom-file-label" for="exampleInputFile">Choose file</label>
                                         </div>
                                     </div>
@@ -192,10 +195,10 @@
                             <!--end::Body-->
                             <!--begin::Footer-->
                             <div class="card-footer">
-                                <button type="submit" class="btn btn-primary" @if (
-                                    $infoPendaftaranSemhas != null &&
-                                    ($infoPendaftaranSemhas->status_daftar_semhas_id == 3 || $infoPendaftaranSemhas->status_daftar_semhas_id == 1)
-                                ) disabled @endif>Daftar</button>
+                                <button type="submit" class="btn btn-primary"
+                                    @if (
+                                        $infoPendaftaranSemhas != null &&
+                                            ($infoPendaftaranSemhas->status_daftar_semhas_id == 3 || $infoPendaftaranSemhas->status_daftar_semhas_id == 1)) disabled @endif>Daftar</button>
                             </div>
                             <!--end::Footer-->
                         </form>

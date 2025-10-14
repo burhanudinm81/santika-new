@@ -15,7 +15,6 @@
     @include('required-css')
 
     @stack('page-scripts')
-
 </head>
 
 <body class="hold-transition sidebar-mini">
@@ -140,7 +139,8 @@
                     </div>
                     <div class="modal-body">
                         <!-- route("mahasiswa.change-password") -->
-                        <form action="{{ route('mahasiswa.profile.change-password') }}" method="post" id="form-ubah-password">
+                        <form action="{{ route('mahasiswa.profile.change-password') }}" method="post"
+                            id="form-ubah-password">
                             @csrf
                             <div class="form-group">
                                 <label for="current-password">Password Lama</label>
@@ -151,13 +151,14 @@
                                         <span class="input-group-text"><i class="fas fa-eye"></i></span>
                                     </div>
                                 </div>
-                                <span class="invalid-feedback d-block" id="current_password_error" role="alert"></span>
+                                <span class="invalid-feedback d-block" id="current_password_error"
+                                    role="alert"></span>
                             </div>
                             <div class="form-group">
                                 <label for="new-password">Password Baru</label>
                                 <div class="input-group">
-                                    <input type="password" class="form-control" id="new-password" name="new_password"
-                                        placeholder="Masukkan password baru">
+                                    <input type="password" class="form-control" id="new-password"
+                                        name="new_password" placeholder="Masukkan password baru">
                                     <div class="input-group-append toggle-password" data-target="#new-password">
                                         <span class="input-group-text"><i class="fas fa-eye"></i></span>
                                     </div>
@@ -173,13 +174,15 @@
                                         <span class="input-group-text"><i class="fas fa-eye"></i></span>
                                     </div>
                                 </div>
-                                <span class="invalid-feedback d-block" id="new_password_confirmation_error" role="alert"></span>
+                                <span class="invalid-feedback d-block" id="new_password_confirmation_error"
+                                    role="alert"></span>
                             </div>
                         </form>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
-                        <button type="submit" class="btn btn-primary" id="save-password-btn" form="form-ubah-password">Simpan</button>
+                        <button type="submit" class="btn btn-primary" id="save-password-btn"
+                            form="form-ubah-password">Simpan</button>
                     </div>
                 </div>
             </div>
