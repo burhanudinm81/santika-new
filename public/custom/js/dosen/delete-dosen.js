@@ -79,7 +79,7 @@ $("document").ready(function () {
                                         <div class="dropdown">
                                             <button type="button" class="btn btn-dark dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Aksi</button>
                                             <div class="dropdown-menu">
-                                                <a class="btn btn-hapus-dosen d-block w-100" data-id="${dosen.id}" data-nama="${dosen.nama}">Hapus</a>
+                                                <a class="btn btn-hapus-data d-block w-100" data-id="${dosen.id}" data-nama="${dosen.nama}">Hapus</a>
                                                 <a class="btn btn-ganti-password d-block w-100" data-id="${dosen.id}" data-nama="${dosen.nama}">Ganti Password</a>
                                             </div>
                                         </div>

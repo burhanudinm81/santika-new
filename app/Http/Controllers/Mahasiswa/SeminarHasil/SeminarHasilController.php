@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePendaftaranSemhasRequest;
 use App\Models\BidangMinat;
 use App\Models\LogBook;
+use App\Models\Notifikasi;
 use App\Models\PendaftaranSemhas;
 use App\Models\Periode;
 use App\Models\Proposal;
@@ -13,6 +14,7 @@ use App\Models\ProposalDosenMahasiswa;
 use App\Models\Revisi;
 use App\Models\Tahap;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class SeminarHasilController extends Controller
 {
@@ -84,95 +86,114 @@ class SeminarHasilController extends Controller
 
     public function storePendaftaran(StorePendaftaranSemhasRequest $request)
     {
-        $validated = $request->validated();
+        DB::transaction(function () use ($request) {
+            $validated = $request->validated();
 
-        $infoProposal = Proposal::find($validated['proposal_id']);
+            $infoProposal = Proposal::find($validated['proposal_id']);
 
-        $pathFileRekomDospem = null;
-        $pathFileProposalSemhas = null;
-        $pathFileDraftJurnal = null;
-        $pathFileIAMitra = null;
-        $pathFileBebasTanggunganPkl = null;
-        $pathFileSkla = null;
+            $pathFileRekomDospem = null;
+            $pathFileProposalSemhas = null;
+            $pathFileDraftJurnal = null;
+            $pathFileIAMitra = null;
+            $pathFileBebasTanggunganPkl = null;
+            $pathFileSkla = null;
 
 
-        $fileRekomDospem = $request->file('file_rekom_dospem');
-        $fileProposalSemhas = $request->file('file_proposal_semhas');
-        $fileDraftJurnal = $request->file('file_draft_jurnal');
-        $fileIAMitra = $request->file('file_IA_mitra');
-        $fileBebasTanggunganPkl = $request->file('file_bebas_tanggungan_pkl');
-        $fileSkla = $request->file('file_skla');
+            $fileRekomDospem = $request->file('file_rekom_dospem');
+            $fileProposalSemhas = $request->file('file_proposal_semhas');
+            $fileDraftJurnal = $request->file('file_draft_jurnal');
+            $fileIAMitra = $request->file('file_IA_mitra');
+            $fileBebasTanggunganPkl = $request->file('file_bebas_tanggungan_pkl');
+            $fileSkla = $request->file('file_skla');
 
-        // membuat nama file yang unik
-        $nameFileRekomDospem = uniqid() . '.' . $fileRekomDospem->getClientOriginalExtension();
-        $nameFileProposalSemhas = uniqid() . '.' . $fileProposalSemhas->getClientOriginalExtension();
-        $nameFileDraftJurnal = uniqid() . '.' . $fileDraftJurnal->getClientOriginalExtension();
-        if ($fileIAMitra != null) {
-            $nameFileIAMitra = uniqid() . '.' . $fileIAMitra->getClientOriginalExtension();
-        }
-        $nameFileBebasTanggunganPkl = uniqid() . '.' . $fileBebasTanggunganPkl->getClientOriginalExtension();
-        $nameFileSkla = uniqid() . '.' . $fileSkla->getClientOriginalExtension();
+            // membuat nama file yang unik
+            $nameFileRekomDospem = uniqid() . '.' . $fileRekomDospem->getClientOriginalExtension();
+            $nameFileProposalSemhas = uniqid() . '.' . $fileProposalSemhas->getClientOriginalExtension();
+            $nameFileDraftJurnal = uniqid() . '.' . $fileDraftJurnal->getClientOriginalExtension();
+            if ($fileIAMitra != null) {
+                $nameFileIAMitra = uniqid() . '.' . $fileIAMitra->getClientOriginalExtension();
+            }
+            $nameFileBebasTanggunganPkl = uniqid() . '.' . $fileBebasTanggunganPkl->getClientOriginalExtension();
+            $nameFileSkla = uniqid() . '.' . $fileSkla->getClientOriginalExtension();
 
-        // simpan ke folder
-        $pathFileRekomDospem = $fileRekomDospem->storeAs(
-            'seminar-hasil/pendaftaran/rekomdosem',
-            $nameFileRekomDospem,
-            'local'
-        );
-        $pathFileProposalSemhas = $fileProposalSemhas->storeAs(
-            'seminar-hasil/pendaftaran/proposal-semhas',
-            $nameFileProposalSemhas,
-            'local'
-        );
-        $pathFileDraftJurnal = $fileDraftJurnal->storeAs(
-            'seminar-hasil/pendaftaran/draft-journal',
-            $nameFileDraftJurnal,
-            'local'
-        );
-
-        if ($fileIAMitra != null) {
-            $pathFileIAMitra = $fileIAMitra->storeAs(
-                'seminar-hasil/pendaftaran/IA-mitra',
-                $nameFileIAMitra,
+            // simpan ke folder
+            $pathFileRekomDospem = $fileRekomDospem->storeAs(
+                'seminar-hasil/pendaftaran/rekomdosem',
+                $nameFileRekomDospem,
                 'local'
             );
-        }
+            $pathFileProposalSemhas = $fileProposalSemhas->storeAs(
+                'seminar-hasil/pendaftaran/proposal-semhas',
+                $nameFileProposalSemhas,
+                'local'
+            );
+            $pathFileDraftJurnal = $fileDraftJurnal->storeAs(
+                'seminar-hasil/pendaftaran/draft-journal',
+                $nameFileDraftJurnal,
+                'local'
+            );
 
-        $pathFileBebasTanggunganPkl = $fileBebasTanggunganPkl->storeAs(
-            'seminar-hasil/pendaftaran/bebas-tanggungan-pkl',
-            $nameFileBebasTanggunganPkl,
-            'local'
-        );
-        $pathFileSkla = $fileSkla->storeAs(
-            'seminar-hasil/pendaftaran/skla',
-            $nameFileSkla,
-            'local'
-        );
+            if ($fileIAMitra != null) {
+                $pathFileIAMitra = $fileIAMitra->storeAs(
+                    'seminar-hasil/pendaftaran/IA-mitra',
+                    $nameFileIAMitra,
+                    'local'
+                );
+            }
 
-        $newPendaftaranSemhas = PendaftaranSemhas::create([
-            'proposal_id' => $validated['proposal_id'],
-            'status_daftar_semhas_id' => 3,
-            'file_rekom_dospem' => $pathFileRekomDospem,
-            'file_proposal_semhas' => $pathFileProposalSemhas,
-            'file_draft_jurnal' => $pathFileDraftJurnal,
-            'file_IA_mitra' => $pathFileIAMitra,
-            'file_bebas_tanggungan_pkl' => $pathFileBebasTanggunganPkl,
-            'file_skla' => $pathFileSkla,
-            'status_file_rekom_dosen' => false,
-            'status_file_proposal_semhas' => false,
-            'status_file_draft_jurnal' => false,
-            'status_file_bebas_tanggungan_pkl' => false,
-            'status_file_skla' => false,
-        ]);
+            $pathFileBebasTanggunganPkl = $fileBebasTanggunganPkl->storeAs(
+                'seminar-hasil/pendaftaran/bebas-tanggungan-pkl',
+                $nameFileBebasTanggunganPkl,
+                'local'
+            );
+            $pathFileSkla = $fileSkla->storeAs(
+                'seminar-hasil/pendaftaran/skla',
+                $nameFileSkla,
+                'local'
+            );
 
-        $periodeAktif = Periode::firstWhere('aktif_sidang_akhir', true);
-        $tahapAktif = Tahap::firstWhere('aktif_sidang_akhir', true);
+            $newPendaftaranSemhas = PendaftaranSemhas::create([
+                'proposal_id' => $validated['proposal_id'],
+                'status_daftar_semhas_id' => 3,
+                'file_rekom_dospem' => $pathFileRekomDospem,
+                'file_proposal_semhas' => $pathFileProposalSemhas,
+                'file_draft_jurnal' => $pathFileDraftJurnal,
+                'file_IA_mitra' => $pathFileIAMitra,
+                'file_bebas_tanggungan_pkl' => $pathFileBebasTanggunganPkl,
+                'file_skla' => $pathFileSkla,
+                'status_file_rekom_dosen' => false,
+                'status_file_proposal_semhas' => false,
+                'status_file_draft_jurnal' => false,
+                'status_file_bebas_tanggungan_pkl' => false,
+                'status_file_skla' => false,
+            ]);
 
-        $infoProposal->update([
-            'pendaftaran_semhas_id' => $newPendaftaranSemhas->id,
-            'periode_semhas_id' => $periodeAktif->id,
-            'tahap_semhas_id' => $tahapAktif->id
-        ]);
+            $periodeAktif = Periode::firstWhere('aktif_sidang_akhir', true);
+            $tahapAktif = Tahap::firstWhere('aktif_sidang_akhir', true);
+
+            $infoProposal->update([
+                'pendaftaran_semhas_id' => $newPendaftaranSemhas->id,
+                'periode_semhas_id' => $periodeAktif->id,
+                'tahap_semhas_id' => $tahapAktif->id
+            ]);
+
+            $proposalInfo = ProposalDosenMahasiswa::with('proposal', 'mahasiswa')
+                ->where('mahasiswa_id', auth('mahasiswa')->user()->id)
+                ->where('status_proposal_mahasiswa_id', 1)
+                ->first();
+
+            Notifikasi::create([
+                'dosen_id' => $proposalInfo->dosen_id,
+                'mahasiswa_id' => $proposalInfo->mahasiswa_id,
+                'tipe' => 'panitia',
+                'keterangan' => sprintf(
+                    '<span class="mr-2"><b>%s</b> telah mengajukan pendaftaran sidang laporan akhir.</span>
+    <a href="%s" class="btn btn-sm btn-primary">Lihat Detail</a>',
+                    $proposalInfo->mahasiswa->nama,
+                    route('panitia.seminar-hasil.verifikasi-daftar', $newPendaftaranSemhas->id)
+                ),
+            ]);
+        });
 
         return redirect()->back()->with('success', 'Pendaftaran Semhas Berhasil Dibuat');
     }
@@ -200,8 +221,8 @@ class SeminarHasilController extends Controller
             ->first();
 
         return view(
-            'mahasiswa.seminar-hasil.hasil-semhas-sementara'
-            ,compact(['proposalInfo', 'mainProposalInfo', 'revisiDosen1', 'revisiDosen2'])
+            'mahasiswa.seminar-hasil.hasil-semhas-sementara',
+            compact(['proposalInfo', 'mainProposalInfo', 'revisiDosen1', 'revisiDosen2'])
         );
     }
 
@@ -220,7 +241,7 @@ class SeminarHasilController extends Controller
             ->where('dosen_id', $mainProposalInfo->dosenPengujiSidangTA1->id)
             ->where('jenis_revisi', 'semhas')
             ->first();
-        if($revisiPeng1 == null){
+        if ($revisiPeng1 == null) {
             $revisiPeng1 = null;
         }
 
@@ -228,7 +249,7 @@ class SeminarHasilController extends Controller
             ->where('dosen_id', $mainProposalInfo->dosenPengujiSidangTA2->id)
             ->where('jenis_revisi', 'semhas')
             ->first();
-        if($revisiPeng2 == null){
+        if ($revisiPeng2 == null) {
             $revisiPeng2 = null;
         }
 
@@ -289,5 +310,22 @@ class SeminarHasilController extends Controller
         ]);
 
         return redirect()->back()->with('success', 'Revisi Berhasil Diupload');
+    }
+
+    public function riwayat()
+    {
+        $data = ProposalDosenMahasiswa::with('dosen', 'proposal')
+            ->where('mahasiswa_id', auth('mahasiswa')->user()->id)
+            ->where('status_proposal_mahasiswa_id', 1)
+            ->latest()
+            ->get();
+
+        $statusPendaftaran = [
+            1 => 'Diterima',
+            2 => 'Ditolak',
+            3 => 'Belum Dicek',
+        ];
+
+        return view('mahasiswa.seminar-proposal.riwayat', compact('data', 'statusPendaftaran'));
     }
 }

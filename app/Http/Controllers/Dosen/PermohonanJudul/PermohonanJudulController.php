@@ -5,8 +5,10 @@ namespace App\Http\Controllers\Dosen\PermohonanJudul;
 use App\Http\Controllers\Controller;
 use App\Models\KuotaDosen;
 use App\Models\Mahasiswa;
+use App\Models\Notifikasi;
 use App\Models\Proposal;
 use App\Models\ProposalDosenMahasiswa;
+use App\Models\StatusPendaftaranSeminar;
 use Illuminate\Http\Request;
 
 class PermohonanJudulController extends Controller
@@ -67,12 +69,19 @@ class PermohonanJudulController extends Controller
                     $item->update(['status_proposal_mahasiswa_id' => $confirmationStatusId]);
                 }
             }
-        } else if ($proposal->prodi_id == 2) {
+        } elseif ($proposal->prodi_id == 2) {
             // jika prodi_id = 2, cari dan ambil proposal mahasiswa D4 berdasarkan proposal_id
             $proposalMahasiswa = ProposalDosenMahasiswa::with('dosen')->where('proposal_id', $proposalId)->where('status_proposal_mahasiswa_id', 3)->first();
             // update status_proposal_mahasiswa_id (di mahasiswa D4)
             $proposalMahasiswa->update(attributes: ['status_proposal_mahasiswa_id' => $confirmationStatusId]);
         }
+
+        $dataStatus = StatusPendaftaranSeminar::find($confirmationStatusId);
+
+        Notifikasi::create([
+            'mahasiswa_id' => $request->input('mahasiswa_id'),
+            'keterangan' => sprintf("Pengajuan judul Anda telah %s.", $dataStatus->status),
+        ]);
 
         // Logic Pengurangan Kuota Dosen
         if ($confirmationStatusId == "1") {

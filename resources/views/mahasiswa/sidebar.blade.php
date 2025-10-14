@@ -9,8 +9,8 @@
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
             <div class="image">
                 @if (is_null(auth('mahasiswa')->user()->foto_profil))
-                    <img src={{ url('/images/blank-profile-128x128.png') }} class="img-circle elevation-2" alt="User Image"
-                        id="user-image">
+                    <img src={{ url('/images/blank-profile-128x128.png') }} class="img-circle elevation-2"
+                        alt="User Image" id="user-image">
                 @else
                     <img src={{ asset('/storage/' . auth('mahasiswa')->user()->foto_profil) }}
                         class="img-circle elevation-2" alt="User Image" id="user-image" width="30px" height="30px">
@@ -22,7 +22,8 @@
         </div>
 
         <nav class="mt-2">
-            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
+                data-accordion="false">
                 <li id="dashboard-item" class="nav-item">
                     <!-- route("mahasiswa.home") -->
                     <a href="/" class="nav-link">
@@ -126,8 +127,7 @@
                             </a>
                         </li>
                         <li class="nav-item" id="riwayat-pendaftaran-item">
-                            <!-- route("mahasiswa.seminar-proposal.riwayat") -->
-                            <a href="#" class="nav-link">
+                            <a href="{{ route('mahasiswa.seminar-proposal.riwayat') }}" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Riwayat Pendaftaran</p>
                             </a>
@@ -189,6 +189,12 @@
                             <a href="{{ route('mahasiswa.seminar-hasil.revisi') }}" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Revisi Sidang</p>
+                            </a>
+                        </li>
+                        <li class="nav-item" id="riwayat-pendaftaran-item">
+                            <a href="{{ route('mahasiswa.seminar-hasil.riwayat') }}" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Riwayat</p>
                             </a>
                         </li>
                     </ul>

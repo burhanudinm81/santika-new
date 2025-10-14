@@ -27,10 +27,10 @@ class DatabaseSeeder extends Seeder
             StatusLogbookSeeder::class,
             JenisKegiatanLogbookSeeder::class,
             // PengujianPenjadwalanSeeder::class,      // hanya untuk pengujian burhan
-            DosenForJadwalSeeder::class,
+            DosenForJadwalSeeder::class,         // nonaktifkan ini untuk menjalankan PengujianPenjadwalanSeeder
             DosenSeeder::class,
             KuotaDosenSeeder::class,
-            DosenBidangMinatSeeder::class,
+            DosenBidangMinatSeeder::class,          // nonaktifkan ini untuk menjalankan PengujianPenjadwalanSeeder
             AdminProdiSeeder::class,
             MahasiswaD3ForJadwalSeeder::class,
             MahasiswaD4ForJadwalSeeder::class,

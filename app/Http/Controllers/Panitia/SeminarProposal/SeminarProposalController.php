@@ -8,9 +8,11 @@ use App\Models\Panitia;
 use App\Models\PendaftaranSeminarProposal;
 use App\Models\Periode;
 use App\Models\Proposal;
+use App\Models\Notifikasi;
 use App\Models\Revisi;
 use App\Models\Tahap;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 
 class SeminarProposalController extends Controller
 {
@@ -86,6 +88,11 @@ class SeminarProposalController extends Controller
                 $pendaftaranSempro->update([
                     'status_daftar_sempro_id' => 1
                 ]);
+
+                // Notifikasi::create([
+                //     'keterangan' => "Pendaftaran Seminar Proposal Anda Diterima",
+                //     'mahasiswa_id' => null,
+                // ]);
             } // jika status verifikasi semua ditolak, maka status sempro di update menjadi ditolak
             else if ($pendaftaranSempro->status_file_proposal == 0 && $pendaftaranSempro->status_lembar_konsultasi == 0 && $pendaftaranSempro->status_lembar_kerjasama_mitra == 0 && $pendaftaranSempro->status_bukti_cek_plagiasi == 0) {
                 $pendaftaranSempro->update([
@@ -165,39 +172,60 @@ class SeminarProposalController extends Controller
 
     public function bukaPendaftaran(BukaPendaftaranRequest $request)
     {
-        $periodeId = (int) $request->periode_id;
-        $tahapId = (int) $request->tahap_id;
+        $data = $request->validated();
 
-        $periode = Periode::findOrFail($periodeId);
-        $tahap = Tahap::findOrFail($tahapId);
+        $result = DB::transaction(function () use ($data) {
+            $periode = Periode::findOrFail($data['periode_id']);
+            $tahap = Tahap::findOrFail($data['tahap_id']);
 
-        // Menutup Pendaftaran Periode dan Tahap sebelumnya
-        // Menonaktifkan periode dan tahap sebelumnya
-        $periodeAktifSempro = Periode::where('aktif_sempro', true)
-            ->update(['aktif_sempro' => false]);
+            // Menutup Pendaftaran Periode dan Tahap sebelumnya
+            // Menonaktifkan periode dan tahap sebelumnya
+            Periode::where('aktif_sempro', true)
+                ->update(['aktif_sempro' => false]);
 
-        $tahapAktifSempro = Tahap::where('aktif_sempro', true)
-            ->update(["aktif_sempro" => false]);
+            Tahap::where('aktif_sempro', true)
+                ->update(["aktif_sempro" => false]);
 
-        // Mengaktifkan Periode dan Tahap Tertentu
-        $periode->aktif_sempro = true;
-        $tahap->aktif_sempro = true;
+            // Mengaktifkan Periode dan Tahap Tertentu
+            $periode->aktif_sempro = true;
+            $periode->save();
 
-        $periode->save();
-        $tahap->save();
+            $tahap->aktif_sempro = true;
+            $tahap->save();
+
+            Notifikasi::create([
+                'keterangan' => "Pendaftaran Seminar Proposal Periode $periode->tahun Tahap $tahap->tahap Telah Dibuka"
+            ]);
+
+            return [
+                'tahun' => $periode->tahun,
+                'tahap' => $tahap->tahap,
+            ];
+        });
 
         return back()->with([
-            'success' => "Berhasil membuka Pendaftaran Seminar Proposal Periode $periode->tahun, Tahap $tahap->tahap!"
+            'success' => sprintf("Berhasil membuka Pendaftaran Seminar Proposal Periode %s, Tahap %s!", $result['tahun'], $result['tahap'])
         ]);
     }
 
-    public function tutupPendaftaran()
+    public function tutupPendaftaran(BukaPendaftaranRequest $request)
     {
-        $periodeAktifSempro = Periode::where('aktif_sempro', true)
-            ->update(['aktif_sempro' => false]);
+        $data = $request->validated();
 
-        $tahapAktifSempro = Tahap::where('aktif_sempro', true)
-            ->update(["aktif_sempro" => false]);
+        DB::transaction(function () use ($data) {
+            $periode = Periode::findOrFail($data['periode_id']);
+            $tahap = Tahap::findOrFail($data['tahap_id']);
+
+            Periode::where('aktif_sempro', true)
+                ->update(['aktif_sempro' => false]);
+
+            Tahap::where('aktif_sempro', true)
+                ->update(["aktif_sempro" => false]);
+
+            Notifikasi::create([
+                'keterangan' => "Pendaftaran Seminar Proposal Periode $periode->tahun Tahap $tahap->tahap Telah Ditutup"
+            ]);
+        });
 
         return back()->with([
             'success' => "Berhasil menutup Pendaftaran Seminar Proposal"

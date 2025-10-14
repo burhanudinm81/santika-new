@@ -4,14 +4,14 @@
     @if (session('success'))
         <div>
             <div style="
-                                                                                                    position: fixed;
-                                                                                                    top: 30px;
-                                                                                                    left: 60%;
-                                                                                                    transform: translateX(-50%);
-                                                                                                    z-index: 1050;
-                                                                                                    width: 50%;
-                                                                                                    transition: all 0.2s ease-in-out;
-                                                                                                "
+                                                                                                                                            position: fixed;
+                                                                                                                                            top: 30px;
+                                                                                                                                            left: 60%;
+                                                                                                                                            transform: translateX(-50%);
+                                                                                                                                            z-index: 1050;
+                                                                                                                                            width: 50%;
+                                                                                                                                            transition: all 0.2s ease-in-out;
+                                                                                                                                        "
                 class="bg-white border-bottom-0 border-right-0 border-left-0 py-4 border-success shadow shadow-md mx-auto alert alert-dismissible fade show relative"
                 role="alert">
                 <strong class="text-success">{{ session('success') }}</strong>
@@ -24,14 +24,14 @@
     @if ($errors->any())
         <div>
             <div style="
-                                                                                                    position: fixed;
-                                                                                                    top: 30px;
-                                                                                                    left: 60%;
-                                                                                                    transform: translateX(-50%);
-                                                                                                    z-index: 1050;
-                                                                                                    width: 50%;
-                                                                                                    transition: all 0.2s ease-in-out;
-                                                                                                "
+                                                                                                                                            position: fixed;
+                                                                                                                                            top: 30px;
+                                                                                                                                            left: 60%;
+                                                                                                                                            transform: translateX(-50%);
+                                                                                                                                            z-index: 1050;
+                                                                                                                                            width: 50%;
+                                                                                                                                            transition: all 0.2s ease-in-out;
+                                                                                                                                        "
                 class="bg-white border-bottom-0 border-right-0 border-left-0 py-4 border-danger shadow shadow-md mx-auto alert alert-dismissible fade show relative"
                 role="alert">
                 <ul>
@@ -49,19 +49,16 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-12">
-                    <h1 class="m-0">Pendaftaran Seminar Proposal</h1>
-                    <button type="button" id="btn-tambah-tahap" class="btn btn-primary mt-3">
-                        Tambah Tahap Baru
-                    </button>
-                    <button type="button" id="btn-tambah-periode" class="btn btn-warning ml-2 mt-3">
-                        Tambah Periode Baru
-                    </button>
-                    <button id="btn-buka-pendaftaran" class="btn btn-success ml-2 mt-3">
-                        Buka Pendaftaran
-                    </button>
-                    <button id="btn-tutup-pendaftaran" class="btn btn-danger ml-2 mt-3">
-                        Tutup Pendaftaran
-                    </button>
+                    <div class="d-flex justify-content-between align-items-center mt-0">
+                        <div>
+                            <h1 class="m-0">Pendaftaran Seminar Proposal</h1>
+                        </div>
+                        <div>
+                            <a href="{{ route("panitia.kelola-periode-tahap.pengaturan-seminar") }}" class="btn btn-light ml-2" title="Pengaturan Seminar">
+                                <i class="fas fa-cog fa-2x"></i>
+                            </a>
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -83,7 +80,7 @@
             </div>
             <div class="row" id="containerTahap">
                 @foreach ($listTahap as $tahap)
-                    <div class="col-lg-3 col-6">
+                    <div class=" col-lg-3 col-6">
                         <!-- kotak tahap -->
                         <div class="small-box bg-info">
                             <div class="inner">
@@ -111,7 +108,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Tambah Tahap Baru</h5>
+                    <h5 class=" modal-title">Tambah Tahap Baru</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -161,7 +158,7 @@
                 <form action="{{ route('panitia.seminar-proposal.buka-pendaftaran') }}" method="post">
                     @csrf
                     <div class="modal-header">
-                        <h5 class="modal-title">Buka Pendaftaran Seminar Proposal</h5>
+                        <h5 class=" modal-title">Buka Pendaftaran Seminar Proposal</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                             <span aria-hidden="true">&times;</span>
                         </button>
@@ -170,9 +167,8 @@
                         <div class="form-group">
                             <label for="periode">Pilih Periode</label>
                             <select name="periode_id" id="periode" class="form-control">
-                                <option value="">-- Pilih Periode --</option>
-                                @foreach ($listPeriode as $periode)
-                                    <option value="{{ $periode->id }}">Periode {{ $periode->tahun }}</option>
+                                <option value="">-- Pilih Periode --</option> @foreach ($listPeriode as $periode) <option
+                                    value="{{ $periode->id }}">Periode {{ $periode->tahun }}</option>
                                 @endforeach
                             </select>
                         </div>
@@ -199,7 +195,7 @@
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
-                    <h5 class="modal-title">Tutup Pendaftaran Seminar Proposal</h5>
+                    <h5 class=" modal-title">Tutup Pendaftaran Seminar Proposal</h5>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close">
                         <span aria-hidden="true">&times;</span>
                     </button>
@@ -207,8 +203,8 @@
                 <div class="modal-body">
                     <p>Apakah anda yakin ingin menutup pendaftaran sempro</p>
                 </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tidak</button>
+                <div class="modal-footer"> <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                        Tidak</button>
                     <a href="{{ route('panitia.seminar-proposal.tutup-pendaftaran') }}" class="btn btn-success"
                         style="width: 75px">Ya</a>
                 </div>

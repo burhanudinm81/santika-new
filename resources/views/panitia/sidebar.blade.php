@@ -23,8 +23,8 @@
         <nav class="mt-2">
             <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
                 data-accordion="false">
-                <li class="nav-item nav-ajax">
-                    <a href="/" class="nav-link" id="dashboard-item">
+                <li class="nav-item">
+                    <a href="/panitia/home" class="nav-link" id="dashboard-item">
                         <i class="nav-icon fas fa-home"></i>
                         <p>
                             Dashboard
@@ -55,6 +55,15 @@
                         <i class="nav-icon fas fa-solid fa-user-plus"></i>
                         <p>
                             Ploting Pembimbing
+                        </p>
+                    </a>
+                </li>
+
+                <li class="nav-item">
+                    <a href="{{ route('panitia.kelola-periode-tahap.pengaturan-seminar') }}" class="nav-link">
+                        <i class="nav-icon fas fa-solid fa-cog"></i>
+                        <p>
+                            Pengaturan Seminar
                         </p>
                     </a>
                 </li>

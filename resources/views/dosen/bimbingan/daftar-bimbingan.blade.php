@@ -29,8 +29,8 @@
                             <div class="mb-2">
                                 <label id="D4JTD" class="form-label"> D3 Teknik Telekomunikasi</label>
                             </div>
-                            <div class="table">
-                                <table class="table table-bordered table-responsive table table-hover">
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-hover">
                                     <thead class="thead-light">
                                         <tr>
                                             <th scope="col" class="text-center">No</th>
@@ -57,10 +57,10 @@
                                                             Pembimbing 2
                                                         @endif
                                                     </td>
-                                                    <td>
-                                                        <a href="{{ route('dosen.bimbingan.detail-bimbingan', $kelompok[0]->mahasiswa->id) }}"class="aksi-button btn btn-primary">Detail</a>
+                                                    <td class="d-flex justify-content-center align-items-center">
+                                                        <a href="{{ route('dosen.bimbingan.detail-bimbingan', $kelompok[0]->mahasiswa->id) }}"class="aksi-button btn btn-primary mr-1">Detail</a>
                                                         <a href="{{ route('dosen.bimbingan.logbook-mahasiswa', $kelompok[0]->mahasiswa->id) }}"
-                                                            class="aksi-button btn btn-primary">Logbook</a>
+                                                            class="aksi-button btn btn-primary ml-1">Logbook</a>
                                                     </td>
                                                 </tr>
                                             @endforeach
@@ -73,8 +73,8 @@
                             <div class="mb-2">
                                 <label id="D4JTD" class="form-label"> D4 Jaringan Telekomunikasi Digital</label>
                             </div>
-                            <div class="table">
-                                <table class="table table-bordered table-responsive table table-hover">
+                            <div class="table-responsive">
+                                <table class="table table-bordered table-hover">
                                     <thead class="thead-light">
                                         <tr>
                                             <th scope="col" class="text-center">No</th>
@@ -99,10 +99,10 @@
                                                             Pembimbing 2
                                                         @endif
                                                     </td>
-                                                    <td>
-                                                        <a href="{{ route('dosen.bimbingan.detail-bimbingan', $item->mahasiswa->id) }}"class="aksi-button btn btn-primary">Detail</a>
+                                                    <td class="d-flex justify-content-center align-items-center">
+                                                        <a href="{{ route('dosen.bimbingan.detail-bimbingan', $item->mahasiswa->id) }}"class="aksi-button btn btn-primary mr-1">Detail</a>
                                                         <a href="{{ route('dosen.bimbingan.logbook-mahasiswa', $item->mahasiswa->id) }}"
-                                                            class="aksi-button btn btn-primary">Logbook</a>
+                                                            class="aksi-button btn btn-primary ml-1">Logbook</a>
                                                     </td>
                                                 </tr>
                                             @endforeach

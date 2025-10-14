@@ -36,16 +36,18 @@
 
                         <div class="my-2" style="width: 300px; margin-right: 300px">
                             <div class="input-group">
-                                <select class="custom-select" id="periode_id"
-                                    aria-label="Example select with button addon">
+                                <select class="custom-select" id="periode_id" aria-label="Example select with button addon">
 
                                     <option disabled>Pilih Periode</option>
                                     @foreach ($periodeInfo as $periode)
-                                        <option value="{{ $periode->id }}">{{ $periode->tahun }}</option>
+                                        <option value="{{ $periode->id }}"
+                                            {{ request('periode') == $periode->id ? 'selected' : '' }}>{{ $periode->tahun }}
+                                        </option>
                                     @endforeach
                                 </select>
                                 <div class="input-group-append">
-                                    <button id="buttonTampilByPeriodeSemhas" class="btn btn-outline-secondary" type="button">Tampilkan</button>
+                                    <button id="buttonTampilByPeriodeSemhas" class="btn btn-outline-secondary"
+                                        type="button">Tampilkan</button>
                                 </div>
                             </div>
                         </div>
@@ -56,25 +58,25 @@
                         <div class="card-body border border-2 border-danger table-responsive p-0" style="height: 320px">
                             <table class="table table-head-fixed text-nowrap">
                                 <thead>
-                                    @if($dosenPanitiaInfo->prodi_id == 1)
-                                    <tr>
-                                        <th class="text-center align-middle">No</th>
-                                        <th class="text-center align-middle">Nama Mahasiswa 1</th>
-                                        <th class="text-center align-middle">NIM Mahasiswa 1</th>
-                                        <th class="text-center align-middle">Nama Mahasiswa 2</th>
-                                        <th class="text-center align-middle">NIM Mahasiswa 2</th>
-                                        <th class="text-center align-middle">Judul</th>
-                                        <th class="text-center align-middle">Status</th>
-                                        <th class="text-center align-middle">Detail</th>
-                                    </tr>
+                                    @if ($dosenPanitiaInfo->prodi_id == 1)
+                                        <tr>
+                                            <th class="text-center align-middle">No</th>
+                                            <th class="text-center align-middle">Nama Mahasiswa 1</th>
+                                            <th class="text-center align-middle">NIM Mahasiswa 1</th>
+                                            <th class="text-center align-middle">Nama Mahasiswa 2</th>
+                                            <th class="text-center align-middle">NIM Mahasiswa 2</th>
+                                            <th class="text-center align-middle">Judul</th>
+                                            <th class="text-center align-middle">Status</th>
+                                            <th class="text-center align-middle">Detail</th>
+                                        </tr>
                                     @elseif($dosenPanitiaInfo->prodi_id == 2)
-                                    <tr>
-                                        <th class="text-center align-middle">No</th>
-                                        <th class="text-center align-middle">NIM</th>
-                                        <th class="text-center align-middle">Nama</th>
-                                        <th class="text-center align-middle">Judul</th>
-                                        <th class="text-center align-middle">Status</th>
-                                    </tr>
+                                        <tr>
+                                            <th class="text-center align-middle">No</th>
+                                            <th class="text-center align-middle">NIM</th>
+                                            <th class="text-center align-middle">Nama</th>
+                                            <th class="text-center align-middle">Judul</th>
+                                            <th class="text-center align-middle">Status</th>
+                                        </tr>
                                     @endif
                                 </thead>
                                 <tbody id="data-table-body">

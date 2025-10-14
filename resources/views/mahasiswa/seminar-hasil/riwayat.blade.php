@@ -44,7 +44,7 @@
                                             <td class="d-flex align-items-center">
                                                 @php
                                                     $statusId =
-                                                        $peserta->proposal->pendaftaranSemhas->status_daftar_semhas_id;
+                                                        $peserta->proposal->pendaftaranSempro->status_daftar_sempro_id;
                                                 @endphp
                                                 @if ($statusId == 2)
                                                     <span
