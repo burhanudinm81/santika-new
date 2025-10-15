@@ -3,8 +3,10 @@
 namespace App\Http\Controllers\Dosen\Bimbingan;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\TerimaSemuaLogbookRequest;
 use App\Models\LogBook;
 use App\Models\Mahasiswa;
+use App\Models\Periode;
 use App\Models\Proposal;
 use App\Models\ProposalDosenMahasiswa;
 use Illuminate\Http\Request;
@@ -57,7 +59,11 @@ class BimbinganController extends Controller
             ->orderBy('created_at', 'desc')
             ->get();
 
-        return view('dosen.bimbingan.daftar-logbook-mahasiswa', compact('mahasiswa', 'logbooksInfo'));
+        $mahasiswa->load('proposalMahasiswas.proposal:id,dosen_pembimbing_1_id,dosen_pembimbing_2_id');
+        $proposalDosenMahasiswa = $mahasiswa->proposalMahasiswas->first();
+        $peranDosbing = auth("dosen")->user()->id == $proposalDosenMahasiswa->proposal->dosen_pembimbing_1_id ? 1 : 2;
+
+        return view('dosen.bimbingan.daftar-logbook-mahasiswa', compact('mahasiswa', 'logbooksInfo', 'peranDosbing'));
     }
 
     public function showDetailLogbook(Mahasiswa $mahasiswa, LogBook $logbook)
@@ -110,5 +116,47 @@ class BimbinganController extends Controller
 
 
         return view('dosen.bimbingan.detail-bimbingan', compact(['mahasiswaInfo', 'mahasiswa', 'proposalSemproInfo']));
+    }
+
+    public function terimaSemuaLogbook(TerimaSemuaLogbookRequest $request)
+    {
+        $mahasiswaId = $request->input('mahasiswa_id');
+        $peranDosbing = $request->input('peran_dosbing');
+        $periodeAktif = Periode::firstWhere('aktif_sempro', true);
+        $latestProposalId = null;
+
+        // Id Proposal terbaru mahasiswa
+        if($peranDosbing == 1){
+            $latestProposalId = ProposalDosenMahasiswa::where('mahasiswa_id', $mahasiswaId)
+            ->whereHas('proposal', function ($query) use ($periodeAktif) {
+                $query->where('periode_id', $periodeAktif->id)
+                      ->where('dosen_pembimbing_1_id', auth('dosen')->user()->id);
+            })
+            ->latest()
+            ->first()
+            ->proposal_id;
+        } else {
+            $latestProposalId = ProposalDosenMahasiswa::where('mahasiswa_id', $mahasiswaId)
+            ->whereHas('proposal', function ($query) use ($periodeAktif) {
+                $query->where('periode_id', $periodeAktif->id)
+                      ->where('dosen_pembimbing_1_id', auth('dosen')->user()->id);
+            })
+            ->latest()
+            ->first()
+            ->proposal_id;
+        }
+
+        if($latestProposalId == null){
+            return redirect()->back()->with('error', 'Tidak ada proposal aktif yang ditemukan untuk mahasiswa ini.');
+        }
+
+        // Update semua logbook mahasiswa tersebut yang belum diverifikasi
+        LogBook::where('mahasiswa_id', $mahasiswaId)
+            ->where('dosen_id', auth('dosen')->user()->id)
+            ->where('proposal_id', $latestProposalId)
+            ->where('status_logbook_id', 1) // 1 adalah status "Belum Diverifikasi"
+            ->update(['status_logbook_id' => 3]); // 3 adalah status "Diterima"
+
+        return redirect()->route('dosen.bimbingan.logbook-mahasiswa', ['mahasiswa' => $mahasiswaId])->with('success', 'Semua logbook berhasil diterima.');
     }
 }

@@ -1,6 +1,27 @@
 @extends('panitia.home')
 
 @section('content-panitia')
+    @if (session('success'))
+        <div>
+            <div style="
+                                                                                                                                                            position: fixed;
+                                                                                                                                                            top: 30px;
+                                                                                                                                                            left: 60%;
+                                                                                                                                                            transform: translateX(-50%);
+                                                                                                                                                            z-index: 1050;
+                                                                                                                                                            width: 50%;
+                                                                                                                                                            transition: all 0.2s ease-in-out;
+                                                                                                                                                        "
+                class="bg-white border-bottom-0 border-right-0 border-left-0 py-4 border-success shadow shadow-md mx-auto alert alert-dismissible fade show relative"
+                role="alert">
+                <strong class="text-success">{{ session('success') }}</strong>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        </div>
+    @endif
+
     <!-- Content Header (Page header) -->
     <div class="content-header">
         <div class="container-fluid">
@@ -22,12 +43,14 @@
                         <div class="card-header">
                             <div class="card-tools d-flex justify-content-between align-items-center w-100 mx-1">
                                 <div class="ml-1">
-                                    <button type="button" class="btn btn-success" id="btn-buka-pendaftaran">
+                                    <button type="button" class="btn btn-success" id="btn-buka-pendaftaran-sempro">
                                         Buka Pendaftaran
                                     </button>
-                                    <button type="button" class="btn btn-danger" id="btn-tutup-pendaftaran">
-                                        Tutup Pendaftaran
-                                    </button>
+                                    @if ($tahapInfo->aktif_sempro)
+                                        <button type="button" class="btn btn-danger" id="btn-nonaktifkan-tahap-sempro">
+                                            Tutup Pendaftaran
+                                        </button>
+                                    @endif
                                 </div>
                                 <div class="input-group input-group-sm" style="width: 150px">
                                     <input type="text" name="table_search" class="form-control float-right"
@@ -45,10 +68,9 @@
                         <div class="my-2" style="width: 300px; margin-right: 300px">
                             <div class="input-group">
                                 <select class="custom-select" id="periode_id" aria-label="Example select with button addon">
-
-                                    <option disabled>Pilih Periode</option>
                                     @foreach ($periodeInfo as $periode)
-                                        <option value="{{ $periode->id }}" {{ request('periode') == $periode->id ? 'selected' : '' }}>{{ $periode->tahun }}
+                                        <option value="{{ $periode->id }}" {{ request('periode') == $periode->id ? 'selected' : '' }} @if ($periode->aktif_sempro) selected @endif>
+                                        {{ $periode->tahun }}
                                         </option>
                                     @endforeach
                                 </select>
@@ -115,11 +137,12 @@
 @endsection
 
 @section('modals')
-    <div id="modal-buka-pendaftaran" class="modal" tabindex="-1">
+    <div id="modal-buka-pendaftaran-sempro" class="modal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
-                <form action="{{ route('panitia.seminar-proposal.buka-pendaftaran') }}" method="post">
+                <form action="{{ route('panitia.kelola-periode-tahap.ubah-tahap-sempro-aktif') }}" method="post">
                     @csrf
+                    <input type="hidden" name="tahap_id" value="{{ $tahapInfo->id }}">
                     <div class="modal-header">
                         <h5 class=" modal-title">Buka Pendaftaran Seminar Proposal</h5>
                         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
@@ -127,7 +150,7 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        
+                        <p>Apakah anda yakin ingin membuka pendaftaran Seminar Proposal Tahap {{ $tahapInfo->tahap }}?</p>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
@@ -138,7 +161,7 @@
         </div>
     </div>
 
-    <div id="modal-tutup-pendaftaran" class="modal" tabindex="-1">
+    <div id="modal-tutup-pendaftaran-sempro" class="modal" tabindex="-1">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -148,14 +171,18 @@
                     </button>
                 </div>
                 <div class="modal-body">
-                    <p>Apakah anda yakin ingin menutup pendaftaran sempro</p>
+                    <p>Apakah anda yakin ingin menutup pendaftaran Seminar Proposal?</p>
                 </div>
                 <div class="modal-footer"> <button type="button" class="btn btn-secondary" data-dismiss="modal">
                         Tidak</button>
-                    <a href="{{ route('panitia.seminar-proposal.tutup-pendaftaran') }}" class="btn btn-success"
+                    <a href="{{ route('panitia.kelola-periode-tahap.nonaktifkan-tahap-sempro') }}" class="btn btn-danger"
                         style="width: 75px">Ya</a>
                 </div>
             </div>
         </div>
     </div>
+@endsection
+
+@section('scripts-panitia')
+    <script src="{{ url("/custom/js/seminar/pengaturan-seminar.js") }}"></script>
 @endsection

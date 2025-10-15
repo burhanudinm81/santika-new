@@ -196,7 +196,7 @@
                             <select class="form-control" id="dosen-pembimbing-2" name="dosen_pembimbing_2_id">
                                 @foreach ($listDosen as $dosen)
                                     <option value="{{ $dosen->id }}">
-                                        {{ $dosen->nama }} - Sisa Kuota: {{ $dosen->kuotaDosen->kuota_pembimbing_2_D3 }}
+                                        {{ $dosen->nama }} - - Jumlah MHS Bimbingan: {{ $dosen->dosbing2_count_d3 ?? '-' }}
                                     </option>
                                 @endforeach
                             </select>
@@ -244,7 +244,7 @@
                             <select class="form-control" id="dosen-pembimbing-2" name="dosen_pembimbing_2_id">
                                 @foreach ($listDosen as $dosen)
                                     <option value="{{ $dosen->id }}">
-                                        {{ $dosen->nama }} - Sisa Kuota: {{ $dosen->kuotaDosen->kuota_pembimbing_2_D4 }}
+                                        {{ $dosen->nama }} - Jumlah MHS Bimbingan: {{ $dosen->dosbing2_count_d4 ?? '-' }}
                                     </option>
                                 @endforeach
                             </select>

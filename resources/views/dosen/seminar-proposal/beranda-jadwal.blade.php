@@ -21,6 +21,13 @@
                         <div class="small-box bg-info">
                             <div class="inner">
                                 <h3>Tahap {{ $tahap->tahap }}</h3>
+                                @if ($tahap->jumlahBelumNilai > 0)
+                                    <span class="badge badge-warning">Belum Diberi Status Kelulusan: {{ $tahap->jumlahBelumNilai }}</span>
+                                @else
+                                    <span class="badge badge-success">Semua Sudah Diberi Status Kelulusan</span>
+                                @endif
+                                
+                                <span class="badge badge-warning">Revisi Belum Dicek: 0</span>
                             </div>
                             <div class="icon">
                                 <i class="fas fa-solid fa-user"></i>
