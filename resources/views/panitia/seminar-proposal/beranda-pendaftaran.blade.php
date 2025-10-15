@@ -85,6 +85,11 @@
                         <div class="small-box bg-info">
                             <div class="inner">
                                 <h3>Tahap {{ $tahap->tahap }}</h3>
+                                @if ($tahap->jumlahBelumVerifikasi > 0)
+                                    <span class="badge badge-warning">{{ $tahap->jumlahBelumVerifikasi }} belum diverifikasi</span>
+                                @else
+                                    <span class="badge badge-success">Semua sudah diverifikasi</span>
+                                @endif
                             </div>
                             <div class="icon">
                                 <i class="fas fa-solid fa-user"></i>

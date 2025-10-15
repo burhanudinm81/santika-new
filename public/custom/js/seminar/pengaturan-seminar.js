@@ -9,6 +9,19 @@ $(document).ready(function(){
         $('#modal-ubah-tahap-sidang-ta-aktif').modal('show');
     });
 
+    $('#btn-buka-pendaftaran-sempro').click(function(){
+        $('#modal-buka-pendaftaran-sempro').modal('show');
+    });
+    $('#btn-buka-pendaftaran-sidang-ta').click(function(){
+        $('#modal-buka-pendaftaran-sidang-ta').modal('show');
+    });
+    $('#btn-nonaktifkan-tahap-sempro').click(function(){
+        $('#modal-tutup-pendaftaran-sempro').modal('show');
+    });
+    $('#btn-nonaktifkan-tahap-sidang-ta').click(function(){
+        $('#modal-tutup-pendaftaran-sidang-ta').modal('show');
+    });
+
     $('#btn-tambah-tahap').click(function(){
         $('#modal-tambah-tahap').modal('show');
     });

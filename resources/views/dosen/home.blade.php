@@ -162,6 +162,8 @@
                 </div>
             </div>
         </div>
+
+        @yield('modals')
     </div>
 
     <!-- REQUIRED SCRIPTS -->

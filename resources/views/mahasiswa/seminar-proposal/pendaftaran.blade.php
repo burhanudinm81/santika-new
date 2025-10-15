@@ -30,23 +30,18 @@
                 @include('notifications.success-alert', ['message' => session('success')])
             @endif
             <div class="col-md-15">
-                @if ($isPendaftaranClose)
-                    <div class="alert alert-danger" role="alert">
-                        <h4 class="alert-heading"><strong>Maaf, anda belum bisa mendaftar Seminar Proposal</strong></h4>
-                        <p>Pendaftaran Seminar Proposal Belum Dibuka</p>
-                    </div>
-                @elseif ($isPendingProposal)
+
+                @if ($isPendingProposal)
                     <div class="alert alert-warning" role="alert">
                         <h4 class="alert-heading"><strong>Maaf, anda belum bisa mendaftar Seminar Proposal</strong></h4>
                         <p>Anda memiliki proposal yang masih belum dikonfirmasi dosen YBS</p>
                     </div>
                 @elseif($isPendingPendaftaran != 0)
                     <div class="alert
-                            @if ($isPendingPendaftaran == 1) alert-success
-                            @elseif($isPendingPendaftaran == 3)
-                                alert-warning @endif
-                        "
-                        role="alert">
+                                            @if ($isPendingPendaftaran == 1) alert-success
+                                            @elseif($isPendingPendaftaran == 3)
+                                            alert-warning @endif
+                                        " role="alert">
                         <h4 class="alert-heading">
                             <strong>
                                 @if ($isPendingPendaftaran == 1)
@@ -58,21 +53,27 @@
                         </h4>
                         <p>
                             @if ($isPendingPendaftaran == 1)
-                                Pendaftaran seminar proposal Anda dikonfirmasi panitia, silahkan mengecek informasi jadwal secara berkala
+                                Pendaftaran seminar proposal Anda dikonfirmasi panitia, silahkan mengecek informasi jadwal secara
+                                berkala
                             @elseif($isPendingPendaftaran == 3)
                                 Pendaftaran seminar proposal anda belum dicek panitia
                             @endif
                         </p>
                     </div>
+                @elseif ($isPendaftaranClose)
+                    <div class="alert alert-danger" role="alert">
+                        <h4 class="alert-heading"><strong>Maaf, anda belum bisa mendaftar Seminar Proposal</strong></h4>
+                        <p>Pendaftaran Seminar Proposal Belum Dibuka</p>
+                    </div>
                 @else
                     <div class="card card-primary card-outline mb-4">
                         <!--begin::Form-->
-                        <form action="{{ route('mahasiswa.seminar-proposal.pendaftaran-store') }}" method="post" enctype="multipart/form-data">
+                        <form action="{{ route('mahasiswa.seminar-proposal.pendaftaran-store') }}" method="post"
+                            enctype="multipart/form-data">
                             @csrf
                             @method('POST')
                             {{-- Hidden Input --}}
-                            <input type="hidden" name="proposal_id"
-                                value="{{ $acceptedProposalMahasiswa1->proposal->id }}" />
+                            <input type="hidden" name="proposal_id" value="{{ $acceptedProposalMahasiswa1->proposal->id }}" />
                             <input type="hidden" name="status_pendaftaran_seminar_proposal_id" value="3" />
                             {{-- End Hidden Input --}}
 
@@ -106,16 +107,15 @@
                                 @endif
                                 <div class="mb-3">
                                     <label for="JudulProposal" class="form-label">Judul Proposal</label>
-                                    <input type="text" class="form-control" id="JudulProposal"
-                                        aria-describedby="JudulProposal" name="judul_proposal"
-                                        value="{{ $acceptedProposalMahasiswa1->proposal->judul }}" readonly />
+                                    <input type="text" class="form-control" id="JudulProposal" aria-describedby="JudulProposal"
+                                        name="judul_proposal" value="{{ $acceptedProposalMahasiswa1->proposal->judul }}"
+                                        readonly />
                                     <input type="hidden" name="id_pengajuan_judul" value="" readonly>
                                 </div>
                                 <div class="mb-3">
                                     <label for="exampleDataList" class="form-label">Bidang Keahlihan</label>
                                     <input type="text" class="form-control" id="exampleDataList" name="bidang"
-                                        value="{{ $acceptedProposalMahasiswa1->proposal->bidangMinat->bidang_minat }}"
-                                        readonly>
+                                        value="{{ $acceptedProposalMahasiswa1->proposal->bidangMinat->bidang_minat }}" readonly>
                                 </div>
                                 <div class="form-group">
                                     <label for="exampleInputFile">File Proposal .pdf</label>
@@ -137,23 +137,24 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="form-group">
-                                    <label for="exampleInputFile">Lembar Kerjasama Mitra .pdf</label>
-                                    <div class="input-group">
-                                        <div class="custom-file">
-                                            <input type="file" class="custom-file-input" id="exampleInputFile"
-                                                name="lembar_kerja_sama_mitra">
-                                            <label class="custom-file-label" for="exampleInputFile">Choose file</label>
+                                @if ($acceptedProposalMahasiswa1->jenis_judul_id == 2)
+                                    <div class="form-group">
+                                        <label for="exampleInputFile">Lembar Kerjasama Mitra .pdf</label>
+                                        <div class="input-group">
+                                            <div class="custom-file">
+                                                <input type="file" class="custom-file-input" id="exampleInputFile"
+                                                    name="lembar_kerja_sama_mitra">
+                                                <label class="custom-file-label" for="exampleInputFile">Choose file</label>
+                                            </div>
                                         </div>
                                     </div>
-                                </div>
+                                @endif
                                 <div class="form-group">
                                     <label for="exampleInputFile">Bukti Cek Plagiasi (.jpg, .jpeg, .png)</label>
                                     <div class="input-group">
                                         <div class="custom-file">
                                             <input type="file" class="custom-file-input" id="exampleInputFile"
-                                                name="bukti_cek_plagiasi"
-                                                required>
+                                                name="bukti_cek_plagiasi" required>
                                             <label class="custom-file-label" for="exampleInputFile">Pilih file</label>
                                         </div>
                                     </div>

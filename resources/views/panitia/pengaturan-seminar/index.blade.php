@@ -14,14 +14,14 @@
     @if (session('success'))
         <div>
             <div style="
-                                                                                                                                                                            position: fixed;
-                                                                                                                                                                            top: 30px;
-                                                                                                                                                                            left: 60%;
-                                                                                                                                                                            transform: translateX(-50%);
-                                                                                                                                                                            z-index: 1050;
-                                                                                                                                                                            width: 50%;
-                                                                                                                                                                            transition: all 0.2s ease-in-out;
-                                                                                                                                                                        "
+                                                                                                                                                                                            position: fixed;
+                                                                                                                                                                                            top: 30px;
+                                                                                                                                                                                            left: 60%;
+                                                                                                                                                                                            transform: translateX(-50%);
+                                                                                                                                                                                            z-index: 1050;
+                                                                                                                                                                                            width: 50%;
+                                                                                                                                                                                            transition: all 0.2s ease-in-out;
+                                                                                                                                                                                        "
                 class="bg-white border-bottom-0 border-right-0 border-left-0 py-4 border-success shadow shadow-md mx-auto alert alert-dismissible fade show relative"
                 role="alert">
                 <strong class="text-success">{{ session('success') }}</strong>
@@ -63,8 +63,8 @@
                             <div class="d-flex justify-content-end align-items-center w-100">
                                 <button id="btn-ubah-tahap-sempro" class="btn btn-sm btn-primary">Ubah</button>
                                 @if (!is_null($tahapAktifSempro))
-                                    <a href="{{ route("panitia.kelola-periode-tahap.nonaktifkan-tahap-sempro") }}"
-                                        id="btn-nonaktifkan-tahap-sempro" class="btn btn-sm btn-danger ml-2">Nonaktifkan</a>
+                                    <button id="btn-nonaktifkan-tahap-sempro"
+                                        class="btn btn-sm btn-danger ml-2">Nonaktifkan</button>
                                 @endif
                             </div>
                         </div>
@@ -78,8 +78,8 @@
                             <div class="d-flex justify-content-end align-items-center w-100">
                                 <button id="btn-ubah-tahap-sidang-ta" class="btn btn-sm btn-primary">Ubah</button>
                                 @if (!is_null($tahapAktifSidangTA))
-                                    <a href="{{ route("panitia.kelola-periode-tahap.nonaktifkan-tahap-sidang-ta") }}"
-                                        id="btn-nonaktifkan-tahap-sidang-ta" class="btn btn-sm btn-danger ml-2">Nonaktifkan</a>
+                                    <button id="btn-nonaktifkan-tahap-sidang-ta"
+                                        class="btn btn-sm btn-danger ml-2">Nonaktifkan</button>
                                 @endif
                             </div>
                         </div>
@@ -124,7 +124,8 @@
                                     <li
                                         class="list-group-item bg-primary mb-1 d-flex justify-content-between align-items-center">
                                         <span>Tahap {{ $tahap->tahap }}</span>
-                                        <button href="#" class="text-light btn-hapus-tahap" title="Hapus Tahap" data-tahap-id="{{ $tahap->id }}">
+                                        <button href="#" class="text-light btn-hapus-tahap" title="Hapus Tahap"
+                                            data-tahap-id="{{ $tahap->id }}">
                                             <i class="fas fa-trash text-danger"></i>
                                         </button>
                                     </li>
@@ -306,6 +307,48 @@
                         <button type="submit" class="btn btn-danger">Ya</button>
                     </div>
                 </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-tutup-pendaftaran-sempro" class="modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class=" modal-title">Tutup Pendaftaran Seminar Proposal</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Apakah anda yakin ingin menutup pendaftaran Seminar Proposal?</p>
+                </div>
+                <div class="modal-footer"> <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                        Tidak</button>
+                    <a href="{{ route('panitia.kelola-periode-tahap.nonaktifkan-tahap-sempro') }}" class="btn btn-danger"
+                        style="width: 75px">Ya</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-tutup-pendaftaran-sidang-ta" class="modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class=" modal-title">Tutup Pendaftaran Sidang Tugas Akhir</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Apakah anda yakin ingin menutup pendaftaran Sidang TA?</p>
+                </div>
+                <div class="modal-footer"> <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                        Tidak</button>
+                    <a href="{{ route('panitia.kelola-periode-tahap.nonaktifkan-tahap-sidang-ta') }}" class="btn btn-danger"
+                        style="width: 75px">Ya</a>
+                </div>
             </div>
         </div>
     </div>

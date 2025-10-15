@@ -114,33 +114,35 @@
                             {{-- End input verifikasi lembar konsultasi --}}
 
                             {{-- Input verifikasi lembar kerjasama mitra --}}
-                            <label class="form-label mb-1">Lembar Kerjasama Mitra .pdf</label>
-                            <div class="container">
-                                <iframe src="{{ $pendaftaranSemproInfo->getPathLembarKerjaSamaMitraFile() }}"
-                                    frameborder="2" width="88%" height="500px" scrolling="yes"></iframe>
-                            </div>
-                            <!-- Dropdown for Lembar Kerjasama Mitra Status -->
-                            <div class="mb-3">
-                                <label class="form-label d-block fw-bold">Status Lembar Kerjasama Mitra</label>
+                            @if ($pendaftaranSemproInfo->proposal->jenis_judul_id == 2)
+                                <label class="form-label mb-1">Lembar Kerjasama Mitra .pdf</label>
+                                <div class="container">
+                                    <iframe src="{{ $pendaftaranSemproInfo->getPathLembarKerjaSamaMitraFile() }}"
+                                        frameborder="2" width="88%" height="500px" scrolling="yes"></iframe>
+                                </div>
+                                <!-- Dropdown for Lembar Kerjasama Mitra Status -->
+                                <div class="mb-3">
+                                    <label class="form-label d-block fw-bold">Status Lembar Kerjasama Mitra</label>
 
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input status-radio" type="radio" name="statusLembarKerjasama"
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input status-radio" type="radio" name="statusLembarKerjasama"
                                         id="statusKerjasamaTolak" value="0"
                                         {{ $pendaftaranSemproInfo->status_lembar_kerjasama_mitra == 0 ? 'checked' : '' }}>
-                                    <label class="form-check-label text-danger fw-semibold" for="statusKerjasamaTolak">
-                                        <i class="bi bi-x-circle"></i> Tolak
-                                    </label>
-                                </div>
+                                        <label class="form-check-label text-danger fw-semibold" for="statusKerjasamaTolak">
+                                            <i class="bi bi-x-circle"></i> Tolak
+                                        </label>
+                                    </div>
 
-                                <div class="form-check form-check-inline">
-                                    <input class="form-check-input status-radio" type="radio" name="statusLembarKerjasama"
-                                        id="statusKerjasamaTerima" value="1"
-                                        {{ $pendaftaranSemproInfo->status_lembar_kerjasama_mitra == 1 ? 'checked' : '' }}>
-                                    <label class="form-check-label text-success fw-semibold" for="statusKerjasamaTerima">
-                                        <i class="bi bi-check-circle"></i> Terima
-                                    </label>
-                                </div>
+                                    <div class="form-check form-check-inline">
+                                        <input class="form-check-input status-radio" type="radio" name="statusLembarKerjasama"
+                                            id="statusKerjasamaTerima" value="1"
+                                            {{ $pendaftaranSemproInfo->status_lembar_kerjasama_mitra == 1 ? 'checked' : '' }}>
+                                        <label class="form-check-label text-success fw-semibold" for="statusKerjasamaTerima">
+                                            <i class="bi bi-check-circle"></i> Terima
+                                        </label>
+                                    </div>
                             </div>
+                            @endif
                             {{-- End input verifikasi lembar kerjasama mitra --}}
 
                             {{-- Input verifikasi bukti cek plagiasi --}}
@@ -209,7 +211,10 @@
                                     @if ($pendaftaranSemproInfo->status_daftar_sempro_id == 1) disabled @endif
                                     ">Simpan</button>
 
-                            <a href="{{ url()->previous() }}" class="btn btn-info mt-2">Kembali</a>
+                            <a href="{{ route("panitia.seminar-proposal.pendaftaran-detail", ["tahapId" => $pendaftaranSemproInfo->proposal->tahap_id]) }}" 
+                                class="btn btn-info mt-2">
+                                Kembali
+                            </a>
                         </form>
                     </div>
                 </div>

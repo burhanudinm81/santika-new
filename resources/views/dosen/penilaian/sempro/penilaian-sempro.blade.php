@@ -59,58 +59,40 @@
 
                             <div class="mb-3">
                                 <label for="status_penilaian">Status Penilaian:</label>
-                                <select 
-                                    class="form-control" 
-                                    id="status_penilaian_sempro" 
-                                    name="status_penilaian" 
-                                    @if (
-                                        auth("dosen")->id() == $proposal->penguji_sempro_1_id && 
-                                        !is_null($proposal->status_sempro_penguji_1_id)
-                                    )
-                                        disabled
-                                    @elseif(
-                                        auth("dosen")->id() == $proposal->penguji_sempro_2_id &&
-                                        !is_null($proposal->status_sempro_penguji_2_id)
-                                    )
-                                        disabled
+                                <select class="form-control" id="status_penilaian_sempro" name="status_penilaian" @if (
+                                    auth("dosen")->id() == $proposal->penguji_sempro_1_id &&
+                                    !is_null($proposal->status_sempro_penguji_1_id)
+                                ) disabled @elseif(
+        auth("dosen")->id() == $proposal->penguji_sempro_2_id &&
+        !is_null($proposal->status_sempro_penguji_2_id)
+    ) disabled @endif required>
+                                    <option value="" disabled selected>-- Pilih Status Penilaian --</option>
+                                    @if (auth("dosen")->id() == $proposal->penguji_sempro_1_id)
+                                        @foreach ($listStatusPenilaian as $status)
+                                            <option @if($status->id == $proposal->status_sempro_penguji_1_id) selected @endif
+                                                value="{{ $status->id }}">
+                                                {{ $status->status }}
+                                            </option>
+                                        @endforeach
+                                    @elseif((auth("dosen")->id() == $proposal->penguji_sempro_2_id))
+                                        @foreach ($listStatusPenilaian as $status)
+                                            <option @if($status->id == $proposal->status_sempro_penguji_2_id) selected @endif
+                                                value="{{ $status->id }}">
+                                                {{ $status->status }}
+                                            </option>
+                                        @endforeach
                                     @endif
-                                    required>
-                                        <option value="" disabled selected>-- Pilih Status Penilaian --</option>
-                                        @if (auth("dosen")->id() == $proposal->penguji_sempro_1_id)
-                                            @foreach ($listStatusPenilaian as $status)
-                                                <option @if($status->id == $proposal->status_sempro_penguji_1_id) selected @endif
-                                                    value="{{ $status->id }}">
-                                                    {{ $status->status }}
-                                                </option>
-                                            @endforeach
-                                        @elseif((auth("dosen")->id() == $proposal->penguji_sempro_2_id))
-                                            @foreach ($listStatusPenilaian as $status)
-                                                <option @if($status->id == $proposal->status_sempro_penguji_2_id) selected @endif
-                                                    value="{{ $status->id }}">
-                                                    {{ $status->status }}
-                                                </option>
-                                            @endforeach
-                                        @endif
                                 </select>
                             </div>
 
                             <strong></i>Catatan Revisi</strong>
-                            <textarea 
-                                class="form-control" 
-                                id="catatan_revisi" 
-                                name="catatan_revisi" 
-                                rows="6"
-                                @if (
-                                    auth("dosen")->id() == $proposal->penguji_sempro_1_id && 
-                                    !is_null($proposal->status_sempro_penguji_1_id)
-                                )
-                                    disabled
-                                @elseif(
-                                    auth("dosen")->id() == $proposal->penguji_sempro_2_id &&
-                                    !is_null($proposal->status_sempro_penguji_2_id)
-                                )
-                                    disabled
-                                @endif
+                            <textarea class="form-control" id="catatan_revisi" name="catatan_revisi" rows="6" @if (
+                                auth("dosen")->id() == $proposal->penguji_sempro_1_id &&
+                                !is_null($proposal->status_sempro_penguji_1_id)
+                            ) disabled @elseif(
+        auth("dosen")->id() == $proposal->penguji_sempro_2_id &&
+        !is_null($proposal->status_sempro_penguji_2_id)
+    ) disabled @endif
                                 required>@if($prevRevisi != null) {{ $prevRevisi->catatan_revisi }} @else {{ $proposal->catatan_revisi }} @endif</textarea>
 
                             <div class="form-group">
@@ -148,29 +130,23 @@
 
                             {{-- Button untuk menyimpan data --}}
                             <div class="form-group w-100">
-                                <button 
-                                    type="submit" 
-                                    class="btn btn-primary"
-                                    @if (
-                                        auth("dosen")->id() == $proposal->penguji_sempro_1_id && 
-                                        !is_null($proposal->status_sempro_penguji_1_id)
-                                    )
-                                        disabled
-                                    @elseif(
-                                        auth("dosen")->id() == $proposal->penguji_sempro_2_id &&
-                                        !is_null($proposal->status_sempro_penguji_2_id)
-                                    )
-                                        disabled
-                                    @endif
-                                >Simpan Perubahan</button>
+                                <button type="submit" class="btn btn-primary" @if (
+                                    auth("dosen")->id() == $proposal->penguji_sempro_1_id &&
+                                    !is_null($proposal->status_sempro_penguji_1_id)
+                                ) disabled @elseif(
+        auth("dosen")->id() == $proposal->penguji_sempro_2_id &&
+        !is_null($proposal->status_sempro_penguji_2_id)
+    ) disabled @endif>Simpan Perubahan</button>
                             </div>
                         </div>
                         <!--end::Body-->
                     </form>
                 </div>
-            </div><!-- /.container-fluid -->
+            </div>
+            <a href="{{ route("dosen.seminar-proposal.jadwal", ["tahapId" => $proposal->tahap_id, "periodeId" => $proposal->periode_id]) }}"
+                class="btn btn-info mt-2">
+                Kembali
+            </a>
         </div>
-        <!-- /.content -->
     </div>
-    <!-- /.content-wrapper -->
 @endsection

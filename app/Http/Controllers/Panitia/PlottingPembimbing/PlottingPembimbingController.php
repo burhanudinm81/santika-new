@@ -34,7 +34,26 @@ class PlottingPembimbingController extends Controller
             ->with(['proposalMahasiswas.mahasiswa', 'dosenPembimbing1', 'dosenPembimbing2'])
             ->get();
 
-        $listDosen = Dosen::with('kuotaDosen')->get();
+        $asDosbing2CountD3 = Proposal::where('prodi_id', 1)
+            ->where('periode_id', $periodeAktif->id)
+            ->whereNotNull('dosen_pembimbing_2_id')
+            ->groupBy('dosen_pembimbing_2_id')
+            ->select('dosen_pembimbing_2_id', \DB::raw('count(*) as count'))
+            ->pluck('count', 'dosen_pembimbing_2_id')
+            ->toArray();
+        $asDosbing2CountD4 = Proposal::where('prodi_id', 2)
+            ->where('periode_id', $periodeAktif->id)
+            ->whereNotNull('dosen_pembimbing_2_id')
+            ->groupBy('dosen_pembimbing_2_id')
+            ->select('dosen_pembimbing_2_id', \DB::raw('count(*) as count'))
+            ->pluck('count', 'dosen_pembimbing_2_id')
+            ->toArray();
+
+        $listDosen = Dosen::all()->map(function($dosen) use ($asDosbing2CountD3, $asDosbing2CountD4){
+            $dosen->dosbing2_count_d3 = $asDosbing2CountD3[$dosen->id] ?? 0;
+            $dosen->dosbing2_count_d4 = $asDosbing2CountD4[$dosen->id] ?? 0;
+            return $dosen;
+        });
 
         return view('panitia.plotting-pembimbing.index', compact('listProposalD3', 'listProposalD4', 'listDosen'));
     }
@@ -74,26 +93,6 @@ class PlottingPembimbingController extends Controller
                 } else {
                     // Mengurangi Kuota Dosen Pembimbing 1 D4
                     $kuotaDosenPembimbing1->kuota_pembimbing_1_D4--;
-                }
-            }
-        }
-        if ($dosenPembimbing2Id != $proposal->dosen_pembimbing_2_id) {
-            // Mengubah Dosen Pembimbing 2
-            $proposal->dosen_pembimbing_2_id = $dosenPembimbing2Id;
-
-            if ($prodiId == 1) {
-                if ($kuotaDosenPembimbing2->kuota_pembimbing_2_D3 <= 0) {
-                    return back()->withErrors(['error' => 'Kuota pembimbing D3 untuk dosen ini sudah habis.']);
-                } else {
-                    // Mengurangi Kuota Dosen Pembimbing 1 D3
-                    $kuotaDosenPembimbing2->kuota_pembimbing_2_D3--;
-                }
-            } elseif ($prodiId == 2) {
-                if ($kuotaDosenPembimbing2->kuota_pembimbing_2_D4 <= 0) {
-                    return back()->withErrors(['error' => 'Kuota pembimbing D4 untuk dosen ini sudah habis.']);
-                } else {
-                    // Mengurangi Kuota Dosen Pembimbing 1 D4
-                    $kuotaDosenPembimbing2->kuota_pembimbing_2_D4--;
                 }
             }
         }

@@ -1,6 +1,26 @@
 @extends('panitia.home')
 
 @section('content-panitia')
+    @if (session('success'))
+        <div>
+            <div style="
+                                                                                                                                                                    position: fixed;
+                                                                                                                                                                    top: 30px;
+                                                                                                                                                                    left: 60%;
+                                                                                                                                                                    transform: translateX(-50%);
+                                                                                                                                                                    z-index: 1050;
+                                                                                                                                                                    width: 50%;
+                                                                                                                                                                    transition: all 0.2s ease-in-out;
+                                                                                                                                                                "
+                class="bg-white border-bottom-0 border-right-0 border-left-0 py-4 border-success shadow shadow-md mx-auto alert alert-dismissible fade show relative"
+                role="alert">
+                <strong class="text-success">{{ session('success') }}</strong>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        </div>
+    @endif
     <!-- Content Header (Page header) -->
     <div class="content-header">
         <div class="container-fluid">
@@ -20,7 +40,17 @@
                 <div class="col-12">
                     <div class="card">
                         <div class="card-header">
-                            <div class="card-tools">
+                            <div class="card-tools d-flex justify-content-between align-items-center w-100 mx-1">
+                                <div class="ml-1">
+                                    <button type="button" class="btn btn-success" id="btn-buka-pendaftaran-sidang-ta">
+                                        Buka Pendaftaran
+                                    </button>
+                                    @if ($tahapInfo->aktif_sidang_akhir)
+                                        <button type="button" class="btn btn-danger" id="btn-nonaktifkan-tahap-sidang-ta">
+                                            Tutup Pendaftaran
+                                        </button>
+                                    @endif
+                                </div>
                                 <div class="input-group input-group-sm" style="width: 150px">
                                     <input type="text" name="table_search" class="form-control float-right"
                                         placeholder="Search" />
@@ -40,8 +70,7 @@
 
                                     <option disabled>Pilih Periode</option>
                                     @foreach ($periodeInfo as $periode)
-                                        <option value="{{ $periode->id }}"
-                                            {{ request('periode') == $periode->id ? 'selected' : '' }}>{{ $periode->tahun }}
+                                        <option value="{{ $periode->id }}" {{ request('periode') == $periode->id ? 'selected' : '' }}>{{ $periode->tahun }}
                                         </option>
                                     @endforeach
                                 </select>
@@ -105,4 +134,55 @@
 
         </div><!-- /.container-fluid -->
     </div>
+@endsection
+
+@section('modals')
+    <div id="modal-buka-pendaftaran-sidang-ta" class="modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <form action="{{ route('panitia.kelola-periode-tahap.ubah-tahap-sidang-ta-aktif') }}" method="post">
+                    @csrf
+                    <input type="hidden" name="tahap_id" value="{{ $tahapInfo->id }}">
+                    <div class="modal-header">
+                        <h5 class=" modal-title">Buka Pendaftaran Sidang Tugas Akhir</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                    <div class="modal-body">
+                        <p>Apakah anda yakin ingin membuka pendaftaran Sidang Tugas Akhir Tahap {{ $tahapInfo->tahap }}?</p>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                        <button type="submit" class="btn btn-success">Buka Pendaftaran</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <div id="modal-tutup-pendaftaran-sidang-ta" class="modal" tabindex="-1">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class=" modal-title">Tutup Pendaftaran Sidang Tugas Akhir</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">&times;</span>
+                    </button>
+                </div>
+                <div class="modal-body">
+                    <p>Apakah anda yakin ingin menutup pendaftaran Sidang Tugas Akhir?</p>
+                </div>
+                <div class="modal-footer"> <button type="button" class="btn btn-secondary" data-dismiss="modal">
+                        Tidak</button>
+                    <a href="{{ route('panitia.kelola-periode-tahap.nonaktifkan-tahap-sidang-ta') }}" class="btn btn-danger"
+                        style="width: 75px">Ya</a>
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection
+
+@section('scripts-panitia')
+    <script src="{{ url("/custom/js/seminar/pengaturan-seminar.js") }}"></script>
 @endsection
