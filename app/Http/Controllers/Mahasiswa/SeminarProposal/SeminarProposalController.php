@@ -12,6 +12,7 @@ use App\Models\Proposal;
 use App\Models\ProposalDosenMahasiswa;
 use App\Models\Tahap;
 use App\Models\Revisi;
+use App\Models\VisibilitasNilai;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -182,7 +183,19 @@ class SeminarProposalController extends Controller
                 ->first();
         }
 
-        return view('mahasiswa.seminar-proposal.hasil-sempro', compact(['proposalInfo', 'mainProposalInfo', 'revisiDosen1', 'revisiDosen2']));
+        $tahapIdPeserta = $proposalInfo->proposal->tahap_id;
+        $periodeIdPeserta = $proposalInfo->proposal->periode_id;
+
+        $visibilitasNilai = VisibilitasNilai::where('tahap_id', $tahapIdPeserta)
+            ->where('periode_id', $periodeIdPeserta)
+            ->where('jenis_nilai_seminar', 1) // 1 = Seminar Proposal
+            ->first()
+            ->visibilitas ?? false;
+
+        return view(
+            'mahasiswa.seminar-proposal.hasil-sempro', 
+            compact(['proposalInfo', 'mainProposalInfo', 'revisiDosen1', 'revisiDosen2', 'visibilitasNilai'])
+        );
     }
 
     public function showUploadRevisi()
@@ -195,6 +208,8 @@ class SeminarProposalController extends Controller
         $namaLembarRevisi2 = null;
         $namaProposal = null;
         $statusRevisi = null;
+        $statusKelulusanSempro = null;
+        $visible = false;
 
         $proposalInfo = ProposalDosenMahasiswa::with('proposal', 'mahasiswa')
             ->where('mahasiswa_id', auth('mahasiswa')->user()->id)
@@ -222,6 +237,20 @@ class SeminarProposalController extends Controller
                 ->where('dosen_id', $mainProposalInfo->dosenPengujiSempro2->id)
                 ->where('jenis_revisi', "sempro")
                 ->first();
+
+            if(in_array(3, [$mainProposalInfo->status_sempro_penguji_1_id, $mainProposalInfo->status_sempro_penguji_2_id])) {
+                $statusKelulusanSempro = 3;     // 3 = Tidak Lulus
+            } else if(in_array(2, [$mainProposalInfo->status_sempro_penguji_1_id, $mainProposalInfo->status_sempro_penguji_2_id])) {
+                $statusKelulusanSempro = 2;     // 2 = Lulus dengan revisi
+            } else {
+                $statusKelulusanSempro = 1;     // 1 = Lulus tanpa revisi
+            }
+
+            $visible = VisibilitasNilai::where('tahap_id', $mainProposalInfo->tahap_id)
+            ->where('periode_id', $mainProposalInfo->periode_id)
+            ->where('jenis_nilai_seminar', 1) // 1 = Seminar Proposal
+            ->first()
+            ->visibilitas ?? false;
         }
 
         if (!is_null($revisiPenguji1)) {
@@ -262,7 +291,9 @@ class SeminarProposalController extends Controller
                 'namaLembarRevisi1',
                 'namaLembarRevisi2',
                 'namaProposal',
-                'statusRevisi'
+                'statusRevisi',
+                'statusKelulusanSempro',
+                'visible'
             )
         );
     }

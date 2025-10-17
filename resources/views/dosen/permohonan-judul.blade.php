@@ -107,12 +107,12 @@
                             </div>
                         </div>
                         <div class="table-responsive">
-                            <table class="table table-bordered table-hover text-nowrap">
+                            <table class="table table-bordered table-hover">
                                 <thead class="thead-light">
                                     <tr>
                                         <th scope="col" class="text-center">No</th>
                                         <th scope="col" class="text-center">Nama Mahasiswa</th>
-                                        <th scope="col" class="text-center">Judul Proposal</th>
+                                        <th scope="col" class="text-center" style="width: 350px">Judul Proposal</th>
                                         <th scope="col" class="text-center">Jenis Judul</th>
                                         <th scope="col" class="text-center">Status</th>
                                         <th scope="col" class="text-center">Aksi</th>
@@ -125,7 +125,7 @@
                                                 <td>{{ $loop->iteration }}</td>
                                                 {{-- <td>{{ $proposalId }}</td> --}}
                                                 <td>{{ $permohonan->mahasiswa->nama }}</td>
-                                                <td>{{ $permohonan->proposal->judul }}</td>
+                                                <td style="width: 350px">{{ $permohonan->proposal->judul }}</td>
                                                 <td>{{ $permohonan->proposal->jenisJudul->jenis }}</td>
                                                 <td>
                                                     <span

@@ -63,7 +63,11 @@
                                     <select class="custom-select" id="periode" name="periode_id" required>
                                         <option selected>Open this select menu</option>
                                         @foreach ($periodes as $periode)
-                                            <option value="{{ $periode->id }}">{{ $periode->tahun }}</option>
+                                            @if ($periode->aktif_sempro)
+                                                <option value="{{ $periode->id }}" selected>{{ $periode->tahun }}</option>
+                                            @else
+                                                <option value="{{ $periode->id }}">{{ $periode->tahun }}</option>
+                                            @endif
                                         @endforeach
                                     </select>
                                 </div>
@@ -97,7 +101,7 @@
                                     </tbody>
                                 </table>
                                 <div class="form-group">
-                                    <label for="jumlah-tanggal">Jumlah Tanggal</label>
+                                    <label for="jumlah-tanggal">Jumlah Hari</label>
                                     <input type="number" class="form-control" id="jumlah-tanggal" name="jumlah_tanggal"
                                         value="1" required>
                                 </div>

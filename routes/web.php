@@ -26,7 +26,8 @@ use App\Http\Controllers\MahasiswaController;
 use App\Http\Controllers\MahasiswaD3Controller;
 use App\Http\Controllers\MahasiswaD4Controller;
 use App\Http\Controllers\Panitia\Ajax\AjaxPendaftaranSemproController;
-use App\Http\Controllers\Panitia\KelolaPeriodeTahap\KelolaPeriodeTahapController;
+use App\Http\Controllers\Panitia\KelolaSeminar\KelolaPeriodeTahapController;
+use App\Http\Controllers\Panitia\KelolaSeminar\VisibilitasNilaiController;
 use App\Http\Controllers\Panitia\PlottingPembimbing\PlottingPembimbingController;
 use App\Http\Controllers\Panitia\SeminarHasil\JadwalSemhasController as JadwalSemhasPanitiaController;
 use App\Http\Controllers\Panitia\SeminarHasil\SeminarHasilPanitiaController;
@@ -71,9 +72,6 @@ Route::get("/", function () {
  * Route yang hanya bisa diakses oleh Guest (Pengguna yang tidak terautentikasi)
  */
 Route::middleware("guest:admin-prodi,mahasiswa,dosen")->group(function () {
-
-
-
     Route::controller(LoginController::class)->group(function () {
         // Route untuk menampilkan halaman login
         Route::get("/login", "showLoginPage")->name("login");
@@ -620,6 +618,17 @@ Route::middleware(["auth:dosen", "auth.session", "password.changed", "is.panitia
             // Route untuk menghapus tahap
             Route::delete("/hapus-tahap", "hapusTahap")->name("hapus-tahap");
         });
+
+    Route::controller(VisibilitasNilaiController::class)
+        ->prefix('/panitia/kelola-seminar/visibilitas-nilai')
+        ->name('panitia.kelola-seminar.visibilitas-nilai.')
+        ->group(function () {
+            // Route untuk mempublikasikan nilai seminar
+            Route::post('/publish', 'publishNilai')->name('publish');
+            // Route untuk menyembunyikan nilai seminar
+            Route::post('/hide', 'hideNilai')->name('hide');
+        });
+
 });
 
 Route::get("/hyper-parameter-tuning", [PengujianPenjadwalanAG::class, "pengujianHyperTuningParameter"]);

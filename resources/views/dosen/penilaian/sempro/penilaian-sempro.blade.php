@@ -16,6 +16,33 @@
     <!-- Main content -->
     <div class="content">
         <div class="container-fluid">
+            @if ($errors->any())
+                <div>
+                    {{-- modal popup error --}}
+                    <div style="
+                                                                    position: fixed;
+                                                                    top: 30px;
+                                                                    left: 60%;
+                                                                    transform: translateX(-50%);
+                                                                    z-index: 1050;
+                                                                    width: 50%;
+                                                                    transition: all 0.2s ease-in-out;
+                                                                "
+                        class="bg-white border-bottom-0 border-right-0 border-left-0 py-4 border-danger shadow shadow-md mx-auto alert alert-dismissible fade show relative"
+                        role="alert">
+                        <strong class="text-danger">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </strong>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                </div>
+            @endif
 
             @if (session()->has('success'))
                 @include('notifications.success-alert', ['message' => session('success')])
@@ -86,14 +113,15 @@
                             </div>
 
                             <strong></i>Catatan Revisi</strong>
-                            <textarea class="form-control" id="catatan_revisi" name="catatan_revisi" rows="6" @if (
+                            <textarea class="form-control" id="catatan_revisi" name="catatan_revisi" rows="6" 
+                            @if (
                                 auth("dosen")->id() == $proposal->penguji_sempro_1_id &&
                                 !is_null($proposal->status_sempro_penguji_1_id)
                             ) disabled @elseif(
-        auth("dosen")->id() == $proposal->penguji_sempro_2_id &&
-        !is_null($proposal->status_sempro_penguji_2_id)
-    ) disabled @endif
-                                required>@if($prevRevisi != null) {{ $prevRevisi->catatan_revisi }} @else {{ $proposal->catatan_revisi }} @endif</textarea>
+                                auth("dosen")->id() == $proposal->penguji_sempro_2_id &&
+                                !is_null($proposal->status_sempro_penguji_2_id)
+                            ) disabled 
+                            @endif>@if($prevRevisi != null) {{ $prevRevisi->catatan_revisi }} @else {{ $proposal->catatan_revisi }} @endif</textarea>
 
                             <div class="form-group">
                                 <label>Lihat Lembar Revisi:</label>

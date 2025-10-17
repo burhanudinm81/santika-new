@@ -143,6 +143,9 @@
                     </form>
                 </div>
             </div>
+            <a href="{{ route("dosen.seminar-proposal.beranda-jadwal") }}" class="btn btn-info my-2">
+                Kembali
+            </a>
         </div>
     </div>
 @endsection
