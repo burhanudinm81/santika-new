@@ -28,4 +28,9 @@ class Tahap extends Model
     {
         return $this->hasMany(Proposal::class, 'tahap_semhas_id');
     }
+
+    public function visibilitasNilai(): HasMany
+    {
+        return $this->hasMany(VisibilitasNilai::class);
+    }
 }

@@ -33,20 +33,32 @@
                                         value="{{ $mainProposalInfo->dosenPengujiSempro1->nama ?? '' }}" readonly />
                                 </div>
                                 <div class="mb-3">
-                                    <label for="StatusNilaiPenguji1" class="form-label">Status Nilai Dosen Penguji 1</label>
-                                    <input type="text"
-                                        @if ($mainProposalInfo->statusSemproPenguji1?->status == 'Ditolak') class="form-control bg-danger"
-                                            @elseif (in_array($mainProposalInfo->statusSemproPenguji1?->status, ['Diterima tanpa revisi', 'Diterima dengan revisi']))
+                                    <label for="StatusNilaiPenguji1" class="form-label">Status Kelulusan Dosen Penguji 1</label>
+                                    @if ($visibilitasNilai)
+                                        <input type="text"
+                                            @if ($mainProposalInfo->statusSemproPenguji1?->status == 'Ditolak') 
+                                                class="form-control bg-danger"
+                                            @elseif ($mainProposalInfo->statusSemproPenguji1?->status == 'Diterima tanpa revisi')
                                                 class="form-control bg-success"
+                                            @elseif ($mainProposalInfo->statusSemproPenguji1?->status == 'Diterima dengan revisi')
+                                                class="form-control bg-warning"
                                             @else
-                                                class="form-control" @endif
-                                        id="StatusNilaiPenguji1" aria-describedby="StatusNilaiPenguji1"
-                                        value="{{ $mainProposalInfo->statusSemproPenguji1?->status ?? '' }}" readonly />
-
+                                                class="form-control"
+                                            @endif
+                                            id="StatusNilaiPenguji1" aria-describedby="StatusNilaiPenguji1"
+                                            value="{{ $mainProposalInfo->statusSemproPenguji1?->status ?? '' }}" readonly />
+                                    @else
+                                        <input type="text" id="StatusNilaiPenguji1" aria-describedby="StatusNilaiPenguji1" class="form-control"
+                                        value="Belum Dipublish" readonly />
+                                    @endif
                                 </div>
                                 <div class="mb-3">
                                     <label for="CatatanPenguji1" class="form-label">Catatan Penguji 1</label>
-                                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" readonly>{{ $revisiDosen1->catatan_revisi ?? '' }}</textarea>
+                                    @if($visibilitasNilai)
+                                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" readonly>{{ $revisiDosen1->catatan_revisi ?? '' }}</textarea>
+                                    @else
+                                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" readonly>Belum Dipublish</textarea>
+                                    @endif
                                 </div>
                                 <hr>
                                 <div class="mb-3">
@@ -60,18 +72,32 @@
                                     @php
                                         $status2 = $mainProposalInfo->statusSemproPenguji2?->status;
                                     @endphp
-                                    <input type="text"
-                                        @if ($status2 === 'Ditolak') class="form-control bg-danger"
-                                            @elseif (in_array($status2, ['Diterima tanpa revisi', 'Diterima dengan revisi']))
+                                    @if ($visibilitasNilai)
+                                        <input type="text"
+                                            @if ($mainProposalInfo->statusSemproPenguji2?->status == 'Ditolak') 
+                                                class="form-control bg-danger"
+                                            @elseif ($mainProposalInfo->statusSemproPenguji2?->status == 'Diterima tanpa revisi')
                                                 class="form-control bg-success"
+                                            @elseif ($mainProposalInfo->statusSemproPenguji2?->status == 'Diterima dengan revisi')
+                                                class="form-control bg-warning"
                                             @else
-                                                class="form-control" @endif
-                                        id="StatusNilaiPenguji2" aria-describedby="StatusNilaiPenguji2"
-                                        value="{{ $status2 ?? '' }}" readonly />
+                                                class="form-control"
+                                            @endif
+                                            id="StatusNilaiPenguji2" aria-describedby="StatusNilaiPenguji2"
+                                            value="{{ $status2 ?? '' }}" readonly />
+                                    @else
+                                        <input type="text" id="StatusNilaiPenguji2" aria-describedby="StatusNilaiPenguji2" class="form-control"
+                                        value="Belum Dipublish" readonly />
+                                    @endif
+                                    
                                 </div>
                                 <div class="mb-3">
                                     <label for="CatatanPenguji2" class="form-label">Catatan Penguji 2</label>
-                                    <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" readonly>{{ $revisiDosen2->catatan_revisi ?? '' }}</textarea>
+                                    @if ($visibilitasNilai)
+                                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" readonly>{{ $revisiDosen2->catatan_revisi ?? '' }}</textarea>
+                                    @else
+                                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" readonly>Belum Dipublish</textarea>
+                                    @endif
                                 </div>
                             </div>
                         @endif

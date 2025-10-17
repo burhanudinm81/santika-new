@@ -18,20 +18,20 @@
                     <table id="tabel-proposal" class="table table-bordered table-head-fixed" style="table-layout: fixed;">
                         <thead>
                             <tr>
-                                <th style="width: 50px">No</th>
-                                <th style="width: 100px">Ruang</th>
-                                <th style="width: 150px">Tanggal</th>
-                                <th style="width: 50px">Sesi</th>
-                                <th style="width: 100px">Waktu</th>
-                                <th style="width: 300px">Judul</th>
-                                <th style="width: 300px">Mahasiswa 1</th>
+                                <th style="width: 50px" class="text-center">No</th>
+                                <th style="width: 100px" class="text-center">Ruang</th>
+                                <th style="width: 150px" class="text-center">Tanggal</th>
+                                <th style="width: 50px" class="text-center">Sesi</th>
+                                <th style="width: 100px" class="text-center">Waktu</th>
+                                <th style="width: 300px" class="text-center">Judul</th>
+                                <th style="width: 300px" class="text-center">Mahasiswa 1</th>
                                 @if ($prodi->id == 1)
-                                    <th style="width: 300px">Mahasiswa 2</th>
+                                    <th style="width: 300px" class="text-center">Mahasiswa 2</th>
                                 @endif
-                                <th style="width: 300px">Dosen Pembimbing 1</th>
-                                <th style="width: 300px">Dosen Pembimbing 2</th>
-                                <th style="width: 300px">Dosen Penguji 1</th>
-                                <th style="width: 300px">Dosen Penguji 2</th>
+                                <th style="width: 300px" class="text-center">Dosen Pembimbing 1</th>
+                                <th style="width: 300px" class="text-center">Dosen Pembimbing 2</th>
+                                <th style="width: 300px" class="text-center">Dosen Penguji 1</th>
+                                <th style="width: 300px" class="text-center">Dosen Penguji 2</th>
                             </tr>
                         </thead>
                         <tbody id="dosen-table-body">

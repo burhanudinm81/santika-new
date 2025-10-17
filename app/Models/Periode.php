@@ -33,4 +33,9 @@ class Periode extends Model
     {
         return $this->hasMany(Proposal::class, 'periode_semhas_id');
     }
+
+    public function visibilitasNilai(): HasMany
+    {
+        return $this->hasMany(VisibilitasNilai::class);
+    }
 }

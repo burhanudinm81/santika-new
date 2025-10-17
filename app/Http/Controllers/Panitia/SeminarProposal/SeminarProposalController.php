@@ -139,7 +139,25 @@ class SeminarProposalController extends Controller
         // ambil semua tahap
         $listTahap = Tahap::all();
 
-        return view('panitia.seminar-proposal.tahap-rekap-nilai', compact('listTahap'));
+        // Menghitung jumlah peserta Seminar Proposal dikelompokkan berdasarkan jadwal
+        $prodiPanitia = Panitia::where('dosen_id', auth('dosen')->user()->id)->first()->prodi_id;
+        $periodeAktif = Periode::where('aktif_sempro', true)->first();
+
+        $jumlahPesertaSempro = Proposal::where("periode_id", $periodeAktif->id)
+            ->where('prodi_id', $prodiPanitia)
+            ->whereHas('pendaftaranSempro', function ($query) {
+                $query->where('status_daftar_sempro_id', 1); // Hanya yang diterima
+            })
+            ->groupBy('tahap_id')
+            ->selectRaw('tahap_id, count(*) as jumlah')
+            ->get();
+
+        $listTahap = $listTahap->map(function ($tahap) use ($jumlahPesertaSempro) {
+            $tahap->jumlahPeserta = $jumlahPesertaSempro->firstWhere('tahap_id', $tahap->id)->jumlah ?? 0;
+            return $tahap;
+        }); 
+
+        return view('panitia.seminar-proposal.tahap-rekap-nilai', compact('listTahap', 'periodeAktif'));
     }
 
     public function showBerandaRekapNilai($tahapId)
@@ -152,7 +170,16 @@ class SeminarProposalController extends Controller
         // ambil data dosen yang menjadi panitia, berdasarkan id dosen yang saat ini sedang login
         $dosenPanitiaInfo = Panitia::where('dosen_id', auth('dosen')->user()->id)->first();
 
-        return view('panitia.seminar-proposal.beranda-rekap-nilai', compact(['tahapInfo', 'periodeInfo', 'dosenPanitiaInfo']));
+        $periodeAktif = Periode::where('aktif_sempro', true)->first();
+        $visibilitasNilai = $tahapInfo->visibilitasNilai()->where('periode_id', $periodeAktif->id)
+            ->where('jenis_nilai_seminar', 1) // 1 = Seminar Proposal
+            ->first()
+            ->visibilitas ?? false;
+
+        return view(
+            'panitia.seminar-proposal.beranda-rekap-nilai', 
+            compact(['tahapInfo', 'periodeInfo', 'dosenPanitiaInfo', 'periodeAktif', 'visibilitasNilai'])
+        );
     }
 
     public function showDetailVerifikasiRevisi($proposalId)

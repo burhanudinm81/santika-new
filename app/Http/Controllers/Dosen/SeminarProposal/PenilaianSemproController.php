@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Dosen\SeminarProposal;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UpdatePenilaianRequest;
 use App\Models\Proposal;
 use App\Models\Revisi;
 use App\Models\StatusProposal;
@@ -34,7 +35,7 @@ class PenilaianSemproController extends Controller
         ]));
     }
 
-    public function updatePenilaian(Request $request)
+    public function updatePenilaian(UpdatePenilaianRequest $request)
     {
         // ambil value dari request
         $proposalId = $request->input('proposal_id');

@@ -1,6 +1,6 @@
 <?php
 
-namespace App\Http\Controllers\Panitia\KelolaPeriodeTahap;
+namespace App\Http\Controllers\Panitia\KelolaSeminar;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\StorePeriodeRequest;

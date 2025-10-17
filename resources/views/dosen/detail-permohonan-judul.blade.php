@@ -90,27 +90,21 @@
 
                         <div class="mb-2">
                             <label for="JudulProposal" class="form-label">Judul Proposal</label>
-                            <input type="text" class="form-control" id="JudulProposal"
-                                value="{{ $permohonanProposalMahasiswa->first()->proposal->judul }}"
-                                aria-describedby="JudulProposal" aria-label="readonly input example" readonly>
+                            <textarea id="JudulProposal" class="form-control" rows="2" readonly>{{ $permohonanProposalMahasiswa->first()->proposal->judul ?? "-" }}</textarea>
                         </div>
 
                         <div class="mb-2">
                             <label for="Tujuan" class="form-label">Tujuan</label>
-                            <input type="text" class="form-control" id="Tujuan"
-                                value="{{ $permohonanProposalMahasiswa->first()->proposal->tujuan }}"
-                                aria-describedby="Tujuan" aria-label="readonly input example" readonly>
+                            <textarea id="Tujuan" class="form-control" rows="4" readonly>{{ $permohonanProposalMahasiswa->first()->proposal->tujuan ?? "-" }}</textarea>
                         </div>
 
                         <div class="mb-2">
                             <label for="LatarBelakang" class="form-label">Latar Belakang</label>
-                            <input type="text" class="form-control" id="LatarBelakang"
-                                value="{{ $permohonanProposalMahasiswa->first()->proposal->latar_belakang }}"
-                                aria-describedby="LatarBelakang" aria-label="readonly input example" readonly>
+                            <textarea id="LatarBelakang" class="form-control" rows="8" readonly>{{ $permohonanProposalMahasiswa->first()->proposal->latar_belakang ?? "-" }}</textarea>
                         </div>
 
                         <div class="mb-2">
-                            <label for="LatarBelakang" class="form-label">Diagram Blok Sistem</label>
+                            <label class="form-label">Diagram Blok Sistem</label>
                             <div class="diagram-blok">
                                 @if ($permohonanProposalMahasiswa->first()->proposal->hasBlokDiagram())
                                     <img style="width: 100px; cursor: pointer;"

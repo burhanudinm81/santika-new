@@ -74,7 +74,7 @@
                 });
             </script>
 
-            @if ($pendingSempro > 0)
+            @if ($pendingSempro > 0 && !is_null($tahap))
                 <a href="{{ route('panitia.seminar-proposal.pendaftaran-detail', [
                     'tahapId' => $tahap,
                     'periode' => $periode,
@@ -88,7 +88,7 @@
                 </a>
             @endif
 
-            @if ($pendingSemhas > 0)
+            @if ($pendingSemhas > 0 && !is_null($tahap))
                 <a href="{{ route('panitia.seminar-hasil.pendaftaran-detail', [
                     'tahapId' => $tahap,
                     'periode' => $periode,
