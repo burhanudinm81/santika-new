@@ -72,7 +72,7 @@
                                 <div class="mb-3">
                                     <label for="NamaMahasiswa2" class="form-label">Nama Mahasiswa 2</label>
                                     <input type="text" class="form-control" id="NamaMahasiswa2"
-                                        value="{{ $listMahasiswa[1]->mahasiswa->nama }}" aria-describedby="NamaMahasiswa2"
+                                        value="{{ $listMahasiswa[1]->mahasiswa->nama ?? '-' }}" aria-describedby="NamaMahasiswa2"
                                         aria-label="readonly input example" readonly>
                                 </div>
                             @elseif($proposal->prodi_id == 2)
@@ -113,14 +113,14 @@
                             </div>
 
                             <strong></i>Catatan Revisi</strong>
-                            <textarea class="form-control" id="catatan_revisi" name="catatan_revisi" rows="6" 
+                            <textarea class="form-control" id="catatan_revisi" name="catatan_revisi" rows="6"
                             @if (
                                 auth("dosen")->id() == $proposal->penguji_sempro_1_id &&
                                 !is_null($proposal->status_sempro_penguji_1_id)
                             ) disabled @elseif(
                                 auth("dosen")->id() == $proposal->penguji_sempro_2_id &&
                                 !is_null($proposal->status_sempro_penguji_2_id)
-                            ) disabled 
+                            ) disabled
                             @endif>@if($prevRevisi != null) {{ $prevRevisi->catatan_revisi }} @else {{ $proposal->catatan_revisi }} @endif</textarea>
 
                             <div class="form-group">

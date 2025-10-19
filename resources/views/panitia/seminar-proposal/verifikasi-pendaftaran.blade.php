@@ -18,7 +18,7 @@
     @endif
 
     <!-- Main con
-                                                                                            <div class="content">tent -->
+                                                                                                <div class="content">tent -->
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-12">
@@ -35,7 +35,7 @@
                             <p>{{ $pendaftaranSemproInfo->proposal->proposalMahasiswas[0]->mahasiswa->nama }}</p>
 
                             <label class="form-label mb-1">Nama Mahasiswa 2</label>
-                            <p>{{ $pendaftaranSemproInfo->proposal->proposalMahasiswas[1]->mahasiswa->nama }}</p>
+                            <p>{{ $pendaftaranSemproInfo->proposal->proposalMahasiswas[1]->mahasiswa->nama ?? '-' }}</p>
                         @elseif($pendaftaranSemproInfo->proposal->prodi_id == 2)
                             <label class="form-label mb-1">Nama Mahasiswa</label>
                             <p>{{ $pendaftaranSemproInfo->proposal->proposalMahasiswas->first()->mahasiswa->nama }}</p>
@@ -125,23 +125,24 @@
                                     <label class="form-label d-block fw-bold">Status Lembar Kerjasama Mitra</label>
 
                                     <div class="form-check form-check-inline">
-                                        <input class="form-check-input status-radio" type="radio" name="statusLembarKerjasama"
-                                        id="statusKerjasamaTolak" value="0"
-                                        {{ $pendaftaranSemproInfo->status_lembar_kerjasama_mitra == 0 ? 'checked' : '' }}>
+                                        <input class="form-check-input status-radio" type="radio"
+                                            name="statusLembarKerjasama" id="statusKerjasamaTolak" value="0"
+                                            {{ $pendaftaranSemproInfo->status_lembar_kerjasama_mitra == 0 ? 'checked' : '' }}>
                                         <label class="form-check-label text-danger fw-semibold" for="statusKerjasamaTolak">
                                             <i class="bi bi-x-circle"></i> Tolak
                                         </label>
                                     </div>
 
                                     <div class="form-check form-check-inline">
-                                        <input class="form-check-input status-radio" type="radio" name="statusLembarKerjasama"
-                                            id="statusKerjasamaTerima" value="1"
+                                        <input class="form-check-input status-radio" type="radio"
+                                            name="statusLembarKerjasama" id="statusKerjasamaTerima" value="1"
                                             {{ $pendaftaranSemproInfo->status_lembar_kerjasama_mitra == 1 ? 'checked' : '' }}>
-                                        <label class="form-check-label text-success fw-semibold" for="statusKerjasamaTerima">
+                                        <label class="form-check-label text-success fw-semibold"
+                                            for="statusKerjasamaTerima">
                                             <i class="bi bi-check-circle"></i> Terima
                                         </label>
                                     </div>
-                            </div>
+                                </div>
                             @endif
                             {{-- End input verifikasi lembar kerjasama mitra --}}
 
@@ -211,7 +212,7 @@
                                     @if ($pendaftaranSemproInfo->status_daftar_sempro_id == 1) disabled @endif
                                     ">Simpan</button>
 
-                            <a href="{{ route("panitia.seminar-proposal.pendaftaran-detail", ["tahapId" => $pendaftaranSemproInfo->proposal->tahap_id]) }}" 
+                            <a href="{{ route('panitia.seminar-proposal.pendaftaran-detail', ['tahapId' => $pendaftaranSemproInfo->proposal->tahap_id]) }}"
                                 class="btn btn-info mt-2">
                                 Kembali
                             </a>

@@ -23,7 +23,7 @@ class PengajuanJudulStoreRequest extends FormRequest
     {
         return [
             'mahasiswa_1_id' => 'required|integer',
-            'mahasiswa_2_id' => 'integer',
+            'mahasiswa_2_id' => 'nullable|integer',
             'prodi_id' => 'required|integer',
             'periode_id' => 'required|integer',
             'jenis_judul_id' => 'required|integer',
@@ -41,7 +41,7 @@ class PengajuanJudulStoreRequest extends FormRequest
     {
         return [
             'mahasiswa_1_id.required' => 'Mahasiswa 1 tidak boleh kosong',
-            'mahasiswa_2_id.required' => 'Mahasiswa 2 tidak boleh kosong',
+            // 'mahasiswa_2_id.required' => 'Mahasiswa 2 tidak boleh kosong',
             'jenis_judul_id.required' => 'Jenis Judul tidak boleh kosong',
             'bidang_minat_id.required' => 'Bidang Minat tidak boleh kosong',
             'calon_dosen_id.required' => 'Calon Dosen tidak boleh kosong',
