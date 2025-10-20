@@ -17,10 +17,41 @@
     <div class="content">
         <div class="container-fluid">
             <div class="col-md-15">
+                @if ($statusKelulusanSempro == 1)
+                    <div class="alert alert-success my-2" role="alert">
+                        <h4 class="alert-heading">Selamat!</h4>
+                        <p>Anda dinyatakan <strong>Lulus Seminar Proposal tanpa revisi</strong>.</p>
+                        <hr>
+                        <p class="mb-0">Silahkan menunggu informasi selanjutnya dari Panitia.</p>
+                    </div>
+                @elseif($statusKelulusanSempro == 2)
+                    @if ($revisiSelesai)
+                        <div class="alert alert-success my-2" role="alert">
+                            <h4 class="alert-heading">Selamat!</h4>
+                            <p>Anda dinyatakan <strong>Lulus Seminar Proposal dengan revisi</strong>.</p>
+                            <hr>
+                            <p class="mb-0">Revisi Telah Diselesaikan. Silahkan menunggu informasi selanjutnya dari Panitia.</p>
+                        </div>
+                    @else
+                        <div class="alert alert-warning my-2" role="alert">
+                            <h4 class="alert-heading">Selamat!</h4>
+                            <p>Anda dinyatakan <strong>Lulus Seminar Proposal dengan revisi</strong>.</p>
+                            <hr>
+                            <p class="mb-0">Selesaikan revisi sebelum tenggat waktu yang telah ditentukan!</p>
+                        </div>
+                    @endif
+                @elseif($statusKelulusanSempro == 3)
+                    <div class="alert alert-danger my-2" role="alert">
+                        <h4 class="alert-heading">Mohon Maaf!</h4>
+                        <p>Anda dinyatakan <strong>Tidak Lulus Seminar Proposal</strong>.</p>
+                        <hr>
+                        <p class="mb-0">Jangan berkecil hati. Jadikan kegagalan ini sebagai pembelajaran yang berharga untuk bangkit kembali. Tetap semangat!</p>
+                    </div>
+                @endif
                 <div class="card card-primary card-outline mb-4">
                     <!--begin::Form-->
                     <form>
-                        @if (is_null($mainProposalInfo))
+                        @if (is_null($mainProposalInfo) || $isPengujiNotAssigned)
                             <div class="card-body">
                                 <p>Anda Belum Pernah Mengikuti Seminar Proposal</p>
                             </div>
@@ -34,14 +65,18 @@
                                 </div>
                                 <div class="mb-3">
                                     <label for="StatusNilaiPenguji1" class="form-label">Status Kelulusan Dosen Penguji 1</label>
-                                    @if ($visibilitasNilai)
+                                    @if ($visible)
                                         <input type="text"
                                             @if ($mainProposalInfo->statusSemproPenguji1?->status == 'Ditolak') 
                                                 class="form-control bg-danger"
                                             @elseif ($mainProposalInfo->statusSemproPenguji1?->status == 'Diterima tanpa revisi')
                                                 class="form-control bg-success"
                                             @elseif ($mainProposalInfo->statusSemproPenguji1?->status == 'Diterima dengan revisi')
-                                                class="form-control bg-warning"
+                                                @if ($revisiSelesai)
+                                                    class="form-control bg-success"
+                                                @else
+                                                    class="form-control bg-warning"
+                                                @endif
                                             @else
                                                 class="form-control"
                                             @endif
@@ -54,7 +89,7 @@
                                 </div>
                                 <div class="mb-3">
                                     <label for="CatatanPenguji1" class="form-label">Catatan Penguji 1</label>
-                                    @if($visibilitasNilai)
+                                    @if($visible)
                                         <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" readonly>{{ $revisiDosen1->catatan_revisi ?? '' }}</textarea>
                                     @else
                                         <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" readonly>Belum Dipublish</textarea>
@@ -72,14 +107,18 @@
                                     @php
                                         $status2 = $mainProposalInfo->statusSemproPenguji2?->status;
                                     @endphp
-                                    @if ($visibilitasNilai)
+                                    @if ($visible)
                                         <input type="text"
                                             @if ($mainProposalInfo->statusSemproPenguji2?->status == 'Ditolak') 
                                                 class="form-control bg-danger"
                                             @elseif ($mainProposalInfo->statusSemproPenguji2?->status == 'Diterima tanpa revisi')
                                                 class="form-control bg-success"
                                             @elseif ($mainProposalInfo->statusSemproPenguji2?->status == 'Diterima dengan revisi')
-                                                class="form-control bg-warning"
+                                                @if ($revisiSelesai)
+                                                    class="form-control bg-success"
+                                                @else
+                                                    class="form-control bg-warning"
+                                                @endif
                                             @else
                                                 class="form-control"
                                             @endif
@@ -93,7 +132,7 @@
                                 </div>
                                 <div class="mb-3">
                                     <label for="CatatanPenguji2" class="form-label">Catatan Penguji 2</label>
-                                    @if ($visibilitasNilai)
+                                    @if ($visible)
                                         <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" readonly>{{ $revisiDosen2->catatan_revisi ?? '' }}</textarea>
                                     @else
                                         <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" readonly>Belum Dipublish</textarea>

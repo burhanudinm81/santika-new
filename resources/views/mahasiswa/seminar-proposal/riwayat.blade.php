@@ -34,27 +34,29 @@
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($data as $key => $peserta)
+                                    @if (is_null($data) || $data->isEmpty())
+                                        <tr>
+                                            <td colspan="6" class="text-center">Belum ada riwayat pendaftaran seminar
+                                                proposal.</td>
+                                        </tr>
+                                    @endif
+                                    @foreach ($data as $key => $pendaftaranSempro)
                                         <tr class="row-clickable">
                                             <td>{{ $key + 1 }}</td>
-                                            <td>{{ $peserta->proposal->tahap->tahap }}</td>
-                                            <td>{{ $peserta->proposal->judul }}</td>
-                                            <td>{{ $peserta->proposal->jenisJudul->jenis }}</td>
-                                            <td>{{ $peserta->dosen->nama }}</td>
+                                            <td>{{ $pendaftaranSempro->proposal->tahap->tahap }}</td>
+                                            <td>{{ $pendaftaranSempro->proposal->judul }}</td>
+                                            <td>{{ $pendaftaranSempro->proposal->jenisJudul->jenis }}</td>
+                                            <td>{{ $pendaftaranSempro->proposal->dosenPembimbing1->nama }}</td>
                                             <td class="d-flex align-items-center">
-                                                @php
-                                                    $statusId =
-                                                        $peserta->proposal->pendaftaranSemhas->status_daftar_semhas_id;
-                                                @endphp
-                                                @if ($statusId == 2)
+                                                @if ($pendaftaranSempro->status_daftar_sempro_id == 2)
                                                     <span
-                                                        class="badge badge-danger">{{ $statusPendaftaran[$statusId] }}</span>
-                                                @elseif ($statusId == 1)
+                                                        class="badge badge-danger">Ditolak</span>
+                                                @elseif ($pendaftaranSempro->status_daftar_sempro_id == 1)
                                                     <span
-                                                        class="badge badge-success">{{ $statusPendaftaran[$statusId] }}</span>
-                                                @elseif ($statusId == 3)
+                                                        class="badge badge-success">Diterima</span>
+                                                @elseif ($pendaftaranSempro->status_daftar_sempro_id == 3)
                                                     <span
-                                                        class="badge badge-warning">{{ $statusPendaftaran[$statusId] }}</span>
+                                                        class="badge badge-warning">Belum Dicek</span>
                                                 @endif
                                             </td>
                                         </tr>

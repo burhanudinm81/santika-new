@@ -129,14 +129,16 @@
                                             name="mahasiswa_id">
 
                                         <div class="col">
-                                            <button class="btn text-bold" type="submit" value="1"
+                                            <button class="btn text-bold btn-success" type="submit" value="1"
                                                 name="confirmation_status_id"
-                                                style="background-color: #75eb79; width: 100%">
+                                                @if ($kuotaPembimbing1 < 1)
+                                                    disabled
+                                                @endif>
                                                 Terima</button>
                                         </div>
                                         <div class="col">
                                             <button value="2" name="confirmation_status_id" type="submit"
-                                                class="btn btn-danger text-white text-bold w-100 mt-2">
+                                                class="btn btn-danger text-white text-bold w-100 my-2">
                                                 Tolak</button>
                                         </div>
 
@@ -148,9 +150,13 @@
                     </div>
 
                 </div>
-            </div><!-- /.container-fluid -->
+            </div>
+
+            <a href="{{ route("dosen.permohonan-judul") }}"
+                class="btn btn-info my-2">
+                Kembali
+            </a>
         </div>
-        <!-- /.content -->
     </div>
 
     {{-- Modal Lightbox --}}

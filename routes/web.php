@@ -378,6 +378,7 @@ Route::middleware(["auth:dosen", "auth.session", "password.changed"])->group(fun
     Route::controller(PenilaianSemproController::class)->group(function () {
         Route::get('/dosen/penilaian-sempro/{proposal_id}', 'showPenilaianBaseOnMahasiswa')->name('dosen.penilaian-sempro');
         Route::put('/dosen/penilaian-sempro/update', 'updatePenilaian')->name('dosen.penilaian-sempro.update-penilaian');
+        Route::put('/dosen/penilaian-sempro/verifikasi-revisi/update', 'updateVerifikasiRevisi')->name('dosen.penilaian-sempro.update-verifikasi-revisi');
     });
 
     Route::controller(PenilaianSemhasController::class)->group(function () {
@@ -443,7 +444,7 @@ Route::middleware(["auth:dosen", "auth.session", "password.changed", "is.panitia
         Route::get('/panitia/seminar-proposal/tahap-rekap-nilai', 'showTahapRekapNilai')->name('panitia.seminar-proposal.tahap-rekap-nilai');
         Route::get('/panitia/seminar-proposal/beranda-rekap-nilai/{tahapId}', 'showBerandaRekapNilai')->name('panitia.seminar-proposal.beranda-rekap-nilai');
         Route::get('/panitia/seminar-proposal/detail-verifikasi-revisi/{proposalId}', 'showDetailVerifikasiRevisi')->name('panitia.seminar-proposal.detail-verifikasi-revisi');
-        Route::put('/panitia/seminar-proposal/detail-verifikasi-revisi/update', 'updateVerifikasiRevisi')->name('panitia.seminar-proposal.update-verifikasi-revisi');
+        // Route::put('/panitia/seminar-proposal/detail-verifikasi-revisi/update', 'updateVerifikasiRevisi')->name('panitia.seminar-proposal.update-verifikasi-revisi');
         // Route untuk membuka pendaftaran seminar proposal
         Route::post('/panitia/seminar-proposal/buka-pendaftaran', 'bukaPendaftaran')->name('panitia.seminar-proposal.buka-pendaftaran');
         // Route untuk menutup pendaftaran seminar proposal
@@ -531,10 +532,9 @@ Route::middleware(["auth:dosen", "auth.session", "password.changed", "is.panitia
             // Route untuk generate jadwal otomatis
             Route::post('/store', 'store')->name('store');
 
-            // Route::get('/edit/{id}', 'edit')->name('edit');
-            // Route::put('/update/{id}', 'update')->name('update');
-            // Route::delete('/delete/{id}', 'delete')->name('delete');
-    
+            // Route untuk edit Jadwal Sempro
+            Route::get('/edit/periode/{periode}/tahap/{tahap}', 'edit')->name('edit');
+
             //  Route untuk melihat detail jadwal sempro
             Route::get('/detail/tahap/{tahap_id}/periode/{periode_id}', 'detail')->name('detail');
 
