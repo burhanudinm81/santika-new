@@ -42,7 +42,7 @@ class JadwalSemproController extends Controller
             ->unique(function ($item) {
                 return $item['tahap_id'] . '-' . $item['periode_id'];
             })
-            ->sortBy(function($item) {
+            ->sortBy(function ($item) {
                 return $item['tahap_id'] . '-' . $item['periode_id'];
             })
             ->values();
@@ -90,7 +90,7 @@ class JadwalSemproController extends Controller
                 ->route('jadwal-sempro.index')
                 ->withErrors(['proposals' => 'Belum ada Pendaftaran yang dikonfirmasi!']);
         }
-        
+
         $ruangs = $request->ruang;
         $tanggals = $request->tanggal;
         $sesis = $request->sesi;
@@ -107,7 +107,7 @@ class JadwalSemproController extends Controller
             return back()->withErrors(['error' => "Jumlah ruang, tanggal dan sesi tidak cukup. Pastikan perkalian jumlah ruang, tanggal dan sesi lebih dari $jumlahProposal"])->withInput();
         }
 
-        $dosenKuota = KuotaDosen::whereHas('dosen', function($query){
+        $dosenKuota = KuotaDosen::whereHas('dosen', function ($query) {
             $query->whereNull('deleted_at');
         })->get()->keyBy('dosen_id')->map(function ($item) use ($prodiPanitia) {
             return [
@@ -123,7 +123,7 @@ class JadwalSemproController extends Controller
         }
 
         // Hapus Jadwal Sempro yang lama jika ada
-        $jadwalSemproLama = JadwalSeminarProposal::whereHas('proposal', function($query) use ($tahapId, $periodeId, $prodiPanitia){
+        $jadwalSemproLama = JadwalSeminarProposal::whereHas('proposal', function ($query) use ($tahapId, $periodeId, $prodiPanitia) {
             $query->where('tahap_id', $tahapId)
                 ->where('periode_id', $periodeId)
                 ->where('prodi_id', $prodiPanitia);
@@ -184,9 +184,9 @@ class JadwalSemproController extends Controller
             // 
             $kuotaDosenPenguji1 = KuotaDosen::firstWhere("dosen_id", $item['penguji_1']);
 
-            if($prodiPanitia == 1)
+            if ($prodiPanitia == 1)
                 $kuotaDosenPenguji1->kuota_penguji_sempro_1_D3--;
-            else if($prodiPanitia == 2)
+            else if ($prodiPanitia == 2)
                 $kuotaDosenPenguji1->kuota_penguji_sempro_1_D4--;
 
             $kuotaDosenPenguji1->save();
@@ -196,9 +196,9 @@ class JadwalSemproController extends Controller
             // 
             $kuotaDosenPenguji2 = KuotaDosen::firstWhere("dosen_id", $item['penguji_2']);
 
-            if($prodiPanitia == 1)
+            if ($prodiPanitia == 1)
                 $kuotaDosenPenguji2->kuota_penguji_sempro_2_D3--;
-            else if($prodiPanitia == 2)
+            else if ($prodiPanitia == 2)
                 $kuotaDosenPenguji2->kuota_penguji_sempro_2_D4--;
 
             $kuotaDosenPenguji2->save();
@@ -273,18 +273,18 @@ class JadwalSemproController extends Controller
         $tahap = $validated["tahap_id"];
         $prodiPanitia = Panitia::firstWhere('dosen_id', auth('dosen')->id())->prodi_id;
 
-        $listDosenPenguji1 = Dosen::whereHas('kuotaDosen', function($query) use ($prodiPanitia){
-            if($prodiPanitia == 1){
+        $listDosenPenguji1 = Dosen::whereHas('kuotaDosen', function ($query) use ($prodiPanitia) {
+            if ($prodiPanitia == 1) {
                 $query->where("kuota_penguji_sempro_1_D3", ">", 0);
-            } else if($prodiPanitia == 2){
+            } else if ($prodiPanitia == 2) {
                 $query->where("kuota_penguji_sempro_1_D4", ">", 0);
             }
         })->get();
 
-        $listDosenPenguji2 = Dosen::whereHas('kuotaDosen', function($query) use ($prodiPanitia){
-            if($prodiPanitia == 1){
+        $listDosenPenguji2 = Dosen::whereHas('kuotaDosen', function ($query) use ($prodiPanitia) {
+            if ($prodiPanitia == 1) {
                 $query->where("kuota_penguji_sempro_2_D3", ">", 0);
-            } else if($prodiPanitia == 2){
+            } else if ($prodiPanitia == 2) {
                 $query->where("kuota_penguji_sempro_2_D4", ">", 0);
             }
         })->get();
@@ -348,7 +348,7 @@ class JadwalSemproController extends Controller
         $listWaktuSelesai = $request->waktu_selesai;
         $listDosenPenguji1Id = $request->dosen_penguji_1_id;
         $listDosenPenguji2Id = $request->dosen_penguji_2_id;
-        
+
         $prodiPanitia = Panitia::firstWhere('dosen_id', auth("dosen")->id())->prodi_id;
         $rowCount = count($listProposalId);
 
@@ -357,15 +357,15 @@ class JadwalSemproController extends Controller
         $tahapId = $proposal->tahap_id;
 
         // Menghapus Jadwal Sempro Lama jika ada
-        $jadwalSemhasLama = JadwalSeminarProposal::whereHas('proposal', function($query) use ($periodeId, $tahapId, $prodiPanitia) {
+        $jadwalSemhasLama = JadwalSeminarProposal::whereHas('proposal', function ($query) use ($periodeId, $tahapId, $prodiPanitia) {
             $query->where('periode_id', $periodeId)
                 ->where('tahap_id', $tahapId)
                 ->where('prodi_id', $prodiPanitia);
         })->delete();
-        
-        for($i = 0; $i < $rowCount; $i++){
+
+        for ($i = 0; $i < $rowCount; $i++) {
             JadwalSeminarProposal::create([
-                'proposal_id'  => $listProposalId[$i],
+                'proposal_id' => $listProposalId[$i],
                 'ruang' => $listRuang[$i],
                 'tanggal' => $listTanggal[$i],
                 'sesi' => $listSesi[$i],
@@ -377,15 +377,15 @@ class JadwalSemproController extends Controller
             $proposal->penguji_sempro_1_id = $listDosenPenguji1Id[$i];
             $proposal->penguji_sempro_2_id = $listDosenPenguji2Id[$i];
             $proposal->save();
- 
+
             // 
             // Mengurangi kuota dosen penguji sempro 1
             // 
             $kuotaDosenPenguji1 = KuotaDosen::firstWhere("dosen_id", $listDosenPenguji1Id[$i]);
 
-            if($prodiPanitia == 1)
+            if ($prodiPanitia == 1)
                 $kuotaDosenPenguji1->kuota_penguji_sempro_1_D3--;
-            else if($prodiPanitia == 2)
+            else if ($prodiPanitia == 2)
                 $kuotaDosenPenguji1->kuota_penguji_sempro_1_D4--;
 
             $kuotaDosenPenguji1->save();
@@ -395,9 +395,9 @@ class JadwalSemproController extends Controller
             // 
             $kuotaDosenPenguji2 = KuotaDosen::firstWhere("dosen_id", $listDosenPenguji2Id[$i]);
 
-            if($prodiPanitia == 1)
+            if ($prodiPanitia == 1)
                 $kuotaDosenPenguji2->kuota_penguji_sempro_2_D3--;
-            else if($prodiPanitia == 2)
+            else if ($prodiPanitia == 2)
                 $kuotaDosenPenguji2->kuota_penguji_sempro_2_D4--;
 
             $kuotaDosenPenguji2->save();
@@ -406,5 +406,58 @@ class JadwalSemproController extends Controller
         return redirect()
             ->route('jadwal-sempro.index')
             ->with('success', 'Jadwal Seminar Proposal berhasil dibuat!');
+    }
+
+    public function edit(Periode $periode, Tahap $tahap): View
+    {
+        $idDosen = auth('dosen')->id();
+        $prodiIdPanitia = Panitia::firstWhere('dosen_id', $idDosen)->prodi_id;
+
+        $jadwalSempro = JadwalSeminarProposal::whereHas('proposal', function ($q) use ($tahap, $periode, $prodiIdPanitia) {
+            $q->where('tahap_id', $tahap->id)
+                ->where('periode_id', $periode->id)
+                ->where('prodi_id', $prodiIdPanitia);
+        })
+            ->with(['proposal.proposalMahasiswas.mahasiswa', 'proposal.dosenPembimbing1', 'proposal.dosenPengujiSempro1', 'proposal.dosenPengujiSempro2'])
+            ->orderBy('tanggal', 'asc')
+            ->orderBy('waktu_mulai', 'asc')
+            ->orderBy('ruang', 'asc')
+            ->get();
+
+        $listDosenPenguji1 = Dosen::whereHas('kuotaDosen', function ($query) use ($prodiIdPanitia) {
+            if ($prodiIdPanitia == 1) {
+                $query->where("kuota_penguji_sempro_1_D3", ">", 0);
+            } else if ($prodiIdPanitia == 2) {
+                $query->where("kuota_penguji_sempro_1_D4", ">", 0);
+            }
+        })->get();
+
+        $listDosenPenguji2 = Dosen::whereHas('kuotaDosen', function ($query) use ($prodiIdPanitia) {
+            if ($prodiIdPanitia == 1) {
+                $query->where("kuota_penguji_sempro_2_D3", ">", 0);
+            } else if ($prodiIdPanitia == 2) {
+                $query->where("kuota_penguji_sempro_2_D4", ">", 0);
+            }
+        })->get();
+
+        $listSesi = $jadwalSempro
+            ->pluck('sesi')
+            ->unique()
+            ->sort()
+            ->values()
+            ->all();
+
+        return view(
+            'panitia.seminar-proposal.jadwal.edit',
+            compact([
+                'periode',
+                'tahap',
+                'prodiIdPanitia',
+                'jadwalSempro',
+                'listDosenPenguji1',
+                'listDosenPenguji2',
+                'listSesi'
+            ])
+        );
     }
 }

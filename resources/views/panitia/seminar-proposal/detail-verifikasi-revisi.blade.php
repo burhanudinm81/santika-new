@@ -23,10 +23,7 @@
             <div class="col-md-15">
                 <div class="card card-primary card-outline mb-4">
                     <!--begin::Form-->
-                    <form action="{{ route('panitia.seminar-proposal.update-verifikasi-revisi') }}" method="POST">
-                        @csrf
-                        @method('PUT')
-
+                    <form>
                         {{-- input hidden --}}
                         {{-- <input type="hidden" name="penguji_1_id" value="{{ $mainProposalInfo->dosenPengujiSempro1->id }}">
                         <input type="hidden" name="penguji_2_id" value="{{ $mainProposalInfo->dosenPengujiSempro2->id }}">
@@ -70,24 +67,66 @@
                                 </div>
                             </div>
                             <div class="form-group">
-                                <label for="exampleInputFile">Status Revisi</label>
-                                <div class="input-group">
-                                    {{-- input dropdown select --}}
-                                    <select class="custom-select" id="status_revisi" name="status_revisi"
-                                        aria-label="Example select with button addon">
-                                        <option value="pending" @if ($revisi1->status == 'pending') selected @endif>Pending
-                                        </option>
-                                        <option value="diterima" @if ($revisi1->status == 'diterima') selected @endif>Diterima
-                                        </option>
-                                    </select>
-                                </div>
+                                <label for="exampleInputFile">Status Revisi Penguji 1</label>
+                                <input 
+                                    type="text" 
+                                    id="status-revisi-penguji-1" 
+                                    @if ($revisi1->status == "pending")
+                                        class="form-control bg-warning"
+                                        value="Pending"
+                                    @elseif ($revisi1->status == "ditolak")
+                                        class="form-control bg-danger"
+                                        value="Ditolak"
+                                    @elseif ($revisi1->status == "diterima")
+                                        class="form-control bg-success"
+                                        value="Diterima"
+                                    @else
+                                        class="form-control"
+                                        value="-"
+                                    @endif 
+                                    readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputFile">Status Revisi Penguji 2</label>
+                                <input 
+                                    type="text" 
+                                    id="status-revisi-penguji-2" 
+                                    @if ($revisi2->status == "pending")
+                                        class="form-control bg-warning"
+                                        value="Pending"
+                                    @elseif ($revisi2->status == "ditolak")
+                                        class="form-control bg-danger"
+                                        value="Ditolak"
+                                    @elseif ($revisi2->status == "diterima")
+                                        class="form-control bg-success"
+                                        value="Diterima"
+                                    @else
+                                        class="form-control"
+                                        value="-"
+                                    @endif
+                                    readonly>
+                            </div>
+                            <div class="form-group">
+                                <label for="exampleInputFile">Status Revisi Keseluruhan</label>
+                                <input 
+                                    type="text" 
+                                    id="status-revisi-keseluruhan" 
+                                    @if (in_array('pending', [$revisi1->status, $revisi2->status]))
+                                        class="form-control bg-warning"
+                                        value="Pending"
+                                    @elseif (in_array('ditolak', [$revisi1->status, $revisi2->status]))
+                                        class="form-control bg-danger"
+                                        value="Ditolak"
+                                    @elseif (in_array('diterima', [$revisi1->status, $revisi2->status]))
+                                        class="form-control bg-success"
+                                        value="Diterima"
+                                    @else
+                                        class="form-control"
+                                    @endif
+                                    readonly>
                             </div>
                         </div>
                         <!--end::Body-->
-                        <!--begin::Footer-->
-                        <div class="card-footer">
-                            <button type="submit" class="btn btn-primary">Simpan</button>
-                        </div>
                         <!--end::Footer-->
                     </form>
                     <!--end::Form-->

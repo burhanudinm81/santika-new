@@ -7,6 +7,7 @@ use App\Http\Requests\UpdatePenilaianRequest;
 use App\Models\Proposal;
 use App\Models\Revisi;
 use App\Models\StatusProposal;
+use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
 
 class PenilaianSemproController extends Controller
@@ -97,5 +98,39 @@ class PenilaianSemproController extends Controller
         }
 
         return redirect()->back()->with('success', 'Penilaian berhasil disimpan.');
+    }
+
+    public function updateVerifikasiRevisi(Request $request)
+    {
+        $request->validate(
+            [
+                'proposal_id' => 'required|exists:proposal,id',
+                'status_revisi' => 'required|in:diterima,ditolak',
+            ],
+            [
+                'proposal_id.required' => 'Proposal ID wajib diisi.',
+                'proposal_id.exists' => 'Proposal ID tidak ditemukan.',
+                'status_revisi.required' => 'Status revisi wajib diisi.',
+                'status_revisi.in' => 'Status revisi tidak valid. Pilih antara diterima atau ditolak.',
+            ]
+        );
+
+        $proposalId = $request->input('proposal_id');
+
+        try {
+            $revisi = Revisi::where('proposal_id', $proposalId)
+            ->where('dosen_id', auth('dosen')->user()->id)
+            ->where('jenis_revisi', 'sempro')
+            ->update([
+                'status' => $request->input('status_revisi')
+            ]);
+        } catch (\Throwable $th) {
+            return redirect()->back()->withErrors(['error_update_verifikasi' => "Gagal Melakukan Verifikasi Revisi Sempro"]);
+        }
+
+        if(!$revisi)
+            return redirect()->back()->withErrors(['error_update_verifikasi' => "Gagal Melakukan Verifikasi Revisi Sempro"]);
+
+        return redirect()->back()->with('success', 'Status Revisi Berhasil Diupdate');
     }
 }

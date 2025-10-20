@@ -22,7 +22,7 @@
 
             <div class="col-md-15">
                 <div class="card card-primary card-outline mb-4">
-                    @if (is_null($mainProposalInfo))
+                    @if (is_null($mainProposalInfo) || $isPengujiNotAssigned)
                         <div class="card-body">
                             <p>Anda Belum Pernah Mengikuti Seminar Proposal</p>
                         </div>
@@ -75,7 +75,7 @@
                                                 </label>
                                             </div>
                                         </div>
-                                        @if (!is_null($revisiPenguji1))
+                                        @if (!is_null($revisiPenguji1->file_lembar_revisi_dosen))
                                             <iframe src="{{ $revisiPenguji1->getPathLembarRevisiSemproForMhs() }}" frameborder="2"
                                                 width="100%" height="700px" scrolling="yes"></iframe>
                                         @endif
@@ -95,7 +95,7 @@
                                                 </label>
                                             </div>
                                         </div>
-                                        @if (!is_null($revisiPenguji2))
+                                        @if (!is_null($revisiPenguji2->file_lembar_revisi_dosen))
                                             <iframe src="{{ $revisiPenguji2->getPathLembarRevisiSemproForMhs() }}" frameborder="2"
                                                 width="100%" height="700px" scrolling="yes"></iframe>
                                         @endif
@@ -115,7 +115,7 @@
                                                 </label>
                                             </div>
                                         </div>
-                                        @if (!is_null($revisiPenguji1))
+                                        @if (!is_null($revisiPenguji1->file_proposal_revisi))
                                             <iframe src="{{ $revisiPenguji1->getPathRevisiProposalSemproForMhs() }}" frameborder="2"
                                                 width="100%" height="700px" scrolling="yes"></iframe>
                                         @endif

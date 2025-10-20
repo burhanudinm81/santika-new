@@ -74,10 +74,7 @@
                                                 </td>
                                                 <td>
                                                     <a href="{{ route('dosen.permohonan-judul-detail', $permohonan->first()->proposal_id) }}"
-                                                        class="
-                                                            btn btn-primary
-                                                            @if ($kuotaPembimbing->kuota_pembimbing_1_D3 <= 0) disabled @endif
-                                                        ">Buka</a>
+                                                        class="btn btn-primary">Buka</a>
                                                 </td>
                                             </tr>
                                         @endforeach
@@ -126,8 +123,8 @@
                                                 {{-- <td>{{ $proposalId }}</td> --}}
                                                 <td>{{ $permohonan->mahasiswa->nama }}</td>
                                                 <td style="width: 350px">{{ $permohonan->proposal->judul }}</td>
-                                                <td>{{ $permohonan->proposal->jenisJudul->jenis }}</td>
-                                                <td>
+                                                <td class="text-center">{{ $permohonan->proposal->jenisJudul->jenis }}</td>
+                                                <td class="text-center">
                                                     <span
                                                         class="badge
                                                         @if ($permohonan->status_proposal_mahasiswa_id == 1) badge-success
@@ -138,12 +135,9 @@
                                                         {{ $permohonan->statusProposalMahasiswa->status }}
                                                     </span>
                                                 </td>
-                                                <td>
+                                                <td class="text-center">
                                                     <a href="{{ route('dosen.permohonan-judul-detail', $permohonan->proposal_id) }}"
-                                                        class="
-                                                            btn btn-primary
-                                                            @if ($kuotaPembimbing->kuota_pembimbing_1_D4 <= 0) disabled @endif
-                                                        ">Buka</a>
+                                                        class="btn btn-primary">Buka</a>
                                                 </td>
                                             </tr>
                                         @endforeach

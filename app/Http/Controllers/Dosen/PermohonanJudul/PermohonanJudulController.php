@@ -33,9 +33,6 @@ class PermohonanJudulController extends Controller
 
         // dd($groupedPermohonanD3);
 
-        // ambil kuota pembimbing dari dosen
-        $kuotaPembimbing = KuotaDosen::where('dosen_id', auth('dosen')->user()->id)->first();
-
         return view('dosen.permohonan-judul', compact(['groupedPermohonanD3', 'listPermohonanD4', 'kuotaPembimbing']));
     }
 
@@ -46,7 +43,28 @@ class PermohonanJudulController extends Controller
             ->where('proposal_id', $proposalId)
             ->get();
 
-        return view('dosen.detail-permohonan-judul', compact('permohonanProposalMahasiswa'));
+        $prodiMahasiswa = $permohonanProposalMahasiswa->first()->mahasiswa->prodi_id;
+
+        if ($prodiMahasiswa == 1) {
+            // Jika Prodi D3 ambil kuota pembimbing 1 D3
+            $kuotaPembimbing1 = KuotaDosen::select(['id', 'dosen_id', 'kuota_pembimbing_1_D3'])
+                ->where('dosen_id', auth('dosen')->user()->id)
+                ->first()
+                ->kuota_pembimbing_1_D3;
+        } elseif($prodiMahasiswa == 2){
+            // Jika Prodi D4 ambil kuota pembimbing 1 D4
+            $kuotaPembimbing1 = KuotaDosen::select(['id', 'dosen_id', 'kuota_pembimbing_1_D4'])
+                ->where('dosen_id', auth('dosen')->user()->id)
+                ->first()
+                ->kuota_pembimbing_1_D4;
+        } else{
+            return redirect()->back()->withErrors(['prodi' => 'Prodi yang anda masukkan tidak valid']);
+        }
+
+        return view(
+            'dosen.detail-permohonan-judul', 
+            compact('permohonanProposalMahasiswa', 'kuotaPembimbing1')
+        );
     }
 
     public function updatePermohonan(Request $request)
