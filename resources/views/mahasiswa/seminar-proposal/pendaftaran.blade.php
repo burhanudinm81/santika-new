@@ -31,11 +31,23 @@
             @endif
             <div class="col-md-15">
 
-                @if ($isPendingProposal)
-                    <div class="alert alert-warning" role="alert">
-                        <h4 class="alert-heading"><strong>Maaf, anda belum bisa mendaftar Seminar Proposal</strong></h4>
-                        <p>Anda memiliki proposal yang masih belum dikonfirmasi dosen YBS</p>
-                    </div>
+                @if (in_array($statusPengajuanJudul, [0, 2, 3]))
+                    @if ($statusPengajuanJudul == 0)
+                        <div class="alert alert-warning" role="alert">
+                            <h4 class="alert-heading"><strong>Maaf, anda belum bisa mendaftar Seminar Proposal</strong></h4>
+                            <p>Anda tidak mempunyai Proposal yang telah disetujui Dosen</p>
+                        </div>
+                    @elseif($statusPengajuanJudul == 2)
+                        <div class="alert alert-warning" role="alert">
+                            <h4 class="alert-heading"><strong>Maaf, anda belum bisa mendaftar Seminar Proposal</strong></h4>
+                            <p>Proposal anda sebelumnya ditolak oleh Dosen. Silahkan mengajukan Proposal Kembali</p>
+                        </div>
+                    @elseif($statusPengajuanJudul == 3)
+                        <div class="alert alert-warning" role="alert">
+                            <h4 class="alert-heading"><strong>Maaf, anda belum bisa mendaftar Seminar Proposal</strong></h4>
+                            <p>Anda memiliki proposal yang masih belum dikonfirmasi dosen YBS</p>
+                        </div>
+                    @endif
                 @elseif($isPendingPendaftaran != 0)
                     <div class="alert
                                             @if ($isPendingPendaftaran == 1) alert-success
@@ -73,7 +85,7 @@
                             @csrf
                             @method('POST')
                             {{-- Hidden Input --}}
-                            <input type="hidden" name="proposal_id" value="{{ $acceptedProposalMahasiswa1->proposal->id }}" />
+                            <input type="hidden" name="proposal_id" value="{{ $proposalMahasiswa1->proposal->id }}" />
                             <input type="hidden" name="status_pendaftaran_seminar_proposal_id" value="3" />
                             {{-- End Hidden Input --}}
 
@@ -82,40 +94,40 @@
                                 <div class="mb-3">
                                     <label for="exampleDataList" class="form-label">Dosen Pembimbing 1</label>
                                     <input class="form-control" id="exampleDataList" name="dosen_pembimbing_1"
-                                        value="{{ $acceptedProposalMahasiswa1->dosen->nama }}" readonly>
+                                        value="{{ $proposalMahasiswa1->dosen->nama }}" readonly>
                                 </div>
-                                @if ($acceptedProposalMahasiswa2 != null)
+                                @if ($proposalMahasiswa2 != null)
                                     <div class="mb-3">
                                         <label for="NamaMahasiswa" class="form-label">Nama Mahasiswa 1</label>
                                         <input type="text" class="form-control" id="NamaMahasiswa" name="mahasiswa_1"
                                             aria-describedby="NamaMahasiswa"
-                                            value="{{ $acceptedProposalMahasiswa1->mahasiswa->nama }}" readonly />
+                                            value="{{ $proposalMahasiswa1->mahasiswa->nama }}" readonly />
                                     </div>
                                     <div class="mb-3">
                                         <label for="NamaMahasiswa" class="form-label">Nama Mahasiswa 2</label>
                                         <input type="text" class="form-control" id="NamaMahasiswa" name="mahasiswa_2"
                                             aria-describedby="NamaMahasiswa"
-                                            value="{{ $acceptedProposalMahasiswa2->mahasiswa->nama }}" readonly />
+                                            value="{{ $proposalMahasiswa2->mahasiswa->nama }}" readonly />
                                     </div>
                                 @else
                                     <div class="mb-3">
                                         <label for="NamaMahasiswa" class="form-label">Nama Mahasiswa</label>
                                         <input type="text" class="form-control" id="NamaMahasiswa" name="mahasiswa_1"
                                             aria-describedby="NamaMahasiswa"
-                                            value="{{ $acceptedProposalMahasiswa1->mahasiswa->nama }}" readonly />
+                                            value="{{ $proposalMahasiswa1->mahasiswa->nama }}" readonly />
                                     </div>
                                 @endif
                                 <div class="mb-3">
                                     <label for="JudulProposal" class="form-label">Judul Proposal</label>
                                     <input type="text" class="form-control" id="JudulProposal" aria-describedby="JudulProposal"
-                                        name="judul_proposal" value="{{ $acceptedProposalMahasiswa1->proposal->judul }}"
+                                        name="judul_proposal" value="{{ $proposalMahasiswa1->proposal->judul }}"
                                         readonly />
                                     <input type="hidden" name="id_pengajuan_judul" value="" readonly>
                                 </div>
                                 <div class="mb-3">
                                     <label for="exampleDataList" class="form-label">Bidang Keahlihan</label>
                                     <input type="text" class="form-control" id="exampleDataList" name="bidang"
-                                        value="{{ $acceptedProposalMahasiswa1->proposal->bidangMinat->bidang_minat }}" readonly>
+                                        value="{{ $proposalMahasiswa1->proposal->bidangMinat->bidang_minat }}" readonly>
                                 </div>
                                 <div class="form-group">
                                     <label for="exampleInputFile">File Proposal .pdf</label>
@@ -137,7 +149,7 @@
                                         </div>
                                     </div>
                                 </div>
-                                @if ($acceptedProposalMahasiswa1->jenis_judul_id == 2)
+                                @if ($proposalMahasiswa1->jenis_judul_id == 2)
                                     <div class="form-group">
                                         <label for="exampleInputFile">Lembar Kerjasama Mitra .pdf</label>
                                         <div class="input-group">

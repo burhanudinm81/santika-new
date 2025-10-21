@@ -189,7 +189,7 @@ class PenilaianSemhasController extends Controller
             ]);
         }
 
-        if ($prodiId == 1) {
+        if ($prodiId == 1 && $mahasiswa2Id != null) {
             $nilaiAkhirMahasiswa2 = NilaiAkhirMahasiswa::where('proposal_id', $proposalId)->where('mahasiswa_id', $mahasiswa2Id)->first();
             if ($nilaiAkhirMahasiswa2 == null) {
                 $nilaiAkhirMahasiswa2 = NilaiAkhirMahasiswa::create([
@@ -209,7 +209,7 @@ class PenilaianSemhasController extends Controller
                 'avg_nilai_dospem1' => $nilaiRataRata1 ?? $nilaiAkhirMahasiswa1->avg_nilai_dospem1,
             ]);
 
-            if ($prodiId == 1) {
+            if ($prodiId == 1 && $mahasiswa2Id != null) {
                 $nilaiAkhirMahasiswa2->update([
                     'nilai_sikap_pemb1' => $nilaiSikap2 ?? $nilaiAkhirMahasiswa2->nilai_sikap_pemb1,
                     'nilai_kemampuan_pemb1' => $nilaiKemampuan2 ?? $nilaiAkhirMahasiswa2->nilai_kemampuan_pemb1,
@@ -227,7 +227,7 @@ class PenilaianSemhasController extends Controller
                 'avg_nilai_dospem2' => $nilaiRataRata1 ?? $nilaiAkhirMahasiswa1->avg_nilai_dospem2,
             ]);
 
-            if ($prodiId == 1) {
+            if ($prodiId == 1 && $mahasiswa2Id != null) {
                 $nilaiAkhirMahasiswa2->update([
                     'nilai_sikap_pemb2' => $nilaiSikap2 ?? $nilaiAkhirMahasiswa2->nilai_sikap_pemb2,
                     'nilai_kemampuan_pemb2' => $nilaiKemampuan2 ?? $nilaiAkhirMahasiswa2->nilai_kemampuan_pemb2,
@@ -241,15 +241,15 @@ class PenilaianSemhasController extends Controller
                 'nilai_penguasaan_materi1' => $nilaiPenguasaanMateri1 ?? $nilaiAkhirMahasiswa1->nilai_penguasaan_materi1,
                 'nilai_presentasi1' => $nilaiPresentasi1 ?? $nilaiAkhirMahasiswa1->nilai_presentasi1,
                 'nilai_karya_tulis1' => $nilaiKaryaTulis1 ?? $nilaiAkhirMahasiswa1->nilai_karya_tulis1,
-                'avg_nilai_penguji1'=> $nilaiRataRataPengujiMhs1 ?? $nilaiAkhirMahasiswa1->avg_nilai_penguji1
+                'avg_nilai_penguji1' => $nilaiRataRataPengujiMhs1 ?? $nilaiAkhirMahasiswa1->avg_nilai_penguji1
             ]);
 
-            if ($prodiId == 1) {
+            if ($prodiId == 1 && $mahasiswa2Id != null) {
                 $nilaiAkhirMahasiswa2->update([
                     'nilai_penguasaan_materi1' => $nilaiPenguasaanMateri2 ?? $nilaiAkhirMahasiswa2->nilai_penguasaan_materi1,
                     'nilai_presentasi1' => $nilaiPresentasi2 ?? $nilaiAkhirMahasiswa2->nilai_presentasi1,
                     'nilai_karya_tulis1' => $nilaiKaryaTulis2 ?? $nilaiAkhirMahasiswa2->nilai_karya_tulis1,
-                    'avg_nilai_penguji1'=> $nilaiRataRataPengujiMhs2 ?? $nilaiAkhirMahasiswa2->avg_nilai_penguji1
+                    'avg_nilai_penguji1' => $nilaiRataRataPengujiMhs2 ?? $nilaiAkhirMahasiswa2->avg_nilai_penguji1
                 ]);
             }
         } else if ($roleDosen == 'Dosen Penguji Sidang TA 2') {
@@ -257,15 +257,15 @@ class PenilaianSemhasController extends Controller
                 'nilai_penguasaan_materi2' => $nilaiPenguasaanMateri1 ?? $nilaiAkhirMahasiswa1->nilaiPenguasaanMateri2,
                 'nilai_presentasi2' => $nilaiPresentasi1 ?? $nilaiAkhirMahasiswa1->nilaiPresentasi2,
                 'nilai_karya_tulis2' => $nilaiKaryaTulis1 ?? $nilaiAkhirMahasiswa1->nilaiKaryaTulis2,
-                'avg_nilai_penguji2'=> $nilaiRataRataPengujiMhs1 ?? $nilaiAkhirMahasiswa1->avg_nilai_penguji2
+                'avg_nilai_penguji2' => $nilaiRataRataPengujiMhs1 ?? $nilaiAkhirMahasiswa1->avg_nilai_penguji2
             ]);
 
-            if ($prodiId == 1) {
+            if ($prodiId == 1 && $mahasiswa2Id != null) {
                 $nilaiAkhirMahasiswa2->update([
                     'nilai_penguasaan_materi2' => $nilaiPenguasaanMateri2 ?? $nilaiAkhirMahasiswa2->nilaiPenguasaanMateri2,
                     'nilai_presentasi2' => $nilaiPresentasi2 ?? $nilaiAkhirMahasiswa2->nilaiPresentasi2,
                     'nilai_karya_tulis2' => $nilaiKaryaTulis2 ?? $nilaiAkhirMahasiswa2->nilaiKaryaTulis2,
-                    'avg_nilai_penguji2'=> $nilaiRataRataPengujiMhs2     ?? $nilaiAkhirMahasiswa2->avg_nilai_penguji2
+                    'avg_nilai_penguji2' => $nilaiRataRataPengujiMhs2     ?? $nilaiAkhirMahasiswa2->avg_nilai_penguji2
                 ]);
             }
         }
@@ -276,7 +276,7 @@ class PenilaianSemhasController extends Controller
                 'avg_nilai_totalDospem' => ($nilaiAkhirMahasiswa1->avg_nilai_dospem1 + $nilaiAkhirMahasiswa1->avg_nilai_dospem2) / 2,
             ]);
         }
-        if ($prodiId == 1) {
+        if ($prodiId == 1 && $mahasiswa2Id != null) {
             if ($nilaiAkhirMahasiswa2->avg_nilai_dospem1 != null && $nilaiAkhirMahasiswa2->avg_nilai_dospem2 != null) {
                 $nilaiAkhirMahasiswa2->update([
                     'avg_nilai_totalDospem' => ($nilaiAkhirMahasiswa2->avg_nilai_dospem1 + $nilaiAkhirMahasiswa2->avg_nilai_dospem2) / 2,
@@ -290,7 +290,7 @@ class PenilaianSemhasController extends Controller
                 'avg_nilai_totalPenguji' => ($nilaiAkhirMahasiswa1->avg_nilai_penguji1 + $nilaiAkhirMahasiswa1->avg_nilai_penguji2) / 2,
             ]);
         }
-        if ($prodiId == 1) {
+        if ($prodiId == 1 && $mahasiswa2Id != null) {
             if ($nilaiAkhirMahasiswa2->avg_nilai_penguji1 != null && $nilaiAkhirMahasiswa2->avg_nilai_penguji2 != null) {
                 $nilaiAkhirMahasiswa2->update([
                     'avg_nilai_totalPenguji' => ($nilaiAkhirMahasiswa2->avg_nilai_penguji1 + $nilaiAkhirMahasiswa2->avg_nilai_penguji2) / 2,

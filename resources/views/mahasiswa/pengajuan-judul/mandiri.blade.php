@@ -207,7 +207,7 @@
                             {{-- Input Judul Proposal --}}
                             <div class="mb-3">
                                 <label for="judul" class="form-label">Judul Proposal</label>
-                                <input type="text" class="form-control" id="judul" name="judul"
+                                <input type="text" class="form-control" id="judul" name="judul" minlength="30" maxlength="255"
                                     @if ($isHavePendingPengajuan) disabled @endif aria-describedby="JudulProposal"
                                     required />
                             </div>
@@ -215,14 +215,14 @@
                             {{-- Input Tujuan Proposal --}}
                             <div class="mb-3">
                                 <label for="tujuan" class="form-label">Tujuan Proposal</label>
-                                <textarea class="form-control" id="tujuan" name="tujuan" rows="3"
+                                <textarea class="form-control" id="tujuan" name="tujuan" rows="4" minlength="150" maxlength="1000"
                                     @if ($isHavePendingPengajuan) disabled @endif></textarea>
                             </div>
 
                             {{-- Input Latar Belakang --}}
                             <div class="mb-3">
                                 <label for="latar-belakang" class="form-label">Latar Belakang</label>
-                                <textarea class="form-control" id="latar-belakang" name="latar_belakang"
+                                <textarea class="form-control" id="latar-belakang" name="latar_belakang" rows="8" minlength="500"
                                     @if ($isHavePendingPengajuan) disabled @endif></textarea>
                             </div>
 

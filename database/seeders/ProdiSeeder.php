@@ -14,10 +14,12 @@ class ProdiSeeder extends Seeder
     public function run(): void
     {
         Prodi::create([
+            'id' => 1,
             "prodi" => "D3 Teknik Telekomunikasi"
         ]);
 
         Prodi::create([
+            'id' => 2,
             "prodi" => "D4 Jaringan Telekomunikasi Digital"
         ]);
     }

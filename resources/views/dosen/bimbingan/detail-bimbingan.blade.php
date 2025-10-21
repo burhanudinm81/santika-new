@@ -30,7 +30,7 @@
                                 <p class="text-muted">{{ $mahasiswaInfo[0]->mahasiswa->nama }}</p>
 
                                 <strong></i>Nama Mahasiswa 2</strong>
-                                <p class="text-muted">{{ $mahasiswaInfo[1]->mahasiswa->nama }}</p>
+                                <p class="text-muted">{{ $mahasiswaInfo[1]->mahasiswa->nama ?? '-' }}</p>
                             @elseif($mahasiswa->prodi_id == 2)
                                 <strong></i>Nama Mahasiswa </strong>
                                 <p class="text-muted">{{ $mahasiswa->nama }}</p>

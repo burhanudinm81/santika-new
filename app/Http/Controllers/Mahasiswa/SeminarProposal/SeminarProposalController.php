@@ -21,22 +21,37 @@ class SeminarProposalController extends Controller
     public function showPendaftaranPage()
     {
         $isPendaftaranClose = false;
-        $isPendingProposal = false;
+
+        /*
+        statusPengajuanJudul = 0 -> Belum Pernah Mengajukan Judul Proposal
+        statusPengajuanJudul = 1 -> Pengajuan Judul Proposal yang terbaru Diterima
+        statusPengajuanJudul = 2 -> Pengajuan Judul Proposal yang terbaru Ditolak
+        statusPengajuanJudul = 3 -> Pengajuan Judul Proposal yang terbaru Belum Dicek
+        */
+        $statusPengajuanJudul = 0;
+
+        /*
+        isPendingPendaftaran = 0 -> Belum Pernah Mendaftar Seminar Proposal
+        isPendingPendaftaran = 1 -> Pendaftaran Seminar Proposal yang terbaru Diterima
+        isPendingPendaftaran = 2 -> Pendaftaran Seminar Proposal yang terbaru Ditolak
+        isPendingPendaftaran = 3 -> Pendaftaran Seminar Proposal yang terbaru Belum Dicek
+        */
         $isPendingPendaftaran = 0;
-        $acceptedProposalMahasiswa2 = null;
-        $acceptedProposalMahasiswa1 = ProposalDosenMahasiswa::with('mahasiswa', 'dosen', 'proposal')
+
+        $proposalMahasiswa2 = null;
+        $proposalMahasiswa1 = ProposalDosenMahasiswa::with('mahasiswa', 'dosen', 'proposal')
             ->where('mahasiswa_id', auth('mahasiswa')->user()->id)
-            ->where('status_proposal_mahasiswa_id', 1)
+            ->latest()
             ->first();
 
-
-        if (!$acceptedProposalMahasiswa1) {
-            $isPendingProposal = true;
+        if ($proposalMahasiswa1) {
+            $statusPengajuanJudul = $proposalMahasiswa1->status_proposal_mahasiswa_id;
         }
 
-        if ($acceptedProposalMahasiswa1) {
-            $pendingPendaftaran = PendaftaranSeminarProposal::where('proposal_id', $acceptedProposalMahasiswa1->proposal_id)
+        if ($statusPengajuanJudul == 1) {
+            $pendingPendaftaran = PendaftaranSeminarProposal::where('proposal_id', $proposalMahasiswa1->proposal_id)
                 ->whereIn('status_daftar_sempro_id', [1, 3])
+                ->latest()
                 ->first();
 
             if ($pendingPendaftaran) {
@@ -44,10 +59,10 @@ class SeminarProposalController extends Controller
             }
         }
 
-        if ($acceptedProposalMahasiswa1 != null && $acceptedProposalMahasiswa1->mahasiswa->prodi_id == 1) {
+        if ($proposalMahasiswa1 != null && $proposalMahasiswa1->mahasiswa->prodi_id == 1) {
 
-            $acceptedProposalMahasiswa2 = ProposalDosenMahasiswa::with('mahasiswa', 'dosen')
-                ->where('proposal_id', $acceptedProposalMahasiswa1->proposal_id)
+            $proposalMahasiswa2 = ProposalDosenMahasiswa::with('mahasiswa', 'dosen')
+                ->where('proposal_id', $proposalMahasiswa1->proposal_id)
                 ->where('mahasiswa_id', '!=', auth('mahasiswa')->user()->id)
                 ->first();
         }
@@ -56,7 +71,18 @@ class SeminarProposalController extends Controller
         $tahapAktif = Tahap::where('aktif_sempro', true)->exists();
         $isPendaftaranClose = !($periodeAktif && $tahapAktif);
 
-        return view('mahasiswa.seminar-proposal.pendaftaran', compact(['isPendaftaranClose', 'isPendingProposal', 'isPendingPendaftaran', 'acceptedProposalMahasiswa1', 'acceptedProposalMahasiswa2']));
+        return view(
+            'mahasiswa.seminar-proposal.pendaftaran',
+            compact(
+                [
+                    'isPendaftaranClose',
+                    'statusPengajuanJudul',
+                    'isPendingPendaftaran',
+                    'proposalMahasiswa1',
+                    'proposalMahasiswa2'
+                ]
+            )
+        );
     }
 
     public function storePendaftaran(StorePendaftaranSemproRequest $request)
@@ -161,6 +187,10 @@ class SeminarProposalController extends Controller
         $mainProposalInfo = null;
         $revisiDosen1 = null;
         $revisiDosen2 = null;
+        $statusKelulusanSempro = null;
+        $isPengujiNotAssigned = false;
+        $revisiSelesai = false;
+        $visible = false;
 
         $proposalInfo = ProposalDosenMahasiswa::with('proposal', 'mahasiswa')
             ->where('mahasiswa_id', auth('mahasiswa')->user()->id)
@@ -171,30 +201,55 @@ class SeminarProposalController extends Controller
             $mainProposalInfo = Proposal::with(['dosenPengujiSempro1', 'dosenPengujiSempro1', 'statusSemproPenguji1', 'statusSemproPenguji2'])
                 ->where('id', $proposalInfo->proposal_id)
                 ->first();
+
+            $tahapIdPeserta = $proposalInfo->proposal->tahap_id;
+            $periodeIdPeserta = $proposalInfo->proposal->periode_id;
+
+            $visible = VisibilitasNilai::where('tahap_id', $tahapIdPeserta)
+                ->where('periode_id', $periodeIdPeserta)
+                ->where('jenis_nilai_seminar', 1) // 1 = Seminar Proposal
+                ->first()
+                ->visibilitas ?? false;
         }
 
         if (!is_null($mainProposalInfo)) {
-            $revisiDosen1 = Revisi::where('proposal_id', $mainProposalInfo->id)
-                ->where('dosen_id', $mainProposalInfo->dosenPengujiSempro1->id)
-                ->first();
+            if (!is_null($mainProposalInfo->dosenPengujiSempro1) && !is_null($mainProposalInfo->dosenPengujiSempro2)) {
+                $revisiDosen1 = Revisi::where('proposal_id', $mainProposalInfo->id)
+                    ->where('dosen_id', $mainProposalInfo->dosenPengujiSempro1->id)
+                    ->first();
 
-            $revisiDosen2 = Revisi::where('proposal_id', $mainProposalInfo->id)
-                ->where('dosen_id', $mainProposalInfo->dosenPengujiSempro2->id)
-                ->first();
+                $revisiDosen2 = Revisi::where('proposal_id', $mainProposalInfo->id)
+                    ->where('dosen_id', $mainProposalInfo->dosenPengujiSempro2->id)
+                    ->first();
+
+                $revisiSelesai = $revisiDosen1->status == $revisiDosen2->status;
+
+                if (in_array(3, [$mainProposalInfo->status_sempro_penguji_1_id, $mainProposalInfo->status_sempro_penguji_2_id])) {
+                    $statusKelulusanSempro = 3;     // 3 = Tidak Lulus
+                } else if (in_array(2, [$mainProposalInfo->status_sempro_penguji_1_id, $mainProposalInfo->status_sempro_penguji_2_id])) {
+                    $statusKelulusanSempro = 2;     // 2 = Lulus dengan revisi
+                } else if (in_array(1, [$mainProposalInfo->status_sempro_penguji_1_id, $mainProposalInfo->status_sempro_penguji_2_id])) {
+                    $statusKelulusanSempro = 1;     // 1 = Lulus tanpa revisi
+                }
+            } else {
+                $isPengujiNotAssigned = true;
+            }
         }
 
-        $tahapIdPeserta = $proposalInfo->proposal->tahap_id;
-        $periodeIdPeserta = $proposalInfo->proposal->periode_id;
-
-        $visibilitasNilai = VisibilitasNilai::where('tahap_id', $tahapIdPeserta)
-            ->where('periode_id', $periodeIdPeserta)
-            ->where('jenis_nilai_seminar', 1) // 1 = Seminar Proposal
-            ->first()
-            ->visibilitas ?? false;
-
         return view(
-            'mahasiswa.seminar-proposal.hasil-sempro', 
-            compact(['proposalInfo', 'mainProposalInfo', 'revisiDosen1', 'revisiDosen2', 'visibilitasNilai'])
+            'mahasiswa.seminar-proposal.hasil-sempro',
+            compact(
+                [
+                    'proposalInfo',
+                    'mainProposalInfo',
+                    'revisiDosen1',
+                    'revisiDosen2',
+                    'visible',
+                    'statusKelulusanSempro',
+                    'isPengujiNotAssigned',
+                    'revisiSelesai'
+                ]
+            )
         );
     }
 
@@ -210,6 +265,7 @@ class SeminarProposalController extends Controller
         $statusRevisi = null;
         $statusKelulusanSempro = null;
         $visible = false;
+        $isPengujiNotAssigned = false;
 
         $proposalInfo = ProposalDosenMahasiswa::with('proposal', 'mahasiswa')
             ->where('mahasiswa_id', auth('mahasiswa')->user()->id)
@@ -228,7 +284,11 @@ class SeminarProposalController extends Controller
                 ->first();
         }
 
-        if (!is_null($mainProposalInfo)) {
+        if (
+            !is_null($mainProposalInfo) &&
+            !is_null($mainProposalInfo->dosenPengujiSempro1) &&
+            !is_null($mainProposalInfo->dosenPengujiSempro2)
+        ) {
             $revisiPenguji1 = Revisi::where('proposal_id', $mainProposalInfo->id)
                 ->where('dosen_id', $mainProposalInfo->dosenPengujiSempro1->id)
                 ->where('jenis_revisi', "sempro")
@@ -238,19 +298,21 @@ class SeminarProposalController extends Controller
                 ->where('jenis_revisi', "sempro")
                 ->first();
 
-            if(in_array(3, [$mainProposalInfo->status_sempro_penguji_1_id, $mainProposalInfo->status_sempro_penguji_2_id])) {
+            if (in_array(3, [$mainProposalInfo->status_sempro_penguji_1_id, $mainProposalInfo->status_sempro_penguji_2_id])) {
                 $statusKelulusanSempro = 3;     // 3 = Tidak Lulus
-            } else if(in_array(2, [$mainProposalInfo->status_sempro_penguji_1_id, $mainProposalInfo->status_sempro_penguji_2_id])) {
+            } else if (in_array(2, [$mainProposalInfo->status_sempro_penguji_1_id, $mainProposalInfo->status_sempro_penguji_2_id])) {
                 $statusKelulusanSempro = 2;     // 2 = Lulus dengan revisi
             } else {
                 $statusKelulusanSempro = 1;     // 1 = Lulus tanpa revisi
             }
 
             $visible = VisibilitasNilai::where('tahap_id', $mainProposalInfo->tahap_id)
-            ->where('periode_id', $mainProposalInfo->periode_id)
-            ->where('jenis_nilai_seminar', 1) // 1 = Seminar Proposal
-            ->first()
-            ->visibilitas ?? false;
+                ->where('periode_id', $mainProposalInfo->periode_id)
+                ->where('jenis_nilai_seminar', 1) // 1 = Seminar Proposal
+                ->first()
+                ->visibilitas ?? false;
+        } else {
+            $isPengujiNotAssigned = true;
         }
 
         if (!is_null($revisiPenguji1)) {
@@ -293,7 +355,8 @@ class SeminarProposalController extends Controller
                 'namaProposal',
                 'statusRevisi',
                 'statusKelulusanSempro',
-                'visible'
+                'visible',
+                'isPengujiNotAssigned'
             )
         );
     }
@@ -349,18 +412,14 @@ class SeminarProposalController extends Controller
 
     public function riwayat()
     {
-        $data = ProposalDosenMahasiswa::with('dosen', 'proposal')
-            ->where('mahasiswa_id', auth('mahasiswa')->user()->id)
-            ->where('status_proposal_mahasiswa_id', 1)
+        $data = PendaftaranSeminarProposal::with('proposal.dosenPembimbing1', 'statusDaftarSempro')
+            ->whereHas('proposal.proposalMahasiswas', function ($query) {
+                $query->where('mahasiswa_id', auth('mahasiswa')->user()->id)
+                    ->where('status_proposal_mahasiswa_id', 1);
+            })
             ->latest()
             ->get();
 
-        $statusPendaftaran = [
-            1 => 'Diterima',
-            2 => 'Ditolak',
-            3 => 'Belum Dicek',
-        ];
-
-        return view('mahasiswa.seminar-proposal.riwayat', compact('data', 'statusPendaftaran'));
+        return view('mahasiswa.seminar-proposal.riwayat', compact('data'));
     }
 }

@@ -8,16 +8,21 @@
                 <div class="col-md-12">
                     <h1 class="m-0">Detail Jadwal Seminar Proposal Prodi {{ $prodi->prodi }}</h1>
                     <h1>Periode {{ $periode->tahun }} Tahap {{ $tahap->tahap }}</h1>
-                </div><!-- /.col -->
-            </div><!-- /.row -->
-        </div><!-- /.container-fluid -->
+                </div>
+            </div>
+        </div>
     </div>
     <!-- /.content-header -->
 
     <!-- Main content -->
     <div class="content">
         <div class="container-fluid">
-            <div class="row">
+            <div class="row mb-2">
+                <a href="{{ route('jadwal-sempro.edit', ["periode" => $periode->id, "tahap" => $tahap->id]) }}" class="btn btn-success">
+                    Edit
+                </a>
+            </div>
+            <div class="row mb-2">
                 <div class="card-body table-responsive p-0">
                     <table id="tabel-proposal" class="table table-bordered table-head-fixed" style="table-layout: fixed;">
                         <thead>
@@ -62,9 +67,9 @@
                                         <td>{{ $index + 1 }}</td>
                                         <td>{{ $jadwal->ruang }}</td>
                                         @if (empty($printed[$key]))
-                                            <td rowspan="{{ $rowspanMap[$key] }}">{{ $jadwal->tanggal->isoFormat("dddd, DD-MM-YYYY") ?? "-" }}</td>
-                                            <td rowspan="{{ $rowspanMap[$key] }}">{{ $jadwal->sesi ?? "-" }}</td>
-                                            <td rowspan="{{ $rowspanMap[$key] }}">{{ $jadwal->waktu_mulai->isoFormat("HH:mm") ?? "-" . ' - ' . $jadwal->waktu_selesai->isoFormat("HH:mm") ?? "-" }}</td>
+                                            <td rowspan="{{ $rowspanMap[$key] }}" class="text-center">{{ $jadwal->tanggal->isoFormat("dddd, DD-MM-YYYY") ?? "-" }}</td>
+                                            <td rowspan="{{ $rowspanMap[$key] }}" class="text-center">{{ $jadwal->sesi ?? "-" }}</td>
+                                            <td rowspan="{{ $rowspanMap[$key] }}" class="text-center">{{ $jadwal->waktu_mulai->isoFormat("HH:mm") ?? "-" }} - {{$jadwal->waktu_selesai->isoFormat("HH:mm") ?? "-" }}</td>
                                             @php $printed[$key] = true; @endphp
                                         @endif
                                         <td>{{ $jadwal->proposal->judul }}</td>
@@ -86,9 +91,14 @@
                         </tbody>
                     </table>
                 </div>
-            </div><!-- /.container-fluid -->
+            </div>
+            <div class="row mb-2">
+                <a href="{{ route("jadwal-sempro.index") }}" class="btn btn-info">
+                    Kembali
+                </a>
+            </div>
+            
         </div>
-        <!-- /.content -->
     </div>
 
     

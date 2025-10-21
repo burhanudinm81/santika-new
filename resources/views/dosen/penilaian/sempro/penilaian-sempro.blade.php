@@ -48,80 +48,110 @@
                 @include('notifications.success-alert', ['message' => session('success')])
             @endif
 
-            <div class="col-md-15">
+            <div class="col-md-15 mb-4">
                 <div class="card card-primary card-outline mb-2">
-                    <!--begin::Form-->
-                    <form action="{{ route('dosen.penilaian-sempro.update-penilaian') }}" method="POST">
-                        @csrf
-                        @method('PUT')
+                    <div class="card-header">
+                        <h3 class="card-title font-weight-bold">Status Kelulusan Seminar Proposal</h3>
+                    </div>
+                    <div class="card-body">
+                        <!--begin::Form-->
+                        <form action="{{ route('dosen.penilaian-sempro.update-penilaian') }}" method="POST">
+                            @csrf
+                            @method('PUT')
 
-                        {{-- hidden input --}}
-                        <input type="hidden" name="proposal_id" value="{{ $proposal->id }}">
-                        <input type="hidden" name="dosen_id" value="{{ auth('dosen')->user()->id }}">
+                            {{-- hidden input --}}
+                            <input type="hidden" name="proposal_id" value="{{ $proposal->id }}">
+                            <input type="hidden" name="dosen_id" value="{{ auth('dosen')->user()->id }}">
 
-                        <!--begin::Body-->
-                        <div class="card-body">
                             @if ($proposal->prodi_id == 1)
-                                <div class="mb-3">
-                                    <label for="NamaMahasiswa1" class="form-label">Nama Mahasiswa 1</label>
-                                    <input type="text" class="form-control" id="NamaMahasiswa1"
-                                        value="{{ $listMahasiswa[0]->mahasiswa->nama }}" aria-describedby="NamaMahasiswa1"
-                                        aria-label="readonly input example" readonly>
-                                </div>
+                                    <div class="mb-3">
+                                        <label for="NamaMahasiswa1" class="form-label">Nama Mahasiswa 1</label>
+                                        <input type="text" class="form-control" id="NamaMahasiswa1"
+                                            value="{{ $listMahasiswa[0]->mahasiswa->nama }}" aria-describedby="NamaMahasiswa1"
+                                            aria-label="readonly input example" readonly>
+                                    </div>
+
+                                    <div class="mb-3">
+                                        <label for="NamaMahasiswa2" class="form-label">Nama Mahasiswa 2</label>
+                                        <input type="text" class="form-control" id="NamaMahasiswa2"
+                                            value="{{ $listMahasiswa[1]->mahasiswa->nama ?? '-' }}" aria-describedby="NamaMahasiswa2"
+                                            aria-label="readonly input example" readonly>
+                                    </div>
+                                @elseif($proposal->prodi_id == 2)
+                                    <div class="mb-3">
+                                        <label for="NamaMahasiswa1" class="form-label">Nama Mahasiswa </label>
+                                        <input type="text" class="form-control" id="NamaMahasiswa1"
+                                            value="{{ $listMahasiswa[0]->mahasiswa->nama }}" aria-describedby="NamaMahasiswa1"
+                                            aria-label="readonly input example" readonly>
+                                    </div>
+                                @endif
 
                                 <div class="mb-3">
-                                    <label for="NamaMahasiswa2" class="form-label">Nama Mahasiswa 2</label>
-                                    <input type="text" class="form-control" id="NamaMahasiswa2"
-                                        value="{{ $listMahasiswa[1]->mahasiswa->nama ?? '-' }}" aria-describedby="NamaMahasiswa2"
-                                        aria-label="readonly input example" readonly>
+                                    <label for="status_penilaian">Status Kelulusan:</label>
+                                    <select class="form-control" id="status_penilaian_sempro" name="status_penilaian" @if (
+                                        auth("dosen")->id() == $proposal->penguji_sempro_1_id &&
+                                        !is_null($proposal->status_sempro_penguji_1_id)
+                                    ) disabled @elseif(
+                                        auth("dosen")->id() == $proposal->penguji_sempro_2_id &&
+                                        !is_null($proposal->status_sempro_penguji_2_id)
+                                    ) disabled @endif required>
+                                        <option value="" disabled selected>-- Pilih Status Kelulusan --</option>
+                                        @if (auth("dosen")->id() == $proposal->penguji_sempro_1_id)
+                                            @foreach ($listStatusPenilaian as $status)
+                                                <option @if($status->id == $proposal->status_sempro_penguji_1_id) selected @endif
+                                                    value="{{ $status->id }}">
+                                                    {{ $status->status }}
+                                                </option>
+                                            @endforeach
+                                        @elseif((auth("dosen")->id() == $proposal->penguji_sempro_2_id))
+                                            @foreach ($listStatusPenilaian as $status)
+                                                <option @if($status->id == $proposal->status_sempro_penguji_2_id) selected @endif
+                                                    value="{{ $status->id }}">
+                                                    {{ $status->status }}
+                                                </option>
+                                            @endforeach
+                                        @endif
+                                    </select>
                                 </div>
-                            @elseif($proposal->prodi_id == 2)
-                                <div class="mb-3">
-                                    <label for="NamaMahasiswa1" class="form-label">Nama Mahasiswa </label>
-                                    <input type="text" class="form-control" id="NamaMahasiswa1"
-                                        value="{{ $listMahasiswa[0]->mahasiswa->nama }}" aria-describedby="NamaMahasiswa1"
-                                        aria-label="readonly input example" readonly>
-                                </div>
-                            @endif
 
-                            <div class="mb-3">
-                                <label for="status_penilaian">Status Penilaian:</label>
-                                <select class="form-control" id="status_penilaian_sempro" name="status_penilaian" @if (
+                                <strong></i>Catatan Revisi</strong>
+                                <textarea class="form-control mb-3" id="catatan_revisi" name="catatan_revisi" rows="6"
+                                @if (
                                     auth("dosen")->id() == $proposal->penguji_sempro_1_id &&
                                     !is_null($proposal->status_sempro_penguji_1_id)
                                 ) disabled @elseif(
-        auth("dosen")->id() == $proposal->penguji_sempro_2_id &&
-        !is_null($proposal->status_sempro_penguji_2_id)
-    ) disabled @endif required>
-                                    <option value="" disabled selected>-- Pilih Status Penilaian --</option>
-                                    @if (auth("dosen")->id() == $proposal->penguji_sempro_1_id)
-                                        @foreach ($listStatusPenilaian as $status)
-                                            <option @if($status->id == $proposal->status_sempro_penguji_1_id) selected @endif
-                                                value="{{ $status->id }}">
-                                                {{ $status->status }}
-                                            </option>
-                                        @endforeach
-                                    @elseif((auth("dosen")->id() == $proposal->penguji_sempro_2_id))
-                                        @foreach ($listStatusPenilaian as $status)
-                                            <option @if($status->id == $proposal->status_sempro_penguji_2_id) selected @endif
-                                                value="{{ $status->id }}">
-                                                {{ $status->status }}
-                                            </option>
-                                        @endforeach
-                                    @endif
-                                </select>
-                            </div>
+                                    auth("dosen")->id() == $proposal->penguji_sempro_2_id &&
+                                    !is_null($proposal->status_sempro_penguji_2_id)
+                                ) disabled
+                                @endif>@if($prevRevisi != null) {{ $prevRevisi->catatan_revisi }} @else {{ $proposal->catatan_revisi }} @endif</textarea>
 
-                            <strong></i>Catatan Revisi</strong>
-                            <textarea class="form-control" id="catatan_revisi" name="catatan_revisi" rows="6"
-                            @if (
-                                auth("dosen")->id() == $proposal->penguji_sempro_1_id &&
-                                !is_null($proposal->status_sempro_penguji_1_id)
-                            ) disabled @elseif(
-                                auth("dosen")->id() == $proposal->penguji_sempro_2_id &&
-                                !is_null($proposal->status_sempro_penguji_2_id)
-                            ) disabled
-                            @endif>@if($prevRevisi != null) {{ $prevRevisi->catatan_revisi }} @else {{ $proposal->catatan_revisi }} @endif</textarea>
+                            {{-- Button untuk menyimpan data --}}
+                                <div class="form-group w-100">
+                                    <button type="submit" class="btn btn-primary" @if (
+                                        auth("dosen")->id() == $proposal->penguji_sempro_1_id &&
+                                        !is_null($proposal->status_sempro_penguji_1_id)
+                                    ) disabled @elseif(
+                                        auth("dosen")->id() == $proposal->penguji_sempro_2_id &&
+                                        !is_null($proposal->status_sempro_penguji_2_id)
+                                    ) disabled @endif>Simpan Perubahan</button>
+                                </div>
+                        </form>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-15">
+                <div class="card card-primary card-outline mb-2">
+                    <div class="card-header">
+                        <h3 class="card-title font-weight-bold">Revisi Seminar Proposal</h3>
+                    </div>
+                    <div class="card-body">
+                        <!--begin::Form-->
+                        <form action="{{ route('dosen.penilaian-sempro.update-verifikasi-revisi') }}" method="POST">
+                            @csrf
+                            @method('PUT')
+
+                            {{-- hidden input --}}
+                            <input type="hidden" name="proposal_id" value="{{ $proposal->id }}">
 
                             <div class="form-group">
                                 <label>Lihat Lembar Revisi:</label>
@@ -147,28 +177,21 @@
                                 </div>
                             </div>
 
-                            {{-- <div class="form-group">
-                                <label for="status_revisi">Status Konfirmasi Revisi</label>
-                                <select class="form-control" id="status_revisi" name="status_revisi" required>
-                                    <option value="" disabled selected>Pilih Status Konfirmasi Revisi</option>
-                                    <option value="diterima">Diterima</option>
-                                    <option value="ditolak">Ditolak</option>
-                                </select>
-                            </div> --}}
+                                <div class="form-group">
+                                    <label for="status_revisi">Status Konfirmasi Revisi</label>
+                                    <select class="form-control" id="status_revisi" name="status_revisi" required>
+                                        <option value="" disabled selected>---Pilih Status Konfirmasi Revisi---</option>
+                                        <option value="diterima" @if ($prevRevisi != null && $prevRevisi->status == "diterima") selected @endif>Diterima</option>
+                                        <option value="ditolak" @if ($prevRevisi != null && $prevRevisi->status == "ditolak") selected @endif >Ditolak</option>
+                                    </select>
+                                </div>
 
-                            {{-- Button untuk menyimpan data --}}
-                            <div class="form-group w-100">
-                                <button type="submit" class="btn btn-primary" @if (
-                                    auth("dosen")->id() == $proposal->penguji_sempro_1_id &&
-                                    !is_null($proposal->status_sempro_penguji_1_id)
-                                ) disabled @elseif(
-        auth("dosen")->id() == $proposal->penguji_sempro_2_id &&
-        !is_null($proposal->status_sempro_penguji_2_id)
-    ) disabled @endif>Simpan Perubahan</button>
-                            </div>
-                        </div>
-                        <!--end::Body-->
-                    </form>
+                                {{-- Button untuk menyimpan data --}}
+                                <div class="form-group w-100">
+                                    <button type="submit" class="btn btn-primary">Simpan Perubahan</button>
+                                </div>
+                        </form>
+                    </div>
                 </div>
             </div>
             <a href="{{ route("dosen.seminar-proposal.jadwal", ["tahapId" => $proposal->tahap_id, "periodeId" => $proposal->periode_id]) }}"
