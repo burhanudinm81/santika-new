@@ -139,7 +139,7 @@ class BimbinganController extends Controller
             $latestProposalId = ProposalDosenMahasiswa::where('mahasiswa_id', $mahasiswaId)
             ->whereHas('proposal', function ($query) use ($periodeAktif) {
                 $query->where('periode_id', $periodeAktif->id)
-                      ->where('dosen_pembimbing_1_id', auth('dosen')->user()->id);
+                      ->where('dosen_pembimbing_2_id', auth('dosen')->user()->id);
             })
             ->latest()
             ->first()

@@ -17,37 +17,40 @@
     <div class="content">
         <div class="container-fluid">
             <div class="col-md-15">
-                @if ($statusKelulusanSempro == 1)
-                    <div class="alert alert-success my-2" role="alert">
-                        <h4 class="alert-heading">Selamat!</h4>
-                        <p>Anda dinyatakan <strong>Lulus Seminar Proposal tanpa revisi</strong>.</p>
-                        <hr>
-                        <p class="mb-0">Silahkan menunggu informasi selanjutnya dari Panitia.</p>
-                    </div>
-                @elseif($statusKelulusanSempro == 2)
-                    @if ($revisiSelesai)
+                @if ($visible)
+                    @if ($statusKelulusanSempro == 1)
                         <div class="alert alert-success my-2" role="alert">
                             <h4 class="alert-heading">Selamat!</h4>
-                            <p>Anda dinyatakan <strong>Lulus Seminar Proposal dengan revisi</strong>.</p>
+                            <p>Anda dinyatakan <strong>Lulus Seminar Proposal tanpa revisi</strong>.</p>
                             <hr>
-                            <p class="mb-0">Revisi Telah Diselesaikan. Silahkan menunggu informasi selanjutnya dari Panitia.</p>
+                            <p class="mb-0">Silahkan menunggu informasi selanjutnya dari Panitia.</p>
                         </div>
-                    @else
-                        <div class="alert alert-warning my-2" role="alert">
-                            <h4 class="alert-heading">Selamat!</h4>
-                            <p>Anda dinyatakan <strong>Lulus Seminar Proposal dengan revisi</strong>.</p>
+                    @elseif($statusKelulusanSempro == 2)
+                        @if ($revisiSelesai)
+                            <div class="alert alert-success my-2" role="alert">
+                                <h4 class="alert-heading">Selamat!</h4>
+                                <p>Anda dinyatakan <strong>Lulus Seminar Proposal dengan revisi</strong>.</p>
+                                <hr>
+                                <p class="mb-0">Revisi Telah Diselesaikan. Silahkan menunggu informasi selanjutnya dari Panitia.</p>
+                            </div>
+                        @else
+                            <div class="alert alert-warning my-2" role="alert">
+                                <h4 class="alert-heading">Selamat!</h4>
+                                <p>Anda dinyatakan <strong>Lulus Seminar Proposal dengan revisi</strong>.</p>
+                                <hr>
+                                <p class="mb-0">Selesaikan revisi sebelum tenggat waktu yang telah ditentukan!</p>
+                            </div>
+                        @endif
+                    @elseif($statusKelulusanSempro == 3)
+                        <div class="alert alert-danger my-2" role="alert">
+                            <h4 class="alert-heading">Mohon Maaf!</h4>
+                            <p>Anda dinyatakan <strong>Tidak Lulus Seminar Proposal</strong>.</p>
                             <hr>
-                            <p class="mb-0">Selesaikan revisi sebelum tenggat waktu yang telah ditentukan!</p>
+                            <p class="mb-0">Jangan berkecil hati. Jadikan kegagalan ini sebagai pembelajaran yang berharga untuk bangkit kembali. Tetap semangat!</p>
                         </div>
                     @endif
-                @elseif($statusKelulusanSempro == 3)
-                    <div class="alert alert-danger my-2" role="alert">
-                        <h4 class="alert-heading">Mohon Maaf!</h4>
-                        <p>Anda dinyatakan <strong>Tidak Lulus Seminar Proposal</strong>.</p>
-                        <hr>
-                        <p class="mb-0">Jangan berkecil hati. Jadikan kegagalan ini sebagai pembelajaran yang berharga untuk bangkit kembali. Tetap semangat!</p>
-                    </div>
                 @endif
+                
                 <div class="card card-primary card-outline mb-4">
                     <!--begin::Form-->
                     <form>

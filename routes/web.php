@@ -542,6 +542,12 @@ Route::middleware(["auth:dosen", "auth.session", "password.changed", "is.panitia
             // Route untuk membuka halaman generate jadwal manual
             Route::get('/create-manual', 'showCreateManualPage')->name('create-manual');
 
+            // Route untuk edit Dosen Penguji Sempro 1
+            Route::put('/update-penguji-sempro-1', 'updateDosenPenguji1')->name('update-penguji-sempro-1');
+
+            // Route untuk edit Dosen Penguji Sempro 2
+            Route::put('/update-penguji-sempro-2', 'updateDosenPenguji2')->name('update-penguji-sempro-2');
+
             // Route untuk mendapatkan daftar calon peserta sempro
             Route::get("/calon-peserta", 'getCalonPesertaSempro')->name('calon-peserta');
 

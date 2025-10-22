@@ -74,7 +74,6 @@ class PlottingPembimbingController extends Controller
 
         $proposal = Proposal::findOrFail($proposalId);
         $kuotaDosenPembimbing1 = KuotaDosen::firstWhere('dosen_id', $dosenPembimbing1Id);
-        $kuotaDosenPembimbing2 = KuotaDosen::firstWhere('dosen_id', $dosenPembimbing2Id);
 
         if ($dosenPembimbing1Id != $proposal->dosen_pembimbing_1_id) {
             // Mengubah Dosen Pembimbing 1
@@ -97,8 +96,13 @@ class PlottingPembimbingController extends Controller
             }
         }
 
+        if ($dosenPembimbing2Id != $proposal->dosen_pembimbing_2_id) {
+            // Mengubah Dosen Pembimbing 2
+            $proposal->dosen_pembimbing_2_id = $dosenPembimbing2Id;
+
+        }
+
         $kuotaDosenPembimbing1->save();
-        $kuotaDosenPembimbing2->save();
         $proposal->save();
 
         return back()->with([

@@ -33,6 +33,9 @@ class PermohonanJudulController extends Controller
 
         // dd($groupedPermohonanD3);
 
+        // ambil kuota pembimbing dari dosen
+        $kuotaPembimbing = KuotaDosen::where('dosen_id', auth('dosen')->user()->id)->first();
+
         return view('dosen.permohonan-judul', compact(['groupedPermohonanD3', 'listPermohonanD4', 'kuotaPembimbing']));
     }
 
