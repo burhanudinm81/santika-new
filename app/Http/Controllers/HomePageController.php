@@ -5,12 +5,14 @@ namespace App\Http\Controllers;
 use App\Http\Controllers\Controller;
 use App\Models\Mahasiswa;
 use App\Models\Panitia;
+use App\Models\Proposal;
 use App\Models\ProposalDosenMahasiswa;
 use App\Models\PendaftaranSeminarProposal;
 use App\Models\Notifikasi;
 use App\Models\PendaftaranSemhas;
 use App\Models\Periode;
 use App\Models\Prodi;
+use App\Models\Revisi;
 use App\Models\Tahap;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -120,11 +122,43 @@ class HomePageController extends Controller
             ->latest()
             ->get();
 
+        // jumlah permohonan judul yang belum diverifikasi/dicek
+        $unverifiedPermohonanJudulCount = ProposalDosenMahasiswa::with(['mahasiswa', 'proposal', 'statusProposalMahasiswa'])
+            ->where('dosen_id', auth('dosen')->user()->id)
+            ->where('status_proposal_mahasiswa_id', 3)
+            ->count();
+
+        // Periode Aktif
+        $periodeAktif = Periode::firstWhere("aktif_sempro", true);
+
+        // Jumlah Sempro yang belum diberi status kelulusan (belum dinilai)
+        $jmlBelumNilaiSempro1 = Proposal::where('periode_id', operator: $periodeAktif->id)
+                ->where('penguji_sempro_1_id', auth("dosen")->id())
+                ->whereNull('status_sempro_penguji_1_id')
+                ->count();
+
+        $jmlBelumNilaiSempro2 = Proposal::where('periode_id', operator: $periodeAktif->id)
+                ->where('penguji_sempro_2_id', auth("dosen")->id())
+                ->whereNull('status_sempro_penguji_2_id')
+                ->count();
+
+        $jmlBelumNilaSempro = $jmlBelumNilaiSempro1 + $jmlBelumNilaiSempro2;
+
+        $jmlRevisiBelumDicek = Revisi::join('proposal', 'proposal.id', '=', 'revisi.proposal_id')
+            ->where('revisi.dosen_id', auth("dosen")->id())
+            ->where('revisi.jenis_revisi', "sempro")
+            ->where('revisi.status', 'pending')
+            ->where('proposal.periode_id', $periodeAktif->id)
+            ->count();
+
         return view("dosen.dashboard", [
             "forceChangePassword" => $forceChangePassword,
             "isPanitia" => $isPanitia,
             'dataChart' => $this->getChart(),
             'notifikasi' => $notifikasi,
+            'unverifiedPermohonanJudulCount' => $unverifiedPermohonanJudulCount,
+            "jumlahBelumNilaiSempro" => $jmlBelumNilaSempro,
+            "jumlahRevisiBelumDicek" => $jmlRevisiBelumDicek
         ]);
     }
 

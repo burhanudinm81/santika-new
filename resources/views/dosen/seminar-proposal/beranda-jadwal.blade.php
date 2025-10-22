@@ -27,7 +27,11 @@
                                     <span class="badge badge-success">Semua Sudah Diberi Status Kelulusan</span>
                                 @endif
                                 
-                                <span class="badge badge-warning">Revisi Belum Dicek: 0</span>
+                                @if ($tahap->jumlahBelumRevisi > 0)
+                                    <span class="badge badge-warning">Revisi Belum Dicek: {{ $tahap->jumlahBelumRevisi }}</span>
+                                @else
+                                    <span class="badge badge-success">Semua Revisi Sudah Dicek</span>
+                                @endif
                             </div>
                             <div class="icon">
                                 <i class="fas fa-solid fa-user"></i>

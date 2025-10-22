@@ -34,7 +34,7 @@
             </div>
             <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
             <script>
-                document.addEventListener("DOMContentLoaded", function() {
+                document.addEventListener("DOMContentLoaded", function () {
                     @foreach ($dataChart as $chart)
                         let ctx_{{ $chart['slug'] }} = document.getElementById(
                             "chartProdi_{{ $chart['slug'] }}");
@@ -45,9 +45,9 @@
                                     labels: ['Belum Sempro', 'Sudah Sempro', 'Belum Sidang', 'Sudah Sidang'],
                                     datasets: [{
                                         data: [
-                                            {{ $chart['sempro']['belum'] }},
-                                            {{ $chart['sempro']['sudah'] }},
-                                            {{ $chart['sidang']['belum'] }},
+                                                            {{ $chart['sempro']['belum'] }},
+                                                            {{ $chart['sempro']['sudah'] }},
+                                                            {{ $chart['sidang']['belum'] }},
                                             {{ $chart['sidang']['sudah'] }}
                                         ],
                                         backgroundColor: [
@@ -71,8 +71,50 @@
                             });
                         }
                     @endforeach
-                });
+                        });
             </script>
+
+
+            @if ($unverifiedPermohonanJudulCount > 0)
+                <div class="row">
+                    <div class="col-12">
+                        <a href="{{ route('dosen.permohonan-judul') }}" class="text-decoration-none">
+                            <div class="alert alert-warning d-flex justify-content-between align-items-center">
+                                <strong><i class="fas fa-exclamation-circle me-2"></i> Permohonan Judul yang Perlu
+                                    Dikonformasi</strong>
+                                <span class="badge bg-dark text-white">{{ $unverifiedPermohonanJudulCount }} Mahasiswa</span>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            @endif
+
+            @if ($jumlahBelumNilaiSempro > 0)
+                <div class="row">
+                    <div class="col-12">
+                        <a href="{{ route('dosen.seminar-proposal.beranda-jadwal') }}" class="text-decoration-none">
+                            <div class="alert alert-warning d-flex justify-content-between align-items-center">
+                                <strong><i class="fas fa-exclamation-circle me-2"></i> Seminar Proposal Belum Diberi status Kelulusan: </strong>
+                                <span class="badge bg-dark text-white">{{ $jumlahBelumNilaiSempro }} Mahasiswa</span>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            @endif
+
+            @if ($jumlahRevisiBelumDicek > 0)
+                <div class="row">
+                    <div class="col-12">
+                        <a href="{{ route('dosen.seminar-proposal.beranda-jadwal') }}" class="text-decoration-none">
+                            <div class="alert alert-warning d-flex justify-content-between align-items-center">
+                                <strong><i class="fas fa-exclamation-circle me-2"></i> Revisi Seminar Proposal Belum Dicek: </strong>
+                                <span class="badge bg-dark text-white">{{ $jumlahRevisiBelumDicek }} Mahasiswa</span>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            @endif
+
 
             @if ($notifikasi->count() > 0)
                 <!-- Tabel Riwayat Pengajuan Judul -->
