@@ -38,6 +38,7 @@
                                             <th scope="col" class="text-center">Nama Mahasiswa 2</th>
                                             <th scope="col" class="text-center">Judul Penelitian</th>
                                             <th scope="col" class="text-center">Peran</th>
+                                            <th scope="col" class="text-center">Status Logbook</th>
                                             <th scope="col" class="text-center">Aksi</th>
                                         </tr>
                                     </thead>
@@ -57,10 +58,41 @@
                                                             Pembimbing 2
                                                         @endif
                                                     </td>
-                                                    <td class="d-flex justify-content-center align-items-center">
-                                                        <a href="{{ route('dosen.bimbingan.detail-bimbingan', $kelompok[0]->mahasiswa->id) }}"class="aksi-button btn btn-primary mr-1">Detail</a>
-                                                        <a href="{{ route('dosen.bimbingan.logbook-mahasiswa', $kelompok[0]->mahasiswa->id) }}"
-                                                            class="aksi-button btn btn-primary ml-1">Logbook</a>
+                                                    <td>
+                                                        <div class="container">
+                                                            @if (is_null($kelompok->jmlBelumDiverifikasi) && is_null($kelompok->jmlDitolak) && is_null($kelompok->jmlDiterima))
+                                                                <div class="row mb-1">
+                                                                    <span class="badge badge-secondary">Mahasiswa Belum Mengisi Logbook</span>
+                                                                </div>
+                                                            @else
+                                                                @if(!is_null($kelompok->jmlBelumDiverifikasi))
+                                                                    <div class="row mb-1">
+                                                                        <span class="badge badge-warning">{{ $kelompok->jmlBelumDiverifikasi }} Belum Diverifikasi</span>
+                                                                    </div>
+                                                                @endif
+                                                                @if(!is_null($kelompok->jmlDitolak))
+                                                                    <div class="row mb-1">
+                                                                        <span class="badge badge-danger">{{ $kelompok->jmlDitolak }} Logbook Ditolak</span>
+                                                                    </div>
+                                                                @endif
+                                                                @if(!is_null($kelompok->jmlDiterima))
+                                                                    <div class="row">
+                                                                        <span class="badge badge-success">{{ $kelompok->jmlDiterima }} Logbook Diterima</span>
+                                                                    </div>
+                                                                @endif
+                                                            @endif
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="d-flex justify-content-center align-items-center">
+                                                            <div>
+                                                                <a href="{{ route('dosen.bimbingan.detail-bimbingan', $kelompok[0]->mahasiswa->id) }}"class="aksi-button btn btn-primary mr-1">Detail</a>
+                                                            </div>
+                                                            <div>
+                                                                <a href="{{ route('dosen.bimbingan.logbook-mahasiswa', $kelompok[0]->mahasiswa->id) }}"
+                                                                    class="aksi-button btn btn-primary ml-1">Logbook</a>
+                                                            </div>
+                                                        </div>
                                                     </td>
                                                 </tr>
                                             @endforeach
@@ -81,6 +113,7 @@
                                             <th scope="col" class="text-center">Nama Mahasiswa</th>
                                             <th scope="col" class="text-center">Judul Proposal</th>
                                             <th scope="col" class="text-center">Peran</th>
+                                            <th scope="col" class="text-center">Status Logbook</th>
                                             <th scope="col" class="text-center">Aksi</th>
                                         </tr>
                                     </thead>
@@ -99,10 +132,41 @@
                                                             Pembimbing 2
                                                         @endif
                                                     </td>
-                                                    <td class="d-flex justify-content-center align-items-center">
-                                                        <a href="{{ route('dosen.bimbingan.detail-bimbingan', $item->mahasiswa->id) }}"class="aksi-button btn btn-primary mr-1">Detail</a>
-                                                        <a href="{{ route('dosen.bimbingan.logbook-mahasiswa', $item->mahasiswa->id) }}"
-                                                            class="aksi-button btn btn-primary ml-1">Logbook</a>
+                                                    <td>
+                                                         <div class="container">
+                                                            @if (is_null($item->jmlBelumDiverifikasi) && is_null($item->jmlDitolak) && is_null($item->jmlDiterima))
+                                                                <div class="row mb-1">
+                                                                    <span class="badge badge-secondary">Mahasiswa Belum Mengisi Logbook</span>
+                                                                </div>
+                                                            @else
+                                                                @if(!is_null($item->jmlBelumDiverifikasi))
+                                                                    <div class="row mb-1">
+                                                                        <span class="badge badge-warning">{{ $item->jmlBelumDiverifikasi }} Belum Diverifikasi</span>
+                                                                    </div>
+                                                                @endif
+                                                                @if(!is_null($item->jmlDitolak))
+                                                                    <div class="row mb-1">
+                                                                        <span class="badge badge-danger">{{ $item->jmlDitolak }} Logbook Ditolak</span>
+                                                                    </div>
+                                                                @endif
+                                                                @if(!is_null($item->jmlDiterima))
+                                                                    <div class="row">
+                                                                        <span class="badge badge-success">{{ $item->jmlDiterima }} Logbook Diterima</span>
+                                                                    </div>
+                                                                @endif
+                                                            @endif
+                                                        </div>
+                                                    </td>
+                                                    <td>
+                                                        <div class="d-flex justify-content-center align-items-center">
+                                                            <div>
+                                                                <a href="{{ route('dosen.bimbingan.detail-bimbingan', $item->mahasiswa->id) }}"class="aksi-button btn btn-primary mr-1">Detail</a>
+                                                            </div>
+                                                            <div>
+                                                                <a href="{{ route('dosen.bimbingan.logbook-mahasiswa', $item->mahasiswa->id) }}"
+                                                                    class="aksi-button btn btn-primary ml-1">Logbook</a>
+                                                            </div>
+                                                        </div>
                                                     </td>
                                                 </tr>
                                             @endforeach
@@ -111,13 +175,9 @@
                                 </table>
                             </div>
                         </div>
-                        <!--end::Body-->
                     </form>
-                    <!--end::Form-->
                 </div>
-            </div><!-- /.container-fluid -->
+            </div>
         </div>
-        <!-- /.content -->
     </div>
-    <!-- /.content-wrapper -->
 @endsection

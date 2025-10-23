@@ -466,6 +466,11 @@ Route::middleware(["auth:dosen", "auth.session", "password.changed", "is.panitia
 
         // Route untuk menutup pendaftaran sidang ujian akhir
         Route::get("/panitia/seminar-hasil/tutup-pendaftaran", "tutupPendaftaran")->name('panitia.seminar-hasil.tutup-pendaftaran');
+
+        Route::get('/panitia/seminar-hasil/tahap-rekap-nilai-akhir', 'showTahapRekapNilaiAkhir')->name('panitia.seminar-hasil.tahap-rekap-nilai-akhir');
+        Route::get('/panitia/seminar-hasil/beranda-rekap-nilai-akhir/{tahapId}', 'showBerandaRekapNilaiAkhir')->name('panitia.seminar-hasil.beranda-rekap-nilai-akhir');
+        Route::get('/panitia/seminar-hasil/detail-nilai/{proposalId}', 'showDetailNilai')->name('panitia.seminar-hasil.detail-nilai');
+        Route::put('/panitia/seminar-hasil/detail-nilai/update/{id}', 'updateNilai')->name('panitia.seminar-hasil.update-nilai');
     });
 
     Route::controller(AjaxPendaftaranSemproController::class)->group(function () {
@@ -479,6 +484,7 @@ Route::middleware(["auth:dosen", "auth.session", "password.changed", "is.panitia
 
     Route::controller(AjaxRekapNilaiSemhasController::class)->group(function () {
         Route::get('/panitia/ajax/list-rekap-nilai-semhas', 'listRekapNilaiSemhas')->name('panitia.ajax.list-rekap-nilai-semhas');
+        Route::get('/panitia/ajax/list-rekap-nilai-semhas-akhir', 'listRekapNilaiSemhasAkhir')->name('panitia.ajax.list-rekap-nilai-semhas-akhir');
     });
 
     Route::controller(PrivateFileController::class)->group(function () {

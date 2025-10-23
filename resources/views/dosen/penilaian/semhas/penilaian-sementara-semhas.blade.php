@@ -68,13 +68,8 @@
                             </div>
 
                             <strong></i>Catatan Revisi Akhir</strong>
-                            <textarea class="form-control" id="catatan_revisi_akhir" name="catatan_revisi_akhir" rows="6" required>
-                                @if ($prevRevisi != null)
-                                    {{ $prevRevisi->catatan_revisi }}
-                                @else
-                                    {{ $proposal->catatan_revisi }}
-                                @endif
-                            </textarea>
+                            <textarea class="form-control" id="catatan_revisi_akhir" name="catatan_revisi_akhir" rows="6" 
+                            required>@if ($prevRevisi != null){{ $prevRevisi->catatan_revisi }}@else {{ $proposal->catatan_revisi }}@endif</textarea>
 
                             <div class="form-group">
                                 <label>Lihat Lembar Revisi:</label>
@@ -117,9 +112,11 @@
                         <!--end::Body-->
                     </form>
                 </div>
-            </div><!-- /.container-fluid -->
+            </div>
+            <a href="{{ route("dosen.seminar-hasil.jadwal", ["tahapId" => $proposal->tahap_id, "periodeId" => $proposal->periode_id]) }}"
+                class="btn btn-info mt-2">
+                Kembali
+            </a>
         </div>
-        <!-- /.content -->
     </div>
-    <!-- /.content-wrapper -->
 @endsection

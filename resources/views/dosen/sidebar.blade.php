@@ -45,12 +45,12 @@
                 @endif
 
 
-                <li class="nav-item">
+                <!-- <li class="nav-item">
                     <a href="#" class="nav-link">
                         <i class="nav-icon fas fa-th-large"></i>
                         <p>Rekomendasi Judul</p>
                     </a>
-                </li>
+                </li> -->
 
                 <li class="nav-item" id="permohonan-judul-item">
                     <a href="{{ route('dosen.permohonan-judul') }}" class="nav-link">

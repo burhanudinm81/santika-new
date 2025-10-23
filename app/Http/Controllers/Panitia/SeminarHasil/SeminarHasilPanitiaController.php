@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Panitia\SeminarHasil;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\BukaPendaftaranRequest;
+use App\Models\NilaiAkhirMahasiswa;
 use App\Models\Panitia;
 use App\Models\PendaftaranSemhas;
 use App\Models\Periode;
@@ -185,5 +186,113 @@ class SeminarHasilPanitiaController extends Controller
         }
 
         return redirect()->back()->with('success', 'Status Revisi Berhasil Diupdate');
+    }
+
+    public function showTahapRekapNilaiAkhir()
+    {
+        // ambil semua tahap
+        $listTahap = Tahap::all();
+
+        return view('panitia.seminar-hasil.tahap-rekap-nilai-akhir', compact('listTahap'));
+    }
+
+    public function showBerandaRekapNilaiAkhir($tahapId)
+    {
+        $tahapInfo = Tahap::find($tahapId);
+
+        // ambil semua data periode, untuk opsi dropdown
+        $periodeInfo = Periode::all();
+
+        // ambil data dosen yang menjadi panitia, berdasarkan id dosen yang saat ini sedang login
+        $dosenPanitiaInfo = Panitia::where('dosen_id', auth('dosen')->user()->id)->first();
+
+        return view('panitia.seminar-hasil.beranda-rekap-nilai-akhir', compact(['tahapInfo', 'periodeInfo', 'dosenPanitiaInfo']));
+    }
+
+    public function showDetailNilai(Request $request, $proposalId)
+    {
+        $proposalInfo = Proposal::find($proposalId);
+        $nilaiAkhir = NilaiAkhirMahasiswa::where('proposal_id', $proposalId)->where('mahasiswa_id', $request->id)->first();
+
+        return view('panitia.seminar-hasil.detail-nilai', compact('proposalInfo', 'nilaiAkhir'));
+    }
+
+    public function updateNilai(Request $request, $id)
+    {
+        $validated = $request->validate([
+            'nilai_sikap_pemb1' => 'required|numeric|min:0|max:100',
+            'nilai_kemampuan_pemb1' => 'required|numeric|min:0|max:100',
+            'nilai_hasilKarya_pemb1' => 'required|numeric|min:0|max:100',
+            'nilai_laporan_pemb1' => 'required|numeric|min:0|max:100',
+
+            'nilai_sikap_pemb2' => 'required|numeric|min:0|max:100',
+            'nilai_kemampuan_pemb2' => 'required|numeric|min:0|max:100',
+            'nilai_hasilKarya_pemb2' => 'required|numeric|min:0|max:100',
+            'nilai_laporan_pemb2' => 'required|numeric|min:0|max:100',
+
+            'nilai_penguasaan_materi1' => 'required|numeric|min:0|max:100',
+            'nilai_presentasi1' => 'required|numeric|min:0|max:100',
+            'nilai_karya_tulis1' => 'required|numeric|min:0|max:100',
+
+            'nilai_penguasaan_materi2' => 'required|numeric|min:0|max:100',
+            'nilai_presentasi2' => 'required|numeric|min:0|max:100',
+            'nilai_karya_tulis2' => 'required|numeric|min:0|max:100',
+        ]);
+
+        $nilaiAkhir = NilaiAkhirMahasiswa::findOrFail($id);
+
+        $avg_dospem1 = (
+            $validated['nilai_sikap_pemb1'] +
+            $validated['nilai_kemampuan_pemb1'] +
+            $validated['nilai_hasilKarya_pemb1'] +
+            $validated['nilai_laporan_pemb1']
+        ) / 4;
+
+        $avg_dospem2 = (
+            $validated['nilai_sikap_pemb2'] +
+            $validated['nilai_kemampuan_pemb2'] +
+            $validated['nilai_hasilKarya_pemb2'] +
+            $validated['nilai_laporan_pemb2']
+        ) / 4;
+
+        $avg_penguji1 = (
+            $validated['nilai_penguasaan_materi1'] +
+            $validated['nilai_presentasi1'] +
+            $validated['nilai_karya_tulis1']
+        ) / 3;
+
+        $avg_penguji2 = (
+            $validated['nilai_penguasaan_materi2'] +
+            $validated['nilai_presentasi2'] +
+            $validated['nilai_karya_tulis2']
+        ) / 3;
+
+        $avg_total_dospem = ($avg_dospem1 + $avg_dospem2) / 2;
+        $avg_total_penguji = ($avg_penguji1 + $avg_penguji2) / 2;
+
+        $nilaiAkhir->update([
+            'nilai_sikap_pemb1' => $validated['nilai_sikap_pemb1'],
+            'nilai_kemampuan_pemb1' => $validated['nilai_kemampuan_pemb1'],
+            'nilai_hasilKarya_pemb1' => $validated['nilai_hasilKarya_pemb1'],
+            'nilai_laporan_pemb1' => $validated['nilai_laporan_pemb1'],
+            'avg_nilai_dospem1' => $avg_dospem1,
+            'nilai_sikap_pemb2' => $validated['nilai_sikap_pemb2'],
+            'nilai_kemampuan_pemb2' => $validated['nilai_kemampuan_pemb2'],
+            'nilai_hasilKarya_pemb2' => $validated['nilai_hasilKarya_pemb2'],
+            'nilai_laporan_pemb2' => $validated['nilai_laporan_pemb2'],
+            'avg_nilai_dospem2' => $avg_dospem2,
+            'nilai_penguasaan_materi1' => $validated['nilai_penguasaan_materi1'],
+            'nilai_presentasi1' => $validated['nilai_presentasi1'],
+            'nilai_karya_tulis1' => $validated['nilai_karya_tulis1'],
+            'avg_nilai_penguji1' => $avg_penguji1,
+            'nilai_penguasaan_materi2' => $validated['nilai_penguasaan_materi2'],
+            'nilai_presentasi2' => $validated['nilai_presentasi2'],
+            'nilai_karya_tulis2' => $validated['nilai_karya_tulis2'],
+            'avg_nilai_penguji2' => $avg_penguji2,
+            'avg_nilai_totalDospem' => $avg_total_dospem,
+            'avg_nilai_totalPenguji' => $avg_total_penguji,
+        ]);
+
+        return redirect()->back()->with('success', 'Nilai Akhir Berhasil Diupdate');
     }
 }
