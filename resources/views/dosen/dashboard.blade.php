@@ -115,6 +115,18 @@
                 </div>
             @endif
 
+            @if ($jumlahLogbookBelumDicek > 0)
+                <div class="row">
+                    <div class="col-12">
+                        <a href="{{ route('dosen.bimbingan.daftar-bimbingan') }}" class="text-decoration-none">
+                            <div class="alert alert-warning d-flex justify-content-between align-items-center">
+                                <strong><i class="fas fa-exclamation-circle me-2"></i> Logbook Belum Dicek: </strong>
+                                <span class="badge bg-dark text-white">{{ $jumlahLogbookBelumDicek }} Mahasiswa</span>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            @endif
 
             @if ($notifikasi->count() > 0)
                 <!-- Tabel Riwayat Pengajuan Judul -->

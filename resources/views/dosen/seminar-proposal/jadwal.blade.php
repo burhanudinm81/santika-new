@@ -148,6 +148,9 @@
                                                         @else
                                                             <span class="badge badge-success">Sudah Dinilai</span>
                                                         @endif
+                                                        @if ($jadwal->belumCekRevisi)
+                                                             <span class="badge badge-warning">Revisi Belum Dicek</span>
+                                                        @endif
                                                     </td>
                                                 </tr>
                                             @endforeach

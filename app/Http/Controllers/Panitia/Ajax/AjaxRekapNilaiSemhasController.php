@@ -26,4 +26,23 @@ class AjaxRekapNilaiSemhasController extends Controller
 
         return response()->json($proposalDoneSemhas);
     }
+
+    public function listRekapNilaiSemhasAkhir(Request $request)
+    {
+        $tahapId = $request->input('tahap_id');
+        $periodeId = $request->input('periode_id');
+        $prodiDosenPanitiaId = $request->input('prodi_panitia_id');
+
+        // filter ke tabel proposal yang pendaftaran_sempro_id != null, status_sempro_proposal_id != null (berarti sudah melakukan semhas dan dinilai penguji)
+        $proposalDoneSemhas = Proposal::with(['proposalMahasiswas.mahasiswa', 'statusSemhasTotal'])
+            ->where('tahap_id', $tahapId)
+            ->where('prodi_id', $prodiDosenPanitiaId)
+            ->where('periode_id', $periodeId)
+            ->whereNotNull('pendaftaran_semhas_id')
+            ->whereNotNull('status_semhas_proposal_id')
+            ->whereNot('status_semhas_proposal_id', 3)
+            ->get();
+
+        return response()->json($proposalDoneSemhas);
+    }
 }

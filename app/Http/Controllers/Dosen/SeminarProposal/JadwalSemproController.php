@@ -89,17 +89,45 @@ class JadwalSemproController extends Controller
             ->where("prodi_id", 1)
             ->where("tahap_id", $tahapId)
             ->where("periode_id", $periodeId)
-            ->whereNull('status_sempro_penguji_1_id')
+            ->whereNull('status_sempro_penguji_2_id')
             ->get();
 
-        $jadwalSeminarProposalD3->map(function ($item) use ($belumNilaiAsDospeng1D3, $belumNilaiAsDospeng2D3) {
+        $revisiBelumCekAsDosPeng1D3 = Revisi::whereHas('proposal', function($q) use($tahapId, $periodeId, $idDosen) {
+            $q->where("prodi_id", 1)
+                ->where("tahap_id", $tahapId)
+                ->where("periode_id", $periodeId)
+                ->where("penguji_sempro_1_id", $idDosen);
+        })
+            ->where("jenis_revisi", "sempro")
+            ->where("status", "pending")
+            ->get();
+
+        $revisiBelumCekAsDosPeng2D3 = Revisi::whereHas('proposal', function($q) use($tahapId, $periodeId, $idDosen) {
+            $q->where("prodi_id", 1)
+                ->where("tahap_id", $tahapId)
+                ->where("periode_id", $periodeId)
+                ->where("penguji_sempro_2_id", $idDosen);
+        })
+            ->where("jenis_revisi", "sempro")
+            ->where("status", "pending")
+            ->get();
+
+        $jadwalSeminarProposalD3->map(function ($item) use ($belumNilaiAsDospeng1D3, $belumNilaiAsDospeng2D3, $revisiBelumCekAsDosPeng1D3, $revisiBelumCekAsDosPeng2D3) {
             $semproBelumNilaiAsDospeng1 = $belumNilaiAsDospeng1D3->firstWhere("id", $item->proposal?->id);
             $semproBelumNilaiAsDospeng2 = $belumNilaiAsDospeng2D3->firstWhere("id", $item->proposal?->id);
+            $belumCekRevisiAsDospeng1 = $revisiBelumCekAsDosPeng1D3->firstWhere("proposal_id", $item->proposal?->id);
+            $belumCekRevisiAsDospeng2 = $revisiBelumCekAsDosPeng2D3->firstWhere("proposal_id", $item->proposal?->id);
 
             if (!is_null($semproBelumNilaiAsDospeng1) || !is_null($semproBelumNilaiAsDospeng2)) {
                 $item->belumDinilai = true;
             } else {
                 $item->belumDinilai = false;
+            }
+
+            if (!is_null($belumCekRevisiAsDospeng1) || !is_null($belumCekRevisiAsDospeng2)) {
+                $item->belumCekRevisi = true;
+            } else {
+                $item->belumCekRevisi = false;
             }
 
             return $item;
@@ -130,17 +158,45 @@ class JadwalSemproController extends Controller
             ->where("prodi_id", 2)
             ->where("tahap_id", $tahapId)
             ->where("periode_id", $periodeId)
-            ->whereNull('status_sempro_penguji_1_id')
+            ->whereNull('status_sempro_penguji_2_id')
             ->get();
 
-        $jadwalSeminarProposalD4->map(function ($item) use ($belumNilaiAsDospeng1D4, $belumNilaiAsDospeng2D4) {
+        $revisiBelumCekAsDosPeng1D4 = Revisi::whereHas('proposal', function($q) use($tahapId, $periodeId, $idDosen) {
+            $q->where("prodi_id", 2)
+                ->where("tahap_id", $tahapId)
+                ->where("periode_id", $periodeId)
+                ->where("penguji_sempro_1_id", $idDosen);
+        })
+            ->where("jenis_revisi", "sempro")
+            ->where("status", "pending")
+            ->get();
+
+        $revisiBelumCekAsDosPeng2D4 = Revisi::whereHas('proposal', function($q) use($tahapId, $periodeId, $idDosen) {
+            $q->where("prodi_id", 2)
+                ->where("tahap_id", $tahapId)
+                ->where("periode_id", $periodeId)
+                ->where("penguji_sempro_2_id", $idDosen);
+        })
+            ->where("jenis_revisi", "sempro")
+            ->where("status", "pending")
+            ->get();
+
+        $jadwalSeminarProposalD4->map(function ($item) use ($belumNilaiAsDospeng1D4, $belumNilaiAsDospeng2D4, $revisiBelumCekAsDosPeng1D4, $revisiBelumCekAsDosPeng2D4) {
             $semproBelumNilaiAsDospeng1 = $belumNilaiAsDospeng1D4->firstWhere("id", $item->proposal?->id);
             $semproBelumNilaiAsDospeng2 = $belumNilaiAsDospeng2D4->firstWhere("id", $item->proposal?->id);
+            $belumCekRevisiAsDospeng1 = $revisiBelumCekAsDosPeng1D4->firstWhere("proposal_id", $item->proposal?->id);
+            $belumCekRevisiAsDospeng2 = $revisiBelumCekAsDosPeng2D4->firstWhere("proposal_id", $item->proposal?->id);
 
             if (!is_null($semproBelumNilaiAsDospeng1) || !is_null($semproBelumNilaiAsDospeng2)) {
                 $item->belumDinilai = true;
             } else {
                 $item->belumDinilai = false;
+            }
+
+            if (!is_null($belumCekRevisiAsDospeng1) || !is_null($belumCekRevisiAsDospeng2)) {
+                $item->belumCekRevisi = true;
+            } else {
+                $item->belumCekRevisi = false;
             }
 
             return $item;

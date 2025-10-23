@@ -87,7 +87,7 @@
                                             value="{{ $mainProposalInfo->statusSemproPenguji1?->status ?? '' }}" readonly />
                                     @else
                                         <input type="text" id="StatusNilaiPenguji1" aria-describedby="StatusNilaiPenguji1" class="form-control"
-                                        value="Belum Dipublish" readonly />
+                                        value="-" readonly />
                                     @endif
                                 </div>
                                 <div class="mb-3">
@@ -95,7 +95,7 @@
                                     @if($visible)
                                         <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" readonly>{{ $revisiDosen1->catatan_revisi ?? '' }}</textarea>
                                     @else
-                                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" readonly>Belum Dipublish</textarea>
+                                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" readonly>-</textarea>
                                     @endif
                                 </div>
                                 <hr>
@@ -129,7 +129,7 @@
                                             value="{{ $status2 ?? '' }}" readonly />
                                     @else
                                         <input type="text" id="StatusNilaiPenguji2" aria-describedby="StatusNilaiPenguji2" class="form-control"
-                                        value="Belum Dipublish" readonly />
+                                        value="-" readonly />
                                     @endif
                                     
                                 </div>
@@ -138,7 +138,7 @@
                                     @if ($visible)
                                         <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" readonly>{{ $revisiDosen2->catatan_revisi ?? '' }}</textarea>
                                     @else
-                                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" readonly>Belum Dipublish</textarea>
+                                        <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" readonly>-</textarea>
                                     @endif
                                 </div>
                             </div>

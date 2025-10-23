@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Controllers\Controller;
+use App\Models\LogBook;
 use App\Models\Mahasiswa;
 use App\Models\Panitia;
 use App\Models\Proposal;
@@ -88,6 +89,7 @@ class HomePageController extends Controller
             $q->whereNull('mahasiswa_id')->orWhere('mahasiswa_id', $id);
         })->whereNull('dosen_id')->whereRaw('? BETWEEN DATE(updated_at) AND DATE(DATE_ADD(updated_at, INTERVAL 7 DAY))', [$today])
             ->latest()
+            ->take(5)
             ->get();
 
         $forceChangePassword = Hash::check(
@@ -120,6 +122,7 @@ class HomePageController extends Controller
         $today = Carbon::today();
         $notifikasi = Notifikasi::whereNull('tipe')->where('dosen_id', $dosenId)->whereRaw('? BETWEEN DATE(updated_at) AND DATE(DATE_ADD(updated_at, INTERVAL 7 DAY))', [$today])
             ->latest()
+            ->take(5)
             ->get();
 
         // jumlah permohonan judul yang belum diverifikasi/dicek
@@ -151,6 +154,10 @@ class HomePageController extends Controller
             ->where('proposal.periode_id', $periodeAktif->id)
             ->count();
 
+        $jmlLogbookBelumDicek = LogBook::where("dosen_id", auth("dosen")->id())
+            ->where("status_logbook_id", 1)
+            ->count();
+
         return view("dosen.dashboard", [
             "forceChangePassword" => $forceChangePassword,
             "isPanitia" => $isPanitia,
@@ -158,7 +165,8 @@ class HomePageController extends Controller
             'notifikasi' => $notifikasi,
             'unverifiedPermohonanJudulCount' => $unverifiedPermohonanJudulCount,
             "jumlahBelumNilaiSempro" => $jmlBelumNilaSempro,
-            "jumlahRevisiBelumDicek" => $jmlRevisiBelumDicek
+            "jumlahRevisiBelumDicek" => $jmlRevisiBelumDicek,
+            "jumlahLogbookBelumDicek" => $jmlLogbookBelumDicek
         ]);
     }
 
@@ -172,6 +180,7 @@ class HomePageController extends Controller
         $today = Carbon::today();
         $notifikasi = Notifikasi::where('tipe', 'panitia')->where('dosen_id', Auth::guard('dosen')->id())->whereRaw('? BETWEEN DATE(updated_at) AND DATE(DATE_ADD(updated_at, INTERVAL 7 DAY))', [$today])
             ->latest()
+            ->take(5)
             ->get();
 
         $dosenId = Auth::guard('dosen')->id();
