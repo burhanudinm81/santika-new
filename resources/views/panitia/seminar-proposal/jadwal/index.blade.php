@@ -70,6 +70,7 @@
                                 <th>No</th>
                                 <th>Tahap</th>
                                 <th>Periode</th>
+                                <th>Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -92,6 +93,11 @@
                                                 href="{{ route('jadwal-sempro.detail', ['tahap_id' => $item['tahap_id'], 'periode_id' => $item['periode_id']]) }}">
                                                 {{ $item['periode']->tahun }}
                                             </a>
+                                        </td>
+                                        <td>
+                                            <a href="{{ route('jadwal-sempro.edit', ["periode" => $item['periode_id'], "tahap" => $item['tahap_id']]) }}" class="btn btn-success">
+                    Edit
+                </a>
                                         </td>
                                     </tr>
                                 @endforeach

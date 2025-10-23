@@ -52,6 +52,7 @@
                                             <th scope="col" class="text-center">Dosen Penguji 1</th>
                                             <th scope="col" class="text-center">Dosen Penguji 2</th>
                                             <th scope="col" class="text-center">Aksi</th>
+                                            <th scope="col" class="text-center">Status</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -80,12 +81,17 @@
                                                     <td>{{ $jadwal->proposal->dosenPengujiSempro2->nama ?? '-' }}</td>
                                                     @if (auth('dosen')->id() != $jadwal->proposal->dosen_pembimbing_1_id)
                                                         <td><a href="{{ route('dosen.penilaian-sempro', ['proposal_id' => $jadwal->proposal_id]) }}"
-                                                                class="btn btn-primary" style="width: 150px">Status
-                                                                Kelulusan</a></td>
-                                                        <td></td>
+                                                                class="btn btn-primary" style="width: 150px">Status Kelulusan</a></td>
                                                     @else
                                                         <td>-</td>
                                                     @endif
+                                                    <td>
+                                                        @if ($jadwal->belumDinilai)
+                                                            <span class="badge badge-warning">Belum Dinilai</span>
+                                                        @else
+                                                            <span class="badge badge-success">Sudah Dinilai</span>
+                                                        @endif
+                                                    </td>
                                                 </tr>
                                             @endforeach
                                         @endif
@@ -108,6 +114,7 @@
                                             <th scope="col" class="text-center">Dosen Penguji 1</th>
                                             <th scope="col" class="text-center">Dosen Penguji 2</th>
                                             <th scope="col" class="text-center">Aksi</th>
+                                            <th scope="col" class="text-center">Status</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -139,6 +146,16 @@
                                                     @else
                                                         <td>-</td>
                                                     @endif
+                                                    <td>
+                                                        @if ($jadwal->belumDinilai)
+                                                            <span class="badge badge-warning">Belum Dinilai</span>
+                                                        @else
+                                                            <span class="badge badge-success">Sudah Dinilai</span>
+                                                        @endif
+                                                        @if ($jadwal->belumCekRevisi)
+                                                             <span class="badge badge-warning">Revisi Belum Dicek</span>
+                                                        @endif
+                                                    </td>
                                                 </tr>
                                             @endforeach
                                         @endif

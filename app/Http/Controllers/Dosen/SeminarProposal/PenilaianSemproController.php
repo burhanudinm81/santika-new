@@ -43,24 +43,30 @@ class PenilaianSemproController extends Controller
         $statusPenilaian = $request->input('status_penilaian');
         $catatanRevisi = $request->input('catatan_revisi');
 
-        // cek apakah revisi yang dibuat dosen saat ini sebelumnya sudah dibuat
-        $prevRevisi = Revisi::where('proposal_id', $proposalId)->where('dosen_id', $dosenId)->first();
-        // dd($prevRevisi);
 
-        if ($prevRevisi == null) { //  jika null, artinya revisi belum dibuat
-            // buat data revisi baru
-            Revisi::create([
-                'proposal_id' => $proposalId,
-                'dosen_id' => $dosenId,
-                'catatan_revisi' => $catatanRevisi,
-                'jenis_revisi' => 'sempro',
-            ]);
-        } else {
-            // update revisi sebelumnya yang sudah dibuat
-            $prevRevisi->update([
-                'catatan_revisi' => $catatanRevisi,
-            ]);
+        // Jika status penilaian Diterima dengan Revisi
+        if ($statusPenilaian == 2) {
+            // cek apakah revisi yang dibuat dosen saat ini sebelumnya sudah dibuat
+            $prevRevisi = Revisi::where('proposal_id', $proposalId)->where('dosen_id', $dosenId)->first();
+            // dd($prevRevisi);
+
+            if ($prevRevisi == null) { //  jika null, artinya revisi belum dibuat
+                // buat data revisi baru
+                Revisi::create([
+                    'proposal_id' => $proposalId,
+                    'dosen_id' => $dosenId,
+                    'catatan_revisi' => $catatanRevisi,
+                    'jenis_revisi' => 'sempro',
+                ]);
+            } else {
+                // update revisi sebelumnya yang sudah dibuat
+                $prevRevisi->update([
+                    'catatan_revisi' => $catatanRevisi,
+                ]);
+            }
         }
+
+
 
         // cek dosen yang sekarang mengisi revisi itu sebagai dospem 1 atau 2
         $levelDospem = 0;

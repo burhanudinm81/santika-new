@@ -45,7 +45,7 @@
                                         <th class="text-center">NIDN</th>
                                         <th class="text-center">NIP</th>
                                         <th class="text-center">Nama</th>
-                                        <th class="text-center">Aksi</th>
+                                        <th class="text-center">Kelola Akun</th>
                                     </tr>
                                 </thead>
                                 <tbody id="dosen-table-body">

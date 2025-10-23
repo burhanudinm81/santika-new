@@ -125,6 +125,12 @@
                                 <p>Rekap Nilai</p>
                             </a>
                         </li>
+                        <li class="nav-item">
+                            <a href="{{ route('panitia.seminar-hasil.tahap-rekap-nilai-akhir') }}" class="nav-link">
+                                <i class="far fa-circle nav-icon"></i>
+                                <p>Rekap Nilai Akhir</p>
+                            </a>
+                        </li>
                     </ul>
                 </li>
 

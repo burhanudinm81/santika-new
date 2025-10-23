@@ -56,12 +56,12 @@
                                 <p>Judul Mandiri</p>
                             </a>
                         </li>
-                        <li class="nav-item">
+                        <!-- <li class="nav-item">
                             <a href="#" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Judul Rekomendasi</p>
                             </a>
-                        </li>
+                        </li> -->
                         <li class="nav-item" id="riwayat-pengajuan-item">
                             <a href="{{ route('mahasiswa.pengajuan-judul-riwayat') }}" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
