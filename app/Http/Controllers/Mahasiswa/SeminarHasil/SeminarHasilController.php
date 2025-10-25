@@ -47,7 +47,7 @@ class SeminarHasilController extends Controller
 
             $infoBidangMinat = BidangMinat::all();
 
-            if(!is_null($infoProposal->status_sempro_penguji_1_id) && !is_null($infoProposal->status_sempro_penguji_2_id)) {
+            if (!is_null($infoProposal->status_sempro_penguji_1_id) && !is_null($infoProposal->status_sempro_penguji_2_id)) {
                 $belumSempro = false;
             }
 
@@ -211,7 +211,7 @@ class SeminarHasilController extends Controller
             ->orderBy('created_at', 'desc')
             ->first();
 
-        $mainProposalInfo = Proposal::with(['dosenPengujiSidangTA1', 'dosenPengujiSidangTA2', 'statusSemhasPenguji1', 'statusSemhasPenguji2'])
+        $mainProposalInfo = Proposal::with(['dosenPengujiSidangTA1', 'dosenPengujiSidangTA2', 'statusSemhasPenguji1', 'statusSemhasPenguji2', 'dosenPembimbing1', 'dosenPembimbing2', 'statusSemhasPembimbing1', 'statusSemhasPembimbing2'])
             ->where('id', $proposalInfo->proposal_id)
             ->first();
 
@@ -225,9 +225,18 @@ class SeminarHasilController extends Controller
             ->where('jenis_revisi', 'semhas')
             ->first();
 
+        $revisiDosbing1 = Revisi::where('proposal_id', $mainProposalInfo->id)
+            ->where('dosen_id', $mainProposalInfo->dosenPembimbing1->id)
+            ->where('jenis_revisi', 'semhas')
+            ->first();
+        $revisiDosbing2 = Revisi::where('proposal_id', $mainProposalInfo->id)
+            ->where('dosen_id', $mainProposalInfo->dosenPembimbing2->id)
+            ->where('jenis_revisi', 'semhas')
+            ->first();
+
         return view(
             'mahasiswa.seminar-hasil.hasil-semhas-sementara',
-            compact(['proposalInfo', 'mainProposalInfo', 'revisiDosen1', 'revisiDosen2'])
+            compact(['proposalInfo', 'mainProposalInfo', 'revisiDosen1', 'revisiDosen2', 'revisiDosbing1', 'revisiDosbing2'])
         );
     }
 
@@ -238,7 +247,7 @@ class SeminarHasilController extends Controller
             ->where('status_proposal_mahasiswa_id', 1)
             ->first();
 
-        $mainProposalInfo = Proposal::with(['dosenPengujiSidangTA1', 'dosenPengujiSidangTA2', 'statusSemhasPenguji1', 'statusSemhasPenguji2', 'statusSemhasTotal'])
+        $mainProposalInfo = Proposal::with(['dosenPengujiSidangTA1', 'dosenPengujiSidangTA2', 'statusSemhasPenguji1', 'statusSemhasPenguji2', 'statusSemhasTotal', 'dosenPembimbing1', 'dosenPembimbing2'])
             ->where('id', $proposalInfo->proposal_id)
             ->first();
 
@@ -269,6 +278,9 @@ class SeminarHasilController extends Controller
     {
         $penguji1ID = $request->input('penguji_1_id');
         $penguji2ID = $request->input('penguji_2_id');
+        $pembimbing1ID = $request->input('pembimbing_1_id');
+        $pembimbing2ID = $request->input('pembimbing_2_id');
+
         $proposalID = $request->input('proposal_id');
         $fileLembarRevisiPenguji1 = $request->file('lembar_revisi_penguji_1');
         $fileLembarRevisiPenguji2 = $request->file('lembar_revisi_penguji_2');
@@ -303,6 +315,14 @@ class SeminarHasilController extends Controller
             ->where('dosen_id', $penguji2ID)
             ->where('jenis_revisi', 'semhas')
             ->first();
+        $revisiPembimbing1 = Revisi::where('proposal_id', $proposalID)
+            ->where('dosen_id', $pembimbing1ID)
+            ->where('jenis_revisi', 'semhas')
+            ->first();
+        $revisiPembimbing2 = Revisi::where('proposal_id', $proposalID)
+            ->where('dosen_id', $pembimbing2ID)
+            ->where('jenis_revisi', 'semhas')
+            ->first();
 
 
         $revisi1->update([
@@ -313,6 +333,15 @@ class SeminarHasilController extends Controller
             'file_proposal_revisi' => $pathProposalRevisi,
             'file_lembar_revisi_dosen' => $pathLembarRevisi2
         ]);
+        $revisiPembimbing1->update([
+            'file_proposal_revisi' => $pathProposalRevisi,
+            'file_lembar_revisi_dosen' => $pathLembarRevisi1
+        ]);
+        $revisiPembimbing2->update([
+            'file_proposal_revisi' => $pathProposalRevisi,
+            'file_lembar_revisi_dosen' => $pathLembarRevisi1
+        ]);
+
 
         return redirect()->back()->with('success', 'Revisi Berhasil Diupload');
     }

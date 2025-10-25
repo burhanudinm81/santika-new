@@ -33,6 +33,10 @@
                             value="{{ $mainProposalInfo->dosenPengujiSidangTA1->id }}">
                         <input type="hidden" name="penguji_2_id"
                             value="{{ $mainProposalInfo->dosenPengujiSidangTA2->id }}">
+                        <input type="hidden" name="pembimbing_1_id"
+                            value="{{ $mainProposalInfo->dosenPembimbing1->id }}">
+                        <input type="hidden" name="pembimbing_2_id"
+                            value="{{ $mainProposalInfo->dosenPembimbing2->id }}">
                         <input type="hidden" name="proposal_id" value="{{ $mainProposalInfo->id }}">
 
                         <!--begin::Body-->

@@ -65,7 +65,7 @@
                         <!-- /.card-header -->
 
                         <div class="my-2" style="width: 300px; margin-right: 300px">
-                            <div class="input-group">
+                            <div class="input-group"> 
                                 <select class="custom-select" id="periode_id" aria-label="Example select with button addon">
 
                                     <option disabled>Pilih Periode</option>

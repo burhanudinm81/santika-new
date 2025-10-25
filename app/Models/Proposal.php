@@ -97,6 +97,17 @@ class Proposal extends Model
     {
         return $this->belongsTo(Dosen::class, 'dosen_pembimbing_2_id');
     }
+
+    public function statusSemhasPembimbing1()
+    {
+        return $this->belongsTo(StatusProposal::class, 'status_semhas_dosbing_1_id');
+    }
+
+    public function statusSemhasPembimbing2()
+    {
+        return $this->belongsTo(StatusProposal::class, 'status_semhas_dosbing_2_id');
+    }
+
     public function dosenPengujiSempro1(): BelongsTo
     {
         return $this->belongsTo(Dosen::class, 'penguji_sempro_1_id');
