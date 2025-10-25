@@ -72,8 +72,8 @@
                             <h5 class="card-title font-weight-bold">Pendaftaran Seminar Proposal Aktif</h5>
                         </div>
                         <div class=" card-body">
-                            <p class="card-text">Periode: {{ $periodeAktif->tahun ?? "-" }}</p>
-                            <p class="card-text">Tahap: {{ $tahapAktif->tahap ?? "-" }}</p>
+                            <p class="card-text">Periode: <b>{{ $periodeAktif->tahun ?? "-" }}</b></p>
+                            <p class="card-text">Tahap: <b>{{ $tahapAktif->tahap ?? "-" }}</b></p>
                         </div>
                     </div>
                 </div>

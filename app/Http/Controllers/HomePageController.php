@@ -156,6 +156,9 @@ class HomePageController extends Controller
 
         $jmlLogbookBelumDicek = LogBook::where("dosen_id", auth("dosen")->id())
             ->where("status_logbook_id", 1)
+            ->select("mahasiswa_id")
+            ->distinct()
+            ->get()
             ->count();
 
         return view("dosen.dashboard", [
