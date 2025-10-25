@@ -10,16 +10,42 @@ use App\Models\Periode;
 use App\Models\Proposal;
 use App\Models\ProposalDosenMahasiswa;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Log;
 
 class BimbinganController extends Controller
 {
-    public function showDaftarBimbingan()
+    public function showDaftarBimbingan(?int $periode_id = null)
     {
-        $listBimbinganD3 = [];
-        $listBimbinganD4 = [];
+        $listBimbinganD3 = collect();
+        $listBimbinganD4 = collect();
+        $listPeriode = Periode::orderBy('tahun', 'desc')->get();
+        $periodeAktif = Periode::where('aktif_sempro', true)->first();
 
+        $periodeTerpilih = is_null($periode_id) ? $periodeAktif : Periode::find($periode_id);
+
+        // Daftar Logbook Yang Belum diverifikasi Dosen
+        $logbookBelumDiverifikasi = LogBook::where('dosen_id', auth('dosen')->user()->id)
+            ->where("status_logbook_id", 1)
+            ->groupBy("proposal_id")
+            ->selectRaw("proposal_id, count(*) as jumlah")
+            ->get();
+
+        // Daftar Logbook Yang Belum Ditolak Dosen
+        $logbookDitolak = LogBook::where('dosen_id', auth('dosen')->user()->id)
+            ->where("status_logbook_id", 2)
+            ->groupBy("proposal_id")
+            ->selectRaw("proposal_id, count(*) as jumlah")
+            ->get();
+
+        // Daftar Logbook Yang Diterima Dosen
+        $logbookDiterima = LogBook::where('dosen_id', auth('dosen')->user()->id)
+            ->where("status_logbook_id", 3)
+            ->groupBy("proposal_id")
+            ->selectRaw("proposal_id, count(*) as jumlah")
+            ->get();
 
         $proposalD3 = Proposal::where('prodi_id', 1)
+            ->where("periode_id", $periodeTerpilih->id)
             ->where(function ($query) {
                 $query->where('dosen_pembimbing_1_id', auth('dosen')->user()->id)
                     ->orWhere('dosen_pembimbing_2_id', auth('dosen')->user()->id);
@@ -28,6 +54,7 @@ class BimbinganController extends Controller
 
 
         $proposalD4 = Proposal::where('prodi_id', 2)
+            ->where("periode_id", $periodeTerpilih->id)
             ->where(function ($query) {
                 $query->where('dosen_pembimbing_1_id', auth('dosen')->user()->id)
                     ->orWhere('dosen_pembimbing_2_id', auth('dosen')->user()->id);
@@ -37,18 +64,73 @@ class BimbinganController extends Controller
         foreach ($proposalD3 as $item) {
             $proposalDosenMahasiswa = ProposalDosenMahasiswa::where('proposal_id', $item->id)->get();
             if (count($proposalDosenMahasiswa) > 0) {
-                $listBimbinganD3[] = $proposalDosenMahasiswa;
+                $listBimbinganD3->push($proposalDosenMahasiswa);
             }
         }
 
         foreach ($proposalD4 as $item) {
             $proposalDosenMahasiswa = ProposalDosenMahasiswa::where('proposal_id', $item->id)->first();
             if ($proposalDosenMahasiswa) {
-                $listBimbinganD4[] = $proposalDosenMahasiswa;
+                $listBimbinganD4->push($proposalDosenMahasiswa);
             }
         }
 
-        return view('dosen.bimbingan.daftar-bimbingan', compact(['listBimbinganD3', 'listBimbinganD4']));
+        $listBimbinganD3->map(function($item) use ($logbookBelumDiverifikasi, $logbookDitolak, $logbookDiterima) {
+                $belumVerifikasi = $logbookBelumDiverifikasi->firstWhere("proposal_id", $item[0]->proposal_id);
+                $ditolak = $logbookDitolak->firstWhere("proposal_id", $item[0]->proposal_id);
+                $diterima = $logbookDiterima->firstWhere("proposal_id", $item[0]->proposal_id);
+
+                if(!is_null($belumVerifikasi)){
+                    $item->jmlBelumDiverifikasi = $belumVerifikasi->jumlah;
+                } else{
+                    $item->jmlBelumDiverifikasi = null;
+                }
+
+                if(!is_null($ditolak)){
+                    $item->jmlDitolak = $ditolak->jumlah;
+                } else{
+                    $item->jmlDitolak = null;
+                }
+
+                if(!is_null($diterima)){
+                    $item->jmlDiterima = $diterima->jumlah;
+                } else{
+                    $item->jmlDiterima = null;
+                }
+
+                return $item;
+            });
+
+        $listBimbinganD4->map(function($item) use ($logbookBelumDiverifikasi, $logbookDitolak, $logbookDiterima) {
+                $belumVerifikasi = $logbookBelumDiverifikasi->firstWhere("proposal_id", $item->proposal_id);
+                $ditolak = $logbookDitolak->firstWhere("proposal_id", $item->proposal_id);
+                $diterima = $logbookDiterima->firstWhere("proposal_id", $item->proposal_id);
+
+                if(!is_null($belumVerifikasi)){
+                    $item->jmlBelumDiverifikasi = $belumVerifikasi->jumlah;
+                } else{
+                    $item->jmlBelumDiverifikasi = null;
+                }
+
+                if(!is_null($ditolak)){
+                    $item->jmlDitolak = $ditolak->jumlah;
+                } else{
+                    $item->jmlDitolak = null;
+                }
+
+                if(!is_null($diterima)){
+                    $item->jmlDiterima = $diterima->jumlah;
+                } else{
+                    $item->jmlDiterima = null;
+                }
+
+                return $item;
+            });
+
+        return view(
+            'dosen.bimbingan.daftar-bimbingan', 
+            compact(['listBimbinganD3', 'listBimbinganD4', 'listPeriode', 'periodeTerpilih'])
+        );
     }
 
     public function showDaftarLogbookMahasiswa(Mahasiswa $mahasiswa)
@@ -139,7 +221,7 @@ class BimbinganController extends Controller
             $latestProposalId = ProposalDosenMahasiswa::where('mahasiswa_id', $mahasiswaId)
             ->whereHas('proposal', function ($query) use ($periodeAktif) {
                 $query->where('periode_id', $periodeAktif->id)
-                      ->where('dosen_pembimbing_1_id', auth('dosen')->user()->id);
+                      ->where('dosen_pembimbing_2_id', auth('dosen')->user()->id);
             })
             ->latest()
             ->first()

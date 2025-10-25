@@ -47,7 +47,7 @@ $(document).ready(function () {
                                     <td class="text-center align-middle">${item.proposal_mahasiswas[0].mahasiswa.nim ?? '-'}</td>
                                     <td class="text-center align-middle">${item.proposal_mahasiswas?.[1]?.mahasiswa.nama ?? '-'}</td>
                                     <td class="text-center align-middle">${item.proposal_mahasiswas?.[1]?.mahasiswa.nim ?? '-'}</td>
-                                    <td class="text-center align-middle">${item.judul ?? '-'}</td>
+                                    <td class="text-center align-middle" style="width: 250px">${item.judul ?? '-'}</td>
                                     <td class="text-center align-middle">
                                         ${badge}
                                     </td>
@@ -62,7 +62,7 @@ $(document).ready(function () {
                                     <td class="text-center align-middle">${index + 1}</td>
                                     <td class="text-center align-middle">${item.proposal_mahasiswas[0].mahasiswa.nama ?? '-'}</td>
                                     <td class="text-center align-middle">${item.proposal_mahasiswas[0].mahasiswa.nim ?? '-'}</td>
-                                    <td class="text-center align-middle">${item.judul ?? '-'}</td>
+                                    <td class="text-center align-middle" style="width: 250px">${item.judul ?? '-'}</td>
                                     <td class="text-center align-middle">
                                         ${badge}
                                     </td>
@@ -147,7 +147,7 @@ $(document).ready(function () {
 
 
 
-                            tbody += `<td class="text-center align-middle">${item.proposal.judul ?? 's-'}</td>
+                            tbody += `<td class="text-center align-middle td-250-wrapper">${item.proposal.judul ?? 's-'}</td>
                             <td class="text-center align-middle">
                                 ${badge}
                             </td>
@@ -162,7 +162,7 @@ $(document).ready(function () {
                                     <td class="text-center align-middle">${index + 1}</td>
                                     <td class="text-center align-middle">${item.proposal.proposal_mahasiswas[0].mahasiswa.nama ?? '-'}</td>
                                     <td class="text-center align-middle">${item.proposal.proposal_mahasiswas[0].mahasiswa.nim ?? '-'}</td>
-                                    <td class="text-center align-middle">${item.proposal.judul ?? '-'}</td>
+                                    <td class="text-center align-middle td-250-wrapper">${item.proposal.judul ?? '-'}</td>
                                     <td class="text-center align-middle">
                                         ${badge}
                                     </td>

@@ -32,7 +32,7 @@
                             @if ($mahasiswa->prodi_id == 1)
                                 <strong></i>Nama Mahasiswa 1</strong>
                                 <p class="text-muted">
-                                   {{$mahasiswaInfo[0]->mahasiswa->nama}}
+                                    {{$mahasiswaInfo[0]->mahasiswa->nama}}
                                 </p>
                                 <strong></i>Nama Mahasiswa 2</strong>
                                 <p class="text-muted">
@@ -63,16 +63,31 @@
 
                             <div class="mb-3">
                                 <label for="CatatanPenguji1" class="form-label">Catatan Khusus dari Dosen</label>
-                                <textarea name="catatan_khusus_dosen" class="form-control" id="exampleFormControlTextarea1" rows="10">{{ $logbook->catatan_khusus_dosen ?? '' }}</textarea>
+                                <textarea name="catatan_khusus_dosen" class="form-control" id="exampleFormControlTextarea1"
+                                    rows="10">{{ $logbook->catatan_khusus_dosen ?? '' }}</textarea>
                             </div>
                             <strong></i>Status Logbook</strong>
                             <br>
 
-                            <div class="d-grid gap-2">
-                                <button name="status_verif_logbook" value="3" type="submit"
-                                    class="btn btn-block btn-primary" type="button">Terima</button>
-                                <button name="status_verif_logbook" value="2" type="submit"
-                                    class="btn btn-block btn-danger" type="button">Tolak</button>
+                            <div class="container mt-2">
+                                <div class="row">
+                                    <div class="col-6">
+                                        <button name="status_verif_logbook" value="3" type="submit"
+                                            class="btn btn-block btn-success" type="button">Terima</button>
+                                    </div>
+                                    <div class="col-6">
+                                        <button name="status_verif_logbook" value="2" type="submit"
+                                            class="btn btn-block btn-danger" type="button">Tolak</button>
+                                    </div>
+                                </div>
+                                <div class="row d-flex justify-content-center align-items-center">
+                                    <div class="col-12">
+                                        <a href="{{ route("dosen.bimbingan.logbook-mahasiswa", ["mahasiswa" => $mahasiswa->id]) }}"
+                                            class="btn btn-info mt-2 w-100">
+                                            Kembali
+                                        </a>
+                                    </div>
+                                </div>
                             </div>
                         </div>
                     </form>

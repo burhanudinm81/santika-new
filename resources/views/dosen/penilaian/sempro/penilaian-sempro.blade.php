@@ -181,8 +181,8 @@
                                     <label for="status_revisi">Status Konfirmasi Revisi</label>
                                     <select class="form-control" id="status_revisi" name="status_revisi" required>
                                         <option value="" disabled selected>---Pilih Status Konfirmasi Revisi---</option>
-                                        <option value="diterima" @if ($prevRevisi != null && $prevRevisi->status == "diterima") selected @endif>Diterima</option>
-                                        <option value="ditolak" @if ($prevRevisi != null && $prevRevisi->status == "ditolak") selected @endif >Ditolak</option>
+                                        <option value="diterima" @if ($prevRevisi?->status == "diterima") selected @endif>Diterima</option>
+                                        <option value="ditolak" @if ($prevRevisi?->status == "ditolak") selected @endif >Ditolak</option>
                                     </select>
                                 </div>
 

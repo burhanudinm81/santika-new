@@ -4,14 +4,14 @@
     @if (session('success'))
         <div>
             <div style="
-                                                                                                                                                                                                    position: fixed;
-                                                                                                                                                                                                    top: 30px;
-                                                                                                                                                                                                    left: 60%;
-                                                                                                                                                                                                    transform: translateX(-50%);
-                                                                                                                                                                                                    z-index: 1050;
-                                                                                                                                                                                                    width: 50%;
-                                                                                                                                                                                                    transition: all 0.2s ease-in-out;
-                                                                                                                                                                                                "
+                                                                                                                                                                                                            position: fixed;
+                                                                                                                                                                                                            top: 30px;
+                                                                                                                                                                                                            left: 60%;
+                                                                                                                                                                                                            transform: translateX(-50%);
+                                                                                                                                                                                                            z-index: 1050;
+                                                                                                                                                                                                            width: 50%;
+                                                                                                                                                                                                            transition: all 0.2s ease-in-out;
+                                                                                                                                                                                                        "
                 class="bg-white border-bottom-0 border-right-0 border-left-0 py-4 border-success shadow shadow-md mx-auto alert alert-dismissible fade show relative"
                 role="alert">
                 <strong class="text-success">{{ session('success') }}</strong>
@@ -70,9 +70,9 @@
                                         <td>{{ $logbook->tanggal_kegiatan }}</td>
                                         <td>
                                             @if ($logbook->status_logbook_id == 1)
-                                                <span class="badge badge-warning">{{ $logbook->statusLogbook->status }}</span>
+                                                <span class="badge badge-warning">{{ $logbook->statusLogbook->status }}</span> <br>
                                             @elseif ($logbook->status_logbook_id == 2)
-                                                <span class="badge badge-danger">{{ $logbook->statusLogbook->status }}</span>
+                                                <span class="badge badge-danger">{{ $logbook->statusLogbook->status }}</span> <br>
                                             @elseif ($logbook->status_logbook_id == 3)
                                                 <span class="badge badge-success">{{ $logbook->statusLogbook->status }}</span>
                                             @endif
@@ -94,7 +94,12 @@
                     </div>
                 </div>
             </div>
-            <button id="btn-terima-semua-logbook" class="btn btn-success mt-2">Terima Semua Logbook</button>
+            <div class="d-flex justify-content-between align-items-center my-2">
+                <a href="{{ route("dosen.bimbingan.daftar-bimbingan") }}" class="btn btn-info mt-2">
+                    Kembali
+                </a>
+                <button id="btn-terima-semua-logbook" class="btn btn-success mt-2">Terima Semua Logbook</button>
+            </div>
         </div>
     </div>
 @endsection
@@ -116,7 +121,8 @@
                 </div>
                 <div class="modal-footer">
                     <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
-                    <form id="form-terima-semua-logbook" method="POST" action="{{ route("dosen.bimbingan.terima-semua-logbook") }}">
+                    <form id="form-terima-semua-logbook" method="POST"
+                        action="{{ route("dosen.bimbingan.terima-semua-logbook") }}">
                         @csrf
                         <input type="hidden" name="peran_dosbing" value="{{ $peranDosbing }}">
                         <input type="hidden" name="mahasiswa_id" value="{{ $mahasiswa->id }}">

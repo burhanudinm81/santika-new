@@ -1,4 +1,23 @@
 @extends('panitia.home')
+@section('page-style')
+    <style>
+        .td-250-wrapper {
+            min-width: 250px;
+            white-space: normal;
+            word-break: break-word;
+            overflow-wrap: anywhere;
+            margin: 0 auto;
+        }
+
+        .td-300-wrapper {
+            min-width: 300px;
+            white-space: normal;
+            word-break: break-word;
+            overflow-wrap: anywhere;
+            margin: 0 auto;
+        }
+    </style>
+@endsection
 
 @section('content-panitia')
     @if (session('success'))
@@ -43,12 +62,13 @@
                         <div class="card-header">
                             <div class="card-tools d-flex justify-content-between align-items-center w-100 mx-1">
                                 <div class="ml-1">
-                                    <button type="button" class="btn btn-success" id="btn-buka-pendaftaran-sempro">
-                                        Buka Pendaftaran
-                                    </button>
                                     @if ($tahapInfo->aktif_sempro)
                                         <button type="button" class="btn btn-danger" id="btn-nonaktifkan-tahap-sempro">
                                             Tutup Pendaftaran
+                                        </button>
+                                    @else
+                                        <button type="button" class="btn btn-success" id="btn-buka-pendaftaran-sempro">
+                                            Buka Pendaftaran
                                         </button>
                                     @endif
                                 </div>
@@ -96,7 +116,7 @@
                                             <th class="text-center align-middle">NIM Mahasiswa 1</th>
                                             <th class="text-center align-middle">Nama Mahasiswa 2</th>
                                             <th class="text-center align-middle">NIM Mahasiswa 2</th>
-                                            <th class="text-center align-middle">Judul</th>
+                                            <th class="text-center align-middle td-250-wrapper">Judul</th>
                                             <th class="text-center align-middle">Status</th>
                                             <th class="text-center align-middle">Detail</th>
                                         </tr>
@@ -105,7 +125,7 @@
                                             <th class="text-center align-middle">No</th>
                                             <th class="text-center align-middle">NIM</th>
                                             <th class="text-center align-middle">Nama</th>
-                                            <th class="text-center align-middle">Judul</th>
+                                            <th class="text-center align-middle td-250-wrapper">Judul</th>
                                             <th class="text-center align-middle">Status</th>
                                         </tr>
                                     @endif
@@ -128,13 +148,20 @@
                                 </tbody>
                             </table>
                         </div>
-                        <!-- /.card-body -->
                     </div>
-                    <!-- /.card -->
                 </div>
             </div>
-
-        </div><!-- /.container-fluid -->
+            <div class="row">
+                <p>
+                    Status Pendaftaran: 
+                    @if ($tahapInfo->aktif_sempro)
+                        <b class="text-success">Dibuka</b>                      
+                    @else
+                        <b class="text-danger">Ditutup</b>
+                    @endif
+                </p>
+            </div>
+        </div>
     </div>
 @endsection
 

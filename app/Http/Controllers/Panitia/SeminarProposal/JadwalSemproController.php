@@ -12,6 +12,7 @@ use App\Models\Prodi;
 use App\Models\Proposal;
 use App\Models\Tahap;
 use App\Services\SemproSchedulerService;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -459,5 +460,145 @@ class JadwalSemproController extends Controller
                 'listSesi'
             ])
         );
+    }
+
+    public function updateDosenPenguji1(Request $request): JsonResponse
+    {
+        $request->validate([
+            'dosen_penguji_1_id' => "required|exists:dosen,id",
+            'jadwal_id' => "required|exists:jadwal_seminar_proposal,id"
+        ]);
+
+        $dosenTerpilih = Dosen::find($request->dosen_penguji_1_id);
+        $jadwalSemproDospeng1 = JadwalSeminarProposal::with('proposal')->find($request->jadwal_id);
+        $tanggal = $jadwalSemproDospeng1->tanggal;
+        $sesi = $jadwalSemproDospeng1->sesi;
+
+        $proposalList = Proposal::where('periode_id', $jadwalSemproDospeng1->proposal->periode_id)
+            ->where('tahap_id', $jadwalSemproDospeng1->proposal->tahap_id)
+            ->whereHas('pendaftaranSempro', function ($q) {
+                $q->where('status_daftar_sempro_id', 1);
+            })
+            ->whereHas('jadwalSeminarProposal', function ($q) use ($tanggal, $sesi) {
+                $q->where('tanggal', $tanggal)->where('sesi', $sesi);
+            })
+            ->get();
+
+        $pengujiNotAvailable = array_merge(
+            $proposalList->pluck('penguji_sempro_1_id')->toArray(),
+            $proposalList->pluck('penguji_sempro_2_id')->toArray()
+        );
+
+        if (in_array($dosenTerpilih->id, $pengujiNotAvailable)) {
+            // Jika dosen yang dipilih ada didaftar dosen yg tidak tersedia di tanggal & sesi sempro terpilih
+
+            $tanggalFormatted = Carbon::parse($tanggal)->format('d-m-Y');
+
+            return response()->json([
+                "success" => false,
+                "message" => "$dosenTerpilih->nama tidak tersedia di tanggal $tanggalFormatted, sesi $sesi",
+                "errors" => [
+                    "dosen_tidak_tersedia" => "Dosen yang dipilih tidak tersedia di tanggal $tanggal, sesi $sesi"
+                ],
+                "data" => [
+                    "dosen" => [
+                        "id" => $dosenTerpilih->id,
+                        "nama" => $dosenTerpilih->nama
+                    ]
+                ]
+            ], 422);
+        }
+
+        try {
+            $proposal = $jadwalSemproDospeng1->proposal;
+            $proposal->penguji_sempro_1_id = $dosenTerpilih->id;
+            $proposal->save();
+        } catch (\Throwable $th) {
+            return response()->json([
+                "success" => false,
+                "message" => "Terjadi kesalahan saat mengubah Dosen Penguji",
+                "errors" => [
+                    "update_error" => "Terjadi kesalahan saat mengubah Dosen Penguji"
+                ],
+                "data" => [
+                    "dosen" => [
+                        "id" => $dosenTerpilih->id,
+                        "nama" => $dosenTerpilih->nama
+                    ]
+                ]
+            ], 500);
+        }
+
+        return response()->json([
+            "success" => true,
+            "message" => "Berhasil mengubah Dosen Penguji Seminar Proposal 1"
+        ]);
+    }
+
+    public function updateDosenPenguji2(Request $request): JsonResponse
+    {
+        $request->validate([
+            'dosen_penguji_2_id' => "required|exists:dosen,id",
+            'jadwal_id' => "required|exists:jadwal_seminar_proposal,id"
+        ]);
+
+        $dosenTerpilih = Dosen::find($request->dosen_penguji_2_id);
+        $jadwalSemproDospeng2 = JadwalSeminarProposal::with('proposal')->find($request->jadwal_id);
+        $tanggal = $jadwalSemproDospeng2->tanggal;
+        $sesi = $jadwalSemproDospeng2->sesi;
+
+        $proposalList = Proposal::where('periode_id', $jadwalSemproDospeng2->proposal->periode_id)
+            ->where('tahap_id', $jadwalSemproDospeng2->proposal->tahap_id)
+            ->whereHas('pendaftaranSempro', function ($q) {
+                $q->where('status_daftar_sempro_id', 1);
+            })
+            ->whereHas('jadwalSeminarProposal', function ($q) use ($tanggal, $sesi) {
+                $q->where('tanggal', $tanggal)->where('sesi', $sesi);
+            })
+            ->get();
+
+        $pengujiNotAvailable = array_merge(
+            $proposalList->pluck('penguji_sempro_1_id')->toArray(),
+            $proposalList->pluck('penguji_sempro_2_id')->toArray()
+        );
+
+        if (in_array($dosenTerpilih->id, $pengujiNotAvailable)) {
+            // Jika dosen yang dipilih ada didaftar dosen yg tidak tersedia di tanggal & sesi sempro terpilih
+
+            $tanggalFormatted = Carbon::parse($tanggal)->format('d-m-Y');
+
+            return response()->json([
+                "success" => false,
+                "message" => "$dosenTerpilih->nama tidak tersedia di tanggal $tanggalFormatted, sesi $sesi",
+                "errors" => [
+                    "dosen_tidak_tersedia" => "Dosen yang dipilih tidak tersedia di tanggal $tanggal, sesi $sesi"
+                ],
+                "data" => [
+                    "dosen" => [
+                        "id" => $dosenTerpilih->id,
+                        "nama" => $dosenTerpilih->nama
+                    ]
+                ]
+            ], 422);
+        }
+
+        try {
+            $proposal = $jadwalSemproDospeng2->proposal;
+            $proposal->penguji_sempro_2_id = $dosenTerpilih->id;
+            $proposal->save();
+        } catch (\Throwable $th) {
+            return response()->json([
+                "success" => false,
+                "message" => "Terjadi kesalahan saat mengubah Dosen Penguji",
+                "errors" => [
+                    "update_error" => "Terjadi kesalahan saat mengubah Dosen Penguji"
+                ],
+            ], 500);
+        }
+
+        return response()->json([
+            "success" => true,
+            "message" => "Berhasil mengubah Dosen Penguji Seminar Proposal 2"
+        ]);
     }
 }
