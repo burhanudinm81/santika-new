@@ -25,6 +25,19 @@
                             <a class="nav-link" href="#D3TT">D3 Teknik Telekomunikasi</a>
                             <a class="nav-link" href="#D4JTD">D4 Jaringan Telekomunikasi Digital</a>
                         </nav>
+                        <div class="my-2 ml-2" style="width: 300px;">
+                            <div class="input-group">
+                                <select class="custom-select" id="periode_id" aria-label="Example select with button addon">
+                                    <option disabled selected>Pilih Periode</option>
+                                    @foreach ($listPeriode as $periode)
+                                        <option value="{{ $periode->id }}"
+                                            {{ $periodeTerpilih->id == $periode->id ? 'selected' : '' }}>
+                                            {{ $periode->tahun }}
+                                        </option>
+                                    @endforeach
+                                </select>
+                            </div>
+                        </div>
                         <div class="card-body">
                             <div class="mb-2">
                                 <label id="D4JTD" class="form-label"> D3 Teknik Telekomunikasi</label>
@@ -181,3 +194,16 @@
         </div>
     </div>
 @endsection
+
+@push('page-scripts')
+    <script>
+        $(document).ready(function() {
+            $('#periode_id').on('change', function() {
+                var selectedPeriodeId = $(this).val();
+                if (selectedPeriodeId) {
+                    window.location.href = '/dosen/bimbingan/daftar-bimbingan/periode/' + selectedPeriodeId;
+                }
+            });
+        });
+    </script>
+@endpush

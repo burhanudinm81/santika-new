@@ -29,6 +29,7 @@ class SeminarHasilController extends Controller
         $countLogbookDospem2 = 0;
         $isLogbookAmountNotSatisfied = true;
         $isPendaftaranClose = false;
+        $belumSempro = true;
 
         $infoProposal = Proposal::with(['proposalMahasiswas', 'dosenPembimbing1', 'dosenPembimbing2', 'bidangMinat'])
             ->whereRelation('proposalMahasiswas', 'mahasiswa_id', auth('mahasiswa')->user()->id)
@@ -36,7 +37,6 @@ class SeminarHasilController extends Controller
             ->where('pendaftaran_sempro_id', '!=', null)
             ->latest()
             ->first();
-
 
         if ($infoProposal != null) {
             $infoMahasiswaAll = ProposalDosenMahasiswa::with(['dosen', 'mahasiswa'])
@@ -46,6 +46,10 @@ class SeminarHasilController extends Controller
             $infoDospem2 = $infoProposal->dosenPembimbing2()->first();
 
             $infoBidangMinat = BidangMinat::all();
+
+            if(!is_null($infoProposal->status_sempro_penguji_1_id) && !is_null($infoProposal->status_sempro_penguji_2_id)) {
+                $belumSempro = false;
+            }
 
             $infoPendaftaranSemhas = PendaftaranSemhas::with('statusDaftarSeminar')->where('proposal_id', $infoProposal->id)->first();
 
@@ -80,7 +84,8 @@ class SeminarHasilController extends Controller
             'countLogbookDospem1',
             'countLogbookDospem2',
             'isLogbookAmountNotSatisfied',
-            'isPendaftaranClose'
+            'isPendaftaranClose',
+            'belumSempro'
         ]));
     }
 

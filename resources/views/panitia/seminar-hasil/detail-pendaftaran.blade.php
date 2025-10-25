@@ -4,14 +4,14 @@
     @if (session('success'))
         <div>
             <div style="
-                                                                                                                                                                    position: fixed;
-                                                                                                                                                                    top: 30px;
-                                                                                                                                                                    left: 60%;
-                                                                                                                                                                    transform: translateX(-50%);
-                                                                                                                                                                    z-index: 1050;
-                                                                                                                                                                    width: 50%;
-                                                                                                                                                                    transition: all 0.2s ease-in-out;
-                                                                                                                                                                "
+                                                                                                                                                                                    position: fixed;
+                                                                                                                                                                                    top: 30px;
+                                                                                                                                                                                    left: 60%;
+                                                                                                                                                                                    transform: translateX(-50%);
+                                                                                                                                                                                    z-index: 1050;
+                                                                                                                                                                                    width: 50%;
+                                                                                                                                                                                    transition: all 0.2s ease-in-out;
+                                                                                                                                                                                "
                 class="bg-white border-bottom-0 border-right-0 border-left-0 py-4 border-success shadow shadow-md mx-auto alert alert-dismissible fade show relative"
                 role="alert">
                 <strong class="text-success">{{ session('success') }}</strong>
@@ -126,13 +126,15 @@
                                 </tbody>
                             </table>
                         </div>
-                        <!-- /.card-body -->
                     </div>
-                    <!-- /.card -->
                 </div>
             </div>
-
-        </div><!-- /.container-fluid -->
+            <div class="row">
+                <a href="{{ route("panitia.seminar-hasil.pendaftaran") }}" class="btn btn-info mt-2">
+                    Kembali
+                </a>
+            </div>
+        </div>
     </div>
 @endsection
 

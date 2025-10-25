@@ -14,10 +14,14 @@ use Illuminate\Support\Facades\Log;
 
 class BimbinganController extends Controller
 {
-    public function showDaftarBimbingan()
+    public function showDaftarBimbingan(?int $periode_id = null)
     {
         $listBimbinganD3 = collect();
         $listBimbinganD4 = collect();
+        $listPeriode = Periode::orderBy('tahun', 'desc')->get();
+        $periodeAktif = Periode::where('aktif_sempro', true)->first();
+
+        $periodeTerpilih = is_null($periode_id) ? $periodeAktif : Periode::find($periode_id);
 
         // Daftar Logbook Yang Belum diverifikasi Dosen
         $logbookBelumDiverifikasi = LogBook::where('dosen_id', auth('dosen')->user()->id)
@@ -41,6 +45,7 @@ class BimbinganController extends Controller
             ->get();
 
         $proposalD3 = Proposal::where('prodi_id', 1)
+            ->where("periode_id", $periodeTerpilih->id)
             ->where(function ($query) {
                 $query->where('dosen_pembimbing_1_id', auth('dosen')->user()->id)
                     ->orWhere('dosen_pembimbing_2_id', auth('dosen')->user()->id);
@@ -49,6 +54,7 @@ class BimbinganController extends Controller
 
 
         $proposalD4 = Proposal::where('prodi_id', 2)
+            ->where("periode_id", $periodeTerpilih->id)
             ->where(function ($query) {
                 $query->where('dosen_pembimbing_1_id', auth('dosen')->user()->id)
                     ->orWhere('dosen_pembimbing_2_id', auth('dosen')->user()->id);
@@ -121,9 +127,10 @@ class BimbinganController extends Controller
                 return $item;
             });
 
-        // dd($listBimbinganD4);
-
-        return view('dosen.bimbingan.daftar-bimbingan', compact(['listBimbinganD3', 'listBimbinganD4']));
+        return view(
+            'dosen.bimbingan.daftar-bimbingan', 
+            compact(['listBimbinganD3', 'listBimbinganD4', 'listPeriode', 'periodeTerpilih'])
+        );
     }
 
     public function showDaftarLogbookMahasiswa(Mahasiswa $mahasiswa)
