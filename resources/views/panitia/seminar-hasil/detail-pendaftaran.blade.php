@@ -70,7 +70,9 @@
 
                                     <option disabled>Pilih Periode</option>
                                     @foreach ($periodeInfo as $periode)
-                                        <option value="{{ $periode->id }}" {{ request('periode') == $periode->id ? 'selected' : '' }}>{{ $periode->tahun }}
+                                        <option value="{{ $periode->id }}"
+                                            @if ($periode->aktif_sidang_akhir) selected @endif>
+                                            {{ $periode->tahun }}
                                         </option>
                                     @endforeach
                                 </select>
@@ -130,7 +132,7 @@
                 </div>
             </div>
             <div class="row">
-                <a href="{{ route("panitia.seminar-hasil.pendaftaran") }}" class="btn btn-info mt-2">
+                <a href="{{ route('panitia.seminar-hasil.pendaftaran') }}" class="btn btn-info mt-2">
                     Kembali
                 </a>
             </div>
@@ -177,8 +179,8 @@
                 </div>
                 <div class="modal-footer"> <button type="button" class="btn btn-secondary" data-dismiss="modal">
                         Tidak</button>
-                    <a href="{{ route('panitia.kelola-periode-tahap.nonaktifkan-tahap-sidang-ta') }}" class="btn btn-danger"
-                        style="width: 75px">Ya</a>
+                    <a href="{{ route('panitia.kelola-periode-tahap.nonaktifkan-tahap-sidang-ta') }}"
+                        class="btn btn-danger" style="width: 75px">Ya</a>
                 </div>
             </div>
         </div>
@@ -186,5 +188,5 @@
 @endsection
 
 @section('scripts-panitia')
-    <script src="{{ url("/custom/js/seminar/pengaturan-seminar.js") }}"></script>
+    <script src="{{ url('/custom/js/seminar/pengaturan-seminar.js') }}"></script>
 @endsection

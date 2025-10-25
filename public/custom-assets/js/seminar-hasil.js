@@ -267,4 +267,8 @@ $(document).ready(function () {
             }
         });
     });
+
+    $('#buttonTampilByPeriodeSemhas').trigger('click');
+    $('#buttonTampilNilaiSemhasByPeriode').trigger('click');
+    $('#buttonTampilNilaiSemhasAkhirByPeriode').trigger('click');
 });
