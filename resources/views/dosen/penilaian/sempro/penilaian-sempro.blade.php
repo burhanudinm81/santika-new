@@ -74,7 +74,7 @@
                                     <div class="mb-3">
                                         <label for="NamaMahasiswa2" class="form-label">Nama Mahasiswa 2</label>
                                         <input type="text" class="form-control" id="NamaMahasiswa2"
-                                            value="{{ $listMahasiswa[1]->mahasiswa->nama }}" aria-describedby="NamaMahasiswa2"
+                                            value="{{ $listMahasiswa[1]->mahasiswa->nama ?? '-' }}" aria-describedby="NamaMahasiswa2"
                                             aria-label="readonly input example" readonly>
                                     </div>
                                 @elseif($proposal->prodi_id == 2)
@@ -92,9 +92,9 @@
                                         auth("dosen")->id() == $proposal->penguji_sempro_1_id &&
                                         !is_null($proposal->status_sempro_penguji_1_id)
                                     ) disabled @elseif(
-            auth("dosen")->id() == $proposal->penguji_sempro_2_id &&
-            !is_null($proposal->status_sempro_penguji_2_id)
-        ) disabled @endif required>
+                                        auth("dosen")->id() == $proposal->penguji_sempro_2_id &&
+                                        !is_null($proposal->status_sempro_penguji_2_id)
+                                    ) disabled @endif required>
                                         <option value="" disabled selected>-- Pilih Status Kelulusan --</option>
                                         @if (auth("dosen")->id() == $proposal->penguji_sempro_1_id)
                                             @foreach ($listStatusPenilaian as $status)
@@ -115,25 +115,25 @@
                                 </div>
 
                                 <strong></i>Catatan Revisi</strong>
-                                <textarea class="form-control mb-3" id="catatan_revisi" name="catatan_revisi" rows="6" 
+                                <textarea class="form-control mb-3" id="catatan_revisi" name="catatan_revisi" rows="6"
                                 @if (
                                     auth("dosen")->id() == $proposal->penguji_sempro_1_id &&
                                     !is_null($proposal->status_sempro_penguji_1_id)
                                 ) disabled @elseif(
                                     auth("dosen")->id() == $proposal->penguji_sempro_2_id &&
                                     !is_null($proposal->status_sempro_penguji_2_id)
-                                ) disabled 
+                                ) disabled
                                 @endif>@if($prevRevisi != null) {{ $prevRevisi->catatan_revisi }} @else {{ $proposal->catatan_revisi }} @endif</textarea>
 
-                                {{-- Button untuk menyimpan data --}}
+                            {{-- Button untuk menyimpan data --}}
                                 <div class="form-group w-100">
                                     <button type="submit" class="btn btn-primary" @if (
                                         auth("dosen")->id() == $proposal->penguji_sempro_1_id &&
                                         !is_null($proposal->status_sempro_penguji_1_id)
                                     ) disabled @elseif(
-            auth("dosen")->id() == $proposal->penguji_sempro_2_id &&
-            !is_null($proposal->status_sempro_penguji_2_id)
-        ) disabled @endif>Simpan Perubahan</button>
+                                        auth("dosen")->id() == $proposal->penguji_sempro_2_id &&
+                                        !is_null($proposal->status_sempro_penguji_2_id)
+                                    ) disabled @endif>Simpan Perubahan</button>
                                 </div>
                         </form>
                     </div>

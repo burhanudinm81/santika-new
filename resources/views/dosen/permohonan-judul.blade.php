@@ -57,7 +57,7 @@
                                                 <td>{{ $loop->iteration }}</td>
                                                 {{-- <td>{{ $proposalId }}</td> --}}
                                                 <td>{{ $permohonan[0]->mahasiswa->nama }}</td>
-                                                <td>{{ $permohonan[1]->mahasiswa->nama }}</td>
+                                                <td>{{ $permohonan[1]->mahasiswa->nama ?? '-' }}</td>
                                                 <td>{{ $permohonan->first()->proposal->judul }}</td>
                                                 <td>{{ $permohonan->first()->proposal->jenisJudul->jenis }}</td>
                                                 <td>

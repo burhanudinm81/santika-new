@@ -14,7 +14,6 @@ class PenilaianSemproController extends Controller
 {
     public function showPenilaianBaseOnMahasiswa($proposal_id)
     {
-
         $prevRevisi = null;
 
         $proposal = Proposal::findOrFail($proposal_id);

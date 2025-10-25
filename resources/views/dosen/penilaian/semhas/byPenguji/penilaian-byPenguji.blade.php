@@ -11,33 +11,33 @@
         </div>
         <div class="form-group">
             <label for="penguasaanMateri1">Penguasaan Materi:</label>
-            <input type="number" class="form-control" id="penguasaanMateri1" 
-                @if($roleDosen == 'Dosen Penguji Sidang TA 1') 
-                    value="{{ $nilaiAkhirMahasiswa1->nilai_penguasaan_materi1 ?? '' }}" 
-                @else 
+            <input type="number" class="form-control" id="penguasaanMateri1"
+                @if($roleDosen == 'Dosen Penguji Sidang TA 1')
+                    value="{{ $nilaiAkhirMahasiswa1->nilai_penguasaan_materi1 ?? '' }}"
+                @else
                     value="{{ $nilaiAkhirMahasiswa1->nilai_penguasaan_materi2 ?? '' }}"
                 @endif  name="penguasaanMateri1" min="0"
                 max="100">
         </div>
         <div class="form-group">
             <label for="presentasi1">Presentasi:</label>
-            <input type="number" class="form-control" id="presentasi1"  
-                @if($roleDosen == 'Dosen Penguji Sidang TA 1') 
-                    value="{{ $nilaiAkhirMahasiswa1->nilai_presentasi1 ?? '' }}" 
-                @else 
+            <input type="number" class="form-control" id="presentasi1"
+                @if($roleDosen == 'Dosen Penguji Sidang TA 1')
+                    value="{{ $nilaiAkhirMahasiswa1->nilai_presentasi1 ?? '' }}"
+                @else
                     value="{{ $nilaiAkhirMahasiswa1->nilai_presentasi2 ?? '' }}"
-                @endif 
+                @endif
                 name="presentasi1" min="0"
                 max="100">
         </div>
         <div class="form-group">
             <label for="karyaTulis">Karya Tulis:</label>
-            <input type="number" class="form-control" id="karyaTulis1"  
-                @if($roleDosen == 'Dosen Penguji Sidang TA 1') 
-                    value="{{ $nilaiAkhirMahasiswa1->nilai_karya_tulis1 ?? '' }}" 
-                @else 
+            <input type="number" class="form-control" id="karyaTulis1"
+                @if($roleDosen == 'Dosen Penguji Sidang TA 1')
+                    value="{{ $nilaiAkhirMahasiswa1->nilai_karya_tulis1 ?? '' }}"
+                @else
                     value="{{ $nilaiAkhirMahasiswa1->nilai_karya_tulis2 ?? '' }}"
-                @endif 
+                @endif
                 name="karyaTulis1" min="0"
                 max="100">
         </div>
@@ -77,38 +77,38 @@
         <div class="form-group">
             <label for="nama_mahasiswa2">Nama Mahasiswa 2:</label>
             <input type="text" class="form-control" id="nama_mahasiswa2" name="nama_mahasiswa2"
-                value="{{ $mainProposal->proposalMahasiswas[1]->mahasiswa->nama }}" readonly>
+                value="{{ $mainProposal->proposalMahasiswas[1]->mahasiswa->nama ?? '-' }}" readonly>
         </div>
         <div class="form-group">
             <label for="penguasaanMateri2">Penguasaan Materi:</label>
             <input type="number" class="form-control" id="penguasaanMateri2"
-                @if($roleDosen == 'Dosen Penguji Sidang TA 1') 
-                    value="{{ $nilaiAkhirMahasiswa2->nilai_penguasaan_materi1 ?? '' }}" 
-                @else 
+                @if($roleDosen == 'Dosen Penguji Sidang TA 1')
+                    value="{{ $nilaiAkhirMahasiswa2->nilai_penguasaan_materi1 ?? '' }}"
+                @else
                     value="{{ $nilaiAkhirMahasiswa2->nilai_penguasaan_materi2 ?? '' }}"
-                @endif  
+                @endif
              name="penguasaanMateri2" min="0"
                 max="100">
         </div>
         <div class="form-group">
             <label for="presentasi2">Presentasi:</label>
-            <input type="number" class="form-control" id="presentasi2" 
-                @if($roleDosen == 'Dosen Penguji Sidang TA 1') 
-                    value="{{ $nilaiAkhirMahasiswa2->nilai_presentasi1 ?? '' }}" 
-                @else 
+            <input type="number" class="form-control" id="presentasi2"
+                @if($roleDosen == 'Dosen Penguji Sidang TA 1')
+                    value="{{ $nilaiAkhirMahasiswa2->nilai_presentasi1 ?? '' }}"
+                @else
                     value="{{ $nilaiAkhirMahasiswa2->nilai_presentasi2 ?? '' }}"
-                @endif 
+                @endif
             name="presentasi2" min="0"
                 max="100">
         </div>
         <div class="form-group">
             <label for="hasil_karya2">Karya Tulis:</label>
             <input type="number" class="form-control" id="karyaTulis2" name="karyaTulis2" min="0"
-                @if($roleDosen == 'Dosen Penguji Sidang TA 1') 
-                    value="{{ $nilaiAkhirMahasiswa2->nilai_karya_tulis1 ?? '' }}" 
-                @else 
+                @if($roleDosen == 'Dosen Penguji Sidang TA 1')
+                    value="{{ $nilaiAkhirMahasiswa2->nilai_karya_tulis1 ?? '' }}"
+                @else
                     value="{{ $nilaiAkhirMahasiswa2->nilai_karya_tulis2 ?? '' }}"
-                @endif 
+                @endif
                 max="100">
         </div>
         <div class="form-group">
@@ -151,9 +151,9 @@
         <div class="form-group">
             <label for="penguasaanMateri1">Penguasaan Materi:</label>
             <input type="number" class="form-control" id="penguasaanMateri1" name="penguasaanMateri1"
-                @if($roleDosen == 'Dosen Penguji Sidang TA 1') 
-                    value="{{ $nilaiAkhirMahasiswa1->nilai_penguasaan_materi1 ?? '' }}" 
-                @else 
+                @if($roleDosen == 'Dosen Penguji Sidang TA 1')
+                    value="{{ $nilaiAkhirMahasiswa1->nilai_penguasaan_materi1 ?? '' }}"
+                @else
                     value="{{ $nilaiAkhirMahasiswa1->nilai_penguasaan_materi2 ?? '' }}"
                 @endif
                 min="0" max="100">
@@ -161,9 +161,9 @@
         <div class="form-group">
             <label for="presentasi1">Presentasi:</label>
             <input type="number" class="form-control" id="presentasi1" name="presentasi1" min="0"
-                @if($roleDosen == 'Dosen Penguji Sidang TA 1') 
-                    value="{{ $nilaiAkhirMahasiswa1->nilai_presentasi1 ?? '' }}" 
-                @else 
+                @if($roleDosen == 'Dosen Penguji Sidang TA 1')
+                    value="{{ $nilaiAkhirMahasiswa1->nilai_presentasi1 ?? '' }}"
+                @else
                     value="{{ $nilaiAkhirMahasiswa1->nilai_presentasi2 ?? '' }}"
                 @endif
                 max="100">
@@ -171,9 +171,9 @@
         <div class="form-group">
             <label for="karyaTulis">Karya Tulis:</label>
             <input type="number" class="form-control" id="karyaTulis1" name="karyaTulis1" min="0"
-                @if($roleDosen == 'Dosen Penguji Sidang TA 1') 
-                    value="{{ $nilaiAkhirMahasiswa1->nilai_karya_tulis1 ?? '' }}" 
-                @else 
+                @if($roleDosen == 'Dosen Penguji Sidang TA 1')
+                    value="{{ $nilaiAkhirMahasiswa1->nilai_karya_tulis1 ?? '' }}"
+                @else
                     value="{{ $nilaiAkhirMahasiswa1->nilai_karya_tulis2 ?? '' }}"
                 @endif
                 max="100">

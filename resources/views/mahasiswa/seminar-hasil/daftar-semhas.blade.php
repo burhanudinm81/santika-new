@@ -91,7 +91,7 @@
                                     </div>
                                     <div class="mb-3">
                                         <label for="NamaMahasiswa" class="form-label">Nama Mahasiswa 2</label>
-                                        <input value="{{ $infoMahasiswaAll[1]->mahasiswa->nama }}" type="text"
+                                        <input value="{{ $infoMahasiswaAll[1]->mahasiswa->nama ?? '-' }}" type="text"
                                             class="form-control" id="NamaMahasiswa" aria-describedby="NamaMahasiswa"
                                             readonly />
                                     </div>

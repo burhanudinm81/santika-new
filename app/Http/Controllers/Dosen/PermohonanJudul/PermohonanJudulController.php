@@ -54,18 +54,18 @@ class PermohonanJudulController extends Controller
                 ->where('dosen_id', auth('dosen')->user()->id)
                 ->first()
                 ->kuota_pembimbing_1_D3;
-        } elseif($prodiMahasiswa == 2){
+        } elseif ($prodiMahasiswa == 2) {
             // Jika Prodi D4 ambil kuota pembimbing 1 D4
             $kuotaPembimbing1 = KuotaDosen::select(['id', 'dosen_id', 'kuota_pembimbing_1_D4'])
                 ->where('dosen_id', auth('dosen')->user()->id)
                 ->first()
                 ->kuota_pembimbing_1_D4;
-        } else{
+        } else {
             return redirect()->back()->withErrors(['prodi' => 'Prodi yang anda masukkan tidak valid']);
         }
 
         return view(
-            'dosen.detail-permohonan-judul', 
+            'dosen.detail-permohonan-judul',
             compact('permohonanProposalMahasiswa', 'kuotaPembimbing1')
         );
     }

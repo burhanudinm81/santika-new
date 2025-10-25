@@ -69,8 +69,10 @@
                             <div class="input-group">
                                 <select class="custom-select" id="periode_id" aria-label="Example select with button addon">
                                     @foreach ($periodeInfo as $periode)
-                                        <option value="{{ $periode->id }}" {{ request('periode') == $periode->id ? 'selected' : '' }} @if ($periode->aktif_sempro) selected @endif>
-                                        {{ $periode->tahun }}
+                                        <option value="{{ $periode->id }}"
+                                            {{ request('periode') == $periode->id ? 'selected' : '' }}
+                                            @if ($periode->aktif_sempro) selected @endif>
+                                            {{ $periode->tahun }}
                                         </option>
                                     @endforeach
                                 </select>
@@ -184,5 +186,5 @@
 @endsection
 
 @section('scripts-panitia')
-    <script src="{{ url("/custom/js/seminar/pengaturan-seminar.js") }}"></script>
+    <script src="{{ url('/custom/js/seminar/pengaturan-seminar.js') }}"></script>
 @endsection

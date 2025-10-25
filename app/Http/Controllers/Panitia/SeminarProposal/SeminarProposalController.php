@@ -155,7 +155,7 @@ class SeminarProposalController extends Controller
         $listTahap = $listTahap->map(function ($tahap) use ($jumlahPesertaSempro) {
             $tahap->jumlahPeserta = $jumlahPesertaSempro->firstWhere('tahap_id', $tahap->id)->jumlah ?? 0;
             return $tahap;
-        }); 
+        });
 
         return view('panitia.seminar-proposal.tahap-rekap-nilai', compact('listTahap', 'periodeAktif'));
     }
@@ -177,7 +177,7 @@ class SeminarProposalController extends Controller
             ->visibilitas ?? false;
 
         return view(
-            'panitia.seminar-proposal.beranda-rekap-nilai', 
+            'panitia.seminar-proposal.beranda-rekap-nilai',
             compact(['tahapInfo', 'periodeInfo', 'dosenPanitiaInfo', 'periodeAktif', 'visibilitasNilai'])
         );
     }
