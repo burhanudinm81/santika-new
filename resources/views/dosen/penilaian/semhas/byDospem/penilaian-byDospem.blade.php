@@ -71,16 +71,20 @@
     {{-- mahasiswa 2 --}}
     <div class="col-md-6 student-panel">
         {{-- input hidden mahasiswa 2 --}}
-        <input type="hidden" name="mahasiswa2_id" value="{{ $mainProposal->proposalMahasiswas[1]->mahasiswa->id }}">
+        <input type="hidden" name="mahasiswa2_id"
+            value="{{ $mainProposal->proposalMahasiswas[1]->mahasiswa->id ?? '' }}">
 
         <div class="form-group">
             <label for="nama_mahasiswa2">Nama Mahasiswa 2:</label>
             <input type="text" class="form-control" id="nama_mahasiswa2" name="nama_mahasiswa2"
-                value="{{ $mainProposal->proposalMahasiswas[1]->mahasiswa->nama ?? '-' }}" readonly>
+                @if($countMahasiswa == 1) disabled @endif
+
+                value="{{ $mainProposal->proposalMahasiswas[1]->mahasiswa->nama ?? '' }}" readonly>
         </div>
         <div class="form-group">
             <label for="sikap2">Sikap:</label>
             <input type="number" class="form-control" id="sikap2" name="sikap2"
+                @if($countMahasiswa == 1) disabled @endif
                 @if ($roleDosen == 'Dosen Pembimbing 1') value="{{ $nilaiAkhirMahasiswa2->nilai_sikap_pemb1 ?? '' }}"
                 @else
                     value="{{ $nilaiAkhirMahasiswa2->nilai_sikap_pemb2 ?? '' }}" @endif
@@ -89,6 +93,8 @@
         <div class="form-group">
             <label for="kemampuan2">Kemampuan:</label>
             <input type="number" class="form-control" id="kemampuan2" name="kemampuan2"
+                @if($countMahasiswa == 1) disabled @endif
+
                 @if ($roleDosen == 'Dosen Pembimbing 1') value="{{ $nilaiAkhirMahasiswa2->nilai_kemampuan_pemb1 ?? '' }}"
                 @else
                     value="{{ $nilaiAkhirMahasiswa2->nilai_kemampuan_pemb2 ?? '' }}" @endif
@@ -97,6 +103,8 @@
         <div class="form-group">
             <label for="hasil_karya2">Hasil Karya:</label>
             <input type="number" class="form-control" id="hasil_karya2" name="hasil_karya2"
+                @if($countMahasiswa == 1) disabled @endif
+
                 @if ($roleDosen == 'Dosen Pembimbing 1') value="{{ $nilaiAkhirMahasiswa2->nilai_hasilKarya_pemb1 ?? '' }}"
                 @else
                     value="{{ $nilaiAkhirMahasiswa2->nilai_hasilKarya_pemb2 ?? '' }}" @endif
@@ -105,6 +113,8 @@
         <div class="form-group">
             <label for="laporan2">Laporan:</label>
             <input type="number" class="form-control" id="laporan2" name="laporan2"
+                @if($countMahasiswa == 1) disabled @endif
+
                 @if ($roleDosen == 'Dosen Pembimbing 1') value="{{ $nilaiAkhirMahasiswa2->nilai_laporan_pemb1 ?? '' }}"
                 @else
                     value="{{ $nilaiAkhirMahasiswa2->nilai_laporan_pemb2 ?? '' }}" @endif
@@ -114,7 +124,7 @@
             <label for="rata_rata2">Rata-Rata:</label>
             <input type="text" class="form-control" id="rata_rata2" name="rata_rata2" readonly>
         </div>
-        <button type="button" class="btn btn-outline-danger" id="countAverage2">Kalkulasi</button>
+        <button type="button" class="btn btn-outline-danger" id="countAverage2" @if($countMahasiswa == 1) disabled @endif>Kalkulasi</button>
         <div class="form-group">
             <label for="nilai_pembimbing1_2">Nilai Pembimbing 1:</label>
             <input type="text" class="form-control" id="nilai_mahasiswa2_pembimbing1"

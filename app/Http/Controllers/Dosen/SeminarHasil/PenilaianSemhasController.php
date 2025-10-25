@@ -68,15 +68,17 @@ class PenilaianSemhasController extends Controller
             ->where('mahasiswa_id', $mainProposal->proposalMahasiswas[0]->mahasiswa->id)
             ->first();
 
-        if ($mainProposal->prodi_id == 1) {
+        if ($mainProposal->prodi_id == 1 && count($mainProposal->proposalMahasiswas) > 1) {
             $nilaiAkhirMahasiswa2 = NilaiAkhirMahasiswa::where('proposal_id', $proposal_id)
                 ->where('mahasiswa_id', $mainProposal->proposalMahasiswas[1]->mahasiswa->id)
                 ->first();
         }
 
+        $countMahasiswa = count($mainProposal->proposalMahasiswas);
+
         return view(
             'dosen.penilaian.semhas.penilaian-akhir-semhas',
-            compact(['mainProposal', 'currentDosenInfo', 'roleDosen', 'nilaiAkhirMahasiswa1', 'nilaiAkhirMahasiswa2'])
+            compact(['mainProposal', 'currentDosenInfo', 'roleDosen', 'nilaiAkhirMahasiswa1', 'nilaiAkhirMahasiswa2', 'countMahasiswa'])
         );
     }
 
