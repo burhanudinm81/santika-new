@@ -106,7 +106,7 @@
                         <input type="hidden" id="tahap_id" value="{{ $tahapInfo->id }}">
                         <input type="hidden" id="prodi_panitia_id" value="{{ $dosenPanitiaInfo->prodi_id }}">
 
-                        <div class="card-body border border-2 border-danger table-responsive p-0" style="height: 320px">
+                        <div class="card-body border table-responsive p-0" style="height: 320px">
                             <table class="table table-head-fixed text-nowrap">
                                 <thead>
                                     @if ($dosenPanitiaInfo->prodi_id == 1)
@@ -153,9 +153,9 @@
             </div>
             <div class="row">
                 <p>
-                    Status Pendaftaran: 
+                    Status Pendaftaran:
                     @if ($tahapInfo->aktif_sempro)
-                        <b class="text-success">Dibuka</b>                      
+                        <b class="text-success">Dibuka</b>
                     @else
                         <b class="text-danger">Ditutup</b>
                     @endif

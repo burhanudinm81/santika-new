@@ -66,12 +66,14 @@
                         <!-- /.card-header -->
 
                         <div class="my-2" style="width: 300px; margin-right: 300px">
-                            <div class="input-group">
+                            <div class="input-group"> 
                                 <select class="custom-select" id="periode_id" aria-label="Example select with button addon">
 
                                     <option disabled>Pilih Periode</option>
                                     @foreach ($periodeInfo as $periode)
-                                        <option value="{{ $periode->id }}" {{ request('periode') == $periode->id ? 'selected' : '' }}>{{ $periode->tahun }}
+                                        <option value="{{ $periode->id }}"
+                                            @if ($periode->aktif_sidang_akhir) selected @endif>
+                                            {{ $periode->tahun }}
                                         </option>
                                     @endforeach
                                 </select>
@@ -188,8 +190,8 @@
                 </div>
                 <div class="modal-footer"> <button type="button" class="btn btn-secondary" data-dismiss="modal">
                         Tidak</button>
-                    <a href="{{ route('panitia.kelola-periode-tahap.nonaktifkan-tahap-sidang-ta') }}" class="btn btn-danger"
-                        style="width: 75px">Ya</a>
+                    <a href="{{ route('panitia.kelola-periode-tahap.nonaktifkan-tahap-sidang-ta') }}"
+                        class="btn btn-danger" style="width: 75px">Ya</a>
                 </div>
             </div>
         </div>
@@ -197,5 +199,5 @@
 @endsection
 
 @section('scripts-panitia')
-    <script src="{{ url("/custom/js/seminar/pengaturan-seminar.js") }}"></script>
+    <script src="{{ url('/custom/js/seminar/pengaturan-seminar.js') }}"></script>
 @endsection

@@ -185,5 +185,6 @@ $(document).ready(function () {
         });
     });
 
-
+    $('#buttonTampilByPeriode').trigger('click');
+    $('#buttonTampilNilaiSemproByPeriode').trigger('click');
 });

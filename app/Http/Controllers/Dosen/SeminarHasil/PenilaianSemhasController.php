@@ -68,15 +68,17 @@ class PenilaianSemhasController extends Controller
             ->where('mahasiswa_id', $mainProposal->proposalMahasiswas[0]->mahasiswa->id)
             ->first();
 
-        if ($mainProposal->prodi_id == 1) {
+        if ($mainProposal->prodi_id == 1 && count($mainProposal->proposalMahasiswas) > 1) {
             $nilaiAkhirMahasiswa2 = NilaiAkhirMahasiswa::where('proposal_id', $proposal_id)
                 ->where('mahasiswa_id', $mainProposal->proposalMahasiswas[1]->mahasiswa->id)
                 ->first();
         }
 
+        $countMahasiswa = count($mainProposal->proposalMahasiswas);
+
         return view(
             'dosen.penilaian.semhas.penilaian-akhir-semhas',
-            compact(['mainProposal', 'currentDosenInfo', 'roleDosen', 'nilaiAkhirMahasiswa1', 'nilaiAkhirMahasiswa2'])
+            compact(['mainProposal', 'currentDosenInfo', 'roleDosen', 'nilaiAkhirMahasiswa1', 'nilaiAkhirMahasiswa2', 'countMahasiswa'])
         );
     }
 
@@ -87,6 +89,8 @@ class PenilaianSemhasController extends Controller
         $dosenId = $request->input('dosen_id');
         $statusPenilaianSementara = $request->input('status_penilaian_sementara');
         $catatanRevisiAkhir = $request->input('catatan_revisi_akhir');
+
+
 
         // cek apakah revisi yang dibuat dosen saat ini sebelumnya sudah dibuat
         $prevRevisi = Revisi::where('proposal_id', $proposalId)
@@ -111,23 +115,36 @@ class PenilaianSemhasController extends Controller
         }
 
         // cek dosen yang sekarang mengisi revisi itu sebagai dospem 1 atau 2
-        $levelDospem = 0;
+        $levelPenguji = 0;
+        $levelPembimbing = 0;
         $proposalInfo = Proposal::findOrFail($proposalId);
 
         if ($proposalInfo->penguji_sidang_ta_1_id == auth('dosen')->user()->id) { // pengecekan apakah dosen yang sekarang mengisi revisi itu adalah dospem 1
-            $levelDospem = 1;
+            $levelPenguji = 1;
         } else if ($proposalInfo->penguji_sidang_ta_2_id == auth('dosen')->user()->id) { // pengecekan apakah dosen yang sekarang mengisi revisi itu adalah dospem 2
-            $levelDospem = 2;
+            $levelPenguji = 2;
+        } else if ($proposalInfo->dosen_pembimbing_1_id == auth('dosen')->user()->id) {
+            $levelPembimbing = 1;
+        } else if ($proposalInfo->dosen_pembimbing_2_id == auth('dosen')->user()->id) {
+            $levelPembimbing = 2;
         }
 
-        if ($levelDospem != 0) { // update status penilaian sempro berdasarkan dosen penguji (penguji 1 atau 2)
-            if ($levelDospem == 1) {
+        if ($levelPenguji != 0 || $levelPembimbing != 0) { // update status penilaian sempro berdasarkan dosen penguji (penguji 1 atau 2)
+            if ($levelPenguji == 1) {
                 $proposalInfo->update([
                     'status_semhas_penguji_1_id' => $statusPenilaianSementara,
                 ]);
-            } else if ($levelDospem == 2) {
+            } else if ($levelPenguji == 2) {
                 $proposalInfo->update([
                     'status_semhas_penguji_2_id' => $statusPenilaianSementara,
+                ]);
+            } else if ($levelPembimbing == 1) {
+                $proposalInfo->update([
+                    'status_semhas_dosbing_1_id' => $statusPenilaianSementara,
+                ]);
+            } else if ($levelPembimbing == 2) {
+                $proposalInfo->update([
+                    'status_semhas_dosbing_2_id' => $statusPenilaianSementara,
                 ]);
             }
         }
