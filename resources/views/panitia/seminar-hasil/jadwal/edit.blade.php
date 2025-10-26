@@ -108,7 +108,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Edit Jadwal Seminar Proposal</h1>
+                    <h1 class="m-0">Edit Jadwal Sidang Tugas Akhir</h1>
                     @if ($errors->any())
                         <div class="alert alert-danger">
                             <strong>Ups!</strong> Terjadi beberapa masalah dengan input Anda.<br><br>
@@ -151,13 +151,14 @@
                                                 @if ($prodiIdPanitia == 1)
                                                     <th class="text-center td-200-wrapper">Mahasiswa 2</th>
                                                 @endif
-                                                <th class="text-center .td-200-wrapper">Moderator</th>
+                                                <th class="text-center .td-200-wrapper">Dosen Pembimbing 1</th>
+                                                <th class="text-center .td-200-wrapper">Dosen Pembimbing 2</th>
                                                 <th class="text-center .td-200-wrapper">Dosen Penguji 1</th>
                                                 <th class="text-center .td-200-wrapper">Dosen Penguji 2</th>
                                             </tr>
                                         </thead>
                                         <tbody id="tbody-daftar-calon-peserta">
-                                            @foreach ($jadwalSempro as $idx => $jadwal)
+                                            @foreach ($jadwalSemhas as $idx => $jadwal)
                                                 <tr>
                                                     <td style="width: 50px" class="text-center">
                                                         {{ $idx + 1}}</th>
@@ -197,12 +198,16 @@
                                                             {{ $jadwal->proposal?->proposalMahasiswas[1]?->mahasiswa?->nama ?? '-' }}
                                                         </td>
                                                     @endif
-                                                    <td class="text-center">
-                                                        {{ $jadwal->proposal?->dosenPembimbing1?->nama ?? "-" }}</td>
+                                                    <td class="text-center td-200-wrapper">
+                                                        {{ $jadwal->proposal?->dosenPembimbing1?->nama ?? "-" }}
+                                                    </td>
+                                                    <td class="text-center td-200-wrapper">
+                                                        {{ $jadwal->proposal?->dosenPembimbing2?->nama ?? "-" }}
+                                                    </td>
                                                     <td class="text-center">
                                                         <select name="dosen_penguji_1_id" data-id="{{ $jadwal->id }}" data-prevent-change="false"
                                                             @foreach ($listDosenPenguji1 as $dosen)
-                                                                @if($dosen->id == $jadwal->proposal?->dosenPengujiSempro1?->id)
+                                                                @if($dosen->id == $jadwal->proposal?->dosenPengujiSidangTA1?->id)
                                                                     data-prev-id="{{ $dosen->id }}"
                                                                     data-prev-name="{{ $dosen->nama }}"
                                                                 @endif
@@ -210,7 +215,7 @@
                                                             class="custom-select dosen-penguji-select dosen-penguji-1-select" style="width: 200px">
                                                             @foreach ($listDosenPenguji1 as $dosen)
                                                                 <option value="{{ $dosen->id }}"
-                                                                    @if($dosen->id == $jadwal->proposal?->dosenPengujiSempro1?->id)
+                                                                    @if($dosen->id == $jadwal->proposal?->dosenPengujiSidangTA1?->id)
                                                                     selected @endif>{{ $dosen->nama }}</option>
                                                             @endforeach
                                                         </select>
@@ -218,7 +223,7 @@
                                                     <td class="text-center">
                                                         <select name="dosen_penguji_2_id" data-id="{{ $jadwal->id }}" data-prevent-change="false"
                                                             @foreach ($listDosenPenguji2 as $dosen)
-                                                                @if($dosen->id == $jadwal->proposal?->dosenPengujiSempro2?->id)
+                                                                @if($dosen->id == $jadwal->proposal?->dosenPengujiSidangTA2?->id)
                                                                     data-prev-id="{{ $dosen->id }}"
                                                                     data-prev-name="{{ $dosen->nama }}"
                                                                 @endif
@@ -226,7 +231,7 @@
                                                             class="custom-select dosen-penguji-select dosen-penguji-2-select" style="width: 200px">
                                                             @foreach ($listDosenPenguji2 as $dosen)
                                                                 <option value="{{ $dosen->id }}"
-                                                                    @if($dosen->id == $jadwal->proposal?->dosenPengujiSempro2?->id)
+                                                                    @if($dosen->id == $jadwal->proposal?->dosenPengujiSidangTA2?->id)
                                                                     selected @endif>{{ $dosen->nama }}</option>
                                                             @endforeach
                                                         </select>
@@ -242,7 +247,7 @@
                 </div>
             </div>
             <div class="row">
-                <a href="{{ route("jadwal-sempro.detail", ["tahap_id" => $tahap->id, "periode_id" => $periode->id]) }}" class="btn btn-info">
+                <a href="{{ route("panitia.jadwal-sidang-akhir.detail", ["tahap_id" => $tahap->id, "periode_id" => $periode->id]) }}" class="btn btn-info">
                     Kembali
                 </a>
             </div>
@@ -253,5 +258,5 @@
 
 @section('scripts-panitia')
     <script src="https://cdn.jsdelivr.net/npm/select2@4.1.0-rc.0/dist/js/select2.min.js"></script>
-    <script src="{{ asset('/custom/js/seminar-proposal/edit-jadwal.js') }}"></script>
+    <script src="{{ asset('/custom/js/seminar-hasil/edit-jadwal.js') }}"></script>
 @endsection

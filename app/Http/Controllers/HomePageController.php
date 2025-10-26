@@ -186,20 +186,19 @@ class HomePageController extends Controller
             ->take(5)
             ->get();
 
-        $dosenId = Auth::guard('dosen')->id();
+        $periodeAktif = Auth::guard('dosen')->id();
+        $periodeAktif = Periode::firstWhere("aktif_sempro", true);
 
-        $pendingSempro = PendaftaranSeminarProposal::where(function ($q) use ($dosenId) {
-            $q->whereHas('proposal', function ($p) use ($dosenId) {
-                $p->where('dosen_pembimbing_1_id', $dosenId)
-                    ->orWhere('dosen_pembimbing_2_id', $dosenId);
+        $pendingSempro = PendaftaranSeminarProposal::where(function ($q) use ($periodeAktif) {
+            $q->whereHas('proposal', function ($p) use ($periodeAktif) {
+                $p->where('periode_id', $periodeAktif->id);
             });
         })->where('status_daftar_sempro_id', 3)
             ->count();
 
-        $pendingSemhas = PendaftaranSemhas::where(function ($q) use ($dosenId) {
-            $q->whereHas('proposal', function ($p) use ($dosenId) {
-                $p->where('dosen_pembimbing_1_id', $dosenId)
-                    ->orWhere('dosen_pembimbing_2_id', $dosenId);
+        $pendingSemhas = PendaftaranSemhas::where(function ($q) use ($periodeAktif) {
+            $q->whereHas('proposal', function ($p) use ($periodeAktif) {
+                $p->where('periode_id', $periodeAktif->id);
             });
         })->where('status_daftar_semhas_id', 3)
             ->count();
@@ -209,9 +208,7 @@ class HomePageController extends Controller
             'dataChart' => $this->getChart(),
             'notifikasi' => $notifikasi,
             'pendingSempro' => $pendingSempro,
-            'pendingSemhas' => $pendingSemhas,
-            'tahap' => Tahap::where('aktif_sempro', 1)->first()->id ?? null,
-            'periode' => Periode::where('aktif_sempro', 1)->first()->id ?? null,
+            'pendingSemhas' => $pendingSemhas
         ]);
     }
 }

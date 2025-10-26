@@ -24,8 +24,9 @@ class SeminarProposalController extends Controller
 
         $periodeAktif = $listPeriode->firstWhere('aktif_sempro', true);
         $tahapAktif = $listTahap->firstWhere('aktif_sempro', true);
+        $prodiPanitia = Panitia::where('dosen_id', auth('dosen')->user()->id)->first()->prodi_id;
 
-        $data = PendaftaranSeminarProposal::where('status_daftar_sempro_id', 3)
+        $pendaftaranBelumDiverifikasi = PendaftaranSeminarProposal::where('status_daftar_sempro_id', 3)
             ->whereHas('proposal', function ($query) use ($periodeAktif) {
                 $query->where('periode_id', $periodeAktif->id);
             })
@@ -35,8 +36,19 @@ class SeminarProposalController extends Controller
             ->selectRaw('proposal.tahap_id, count(*) as jumlah')
             ->get();
 
-        $listTahap = $listTahap->map(function ($tahap) use ($data) {
-            $tahap->jumlahBelumVerifikasi = $data->firstWhere('tahap_id', $tahap->id)->jumlah ?? 0;
+        $pendaftaranSempro = PendaftaranSeminarProposal::whereHas('proposal', function ($query) use ($periodeAktif, $prodiPanitia) {
+                $query->where('periode_id', $periodeAktif->id)
+                    ->where('prodi_id', $prodiPanitia);
+            })
+            ->join('proposal', 'pendaftaran_seminar_proposal.proposal_id', '=', 'proposal.id')
+            ->select('proposal.tahap_id')
+            ->groupBy('proposal.tahap_id')
+            ->selectRaw('proposal.tahap_id, count(*) as jumlah')
+            ->get();
+
+        $listTahap = $listTahap->map(function ($tahap) use ($pendaftaranBelumDiverifikasi, $pendaftaranSempro) {
+            $tahap->jumlahBelumVerifikasi = $pendaftaranBelumDiverifikasi->firstWhere('tahap_id', $tahap->id)->jumlah ?? 0;
+            $tahap->jumlahPendaftar = $pendaftaranSempro->firstWhere('tahap_id', $tahap->id)->jumlah ?? 0;
             return $tahap;
         });
 

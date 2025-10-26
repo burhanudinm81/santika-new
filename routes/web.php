@@ -530,7 +530,7 @@ Route::middleware(["auth:dosen", "auth.session", "password.changed", "is.panitia
         ->group(function () {
             // -- Generate Jadwal Otomatis
             // Route untuk mengakses halaman beranda jadwal sempro
-            Route::get('/', 'index')->name('index');
+            Route::get('/periode/{periode?}', 'index')->name('index');
 
             // Route untuk Membuka Halaman Generate Jadwal Otomatis
             Route::get('/create', 'create')->name('create');
@@ -538,7 +538,7 @@ Route::middleware(["auth:dosen", "auth.session", "password.changed", "is.panitia
             // Route untuk generate jadwal otomatis
             Route::post('/store', 'store')->name('store');
 
-            // Route untuk edit Jadwal Sempro
+            // Route untuk membuka halaman edit Jadwal Sempro
             Route::get('/edit/periode/{periode}/tahap/{tahap}', 'edit')->name('edit');
 
             //  Route untuk melihat detail jadwal sempro
@@ -559,6 +559,9 @@ Route::middleware(["auth:dosen", "auth.session", "password.changed", "is.panitia
 
             // Route untuk mengirim data jadwal manual
             Route::post("/store-manual", "storeManual")->name("store-manual");
+
+            // Route untuk cek jumlah proposal Seminar Proposal
+            Route::post("/cek-jumlah-proposal", "cekJumlahProposal")->name("cek-jumlah-proposal");
         });
 
     Route::controller(PlottingPembimbingController::class)->group(function () {
@@ -574,13 +577,22 @@ Route::middleware(["auth:dosen", "auth.session", "password.changed", "is.panitia
         ->name('panitia.jadwal-sidang-akhir.')
         ->group(function () {
             // Route untuk menampilkan jadwal sidang akhir
-            Route::get('/', 'index')->name('index');
+            Route::get('/periode/{periode?}', 'index')->name('index');
 
             // Route untuk membuka halaman generate jadwal sidang ujian akhir otomatis
             Route::get('/create', 'create')->name('create');
 
             // Route untuk mengirim data generate jadwal sidang ujian akhir otomatis
             Route::post('/store', 'store')->name('store');
+
+            // Route untuk membuka halaman edit Jadwal Sidang Akhir
+            Route::get('/edit/periode/{periode}/tahap/{tahap}', 'edit')->name('edit');
+
+             // Route untuk edit Dosen Penguji Sidang Akhir 1
+            Route::put('/update-penguji-sidang-akhir-1', 'updateDosenPenguji1')->name('update-penguji-sidang-akhir-1');
+
+            // Route untuk edit Dosen Penguji Sidang Akhir 2
+            Route::put('/update-penguji-sidang-akhir-2', 'updateDosenPenguji2')->name('update-penguji-sidang-akhir-2');
 
             // Route untuk menampilkan halaman detail jadwal sidang ujian akhir
             Route::get("/detail/tahap/{tahap_id}/periode/{periode_id}", "detail")->name('detail');
@@ -593,6 +605,9 @@ Route::middleware(["auth:dosen", "auth.session", "password.changed", "is.panitia
 
             // Route untuk mengirim data generate jadwal sidang ujian akhir manual
             Route::post("/store-manual", "storeManual")->name("store-manual");
+
+            // Route untuk cek jumlah proposal Sidang Tugas Akhir
+            Route::post("/cek-jumlah-proposal", "cekJumlahProposal")->name("cek-jumlah-proposal");
         });
 
     // Route untuk serving file yang private, dalam bentuk link path

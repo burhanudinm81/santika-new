@@ -61,11 +61,11 @@
                                     <label for="JudulProposal" class="form-label" style="font-size: 22px">Status Pendaftaran
                                         Seminar</label>
                                     <input type="text" class="
-                                                form-control
-                                                 @if ($infoPendaftaranSemhas != null && $infoPendaftaranSemhas->status_daftar_semhas_id == 3) bg-warning
-                                                 @elseif($infoPendaftaranSemhas != null && $infoPendaftaranSemhas->status_daftar_semhas_id == 1) bg-success
-                                                 @else bg-info @endif
-                                                " id="JudulProposal" aria-describedby="JudulProposal"
+                                                        form-control
+                                                         @if ($infoPendaftaranSemhas != null && $infoPendaftaranSemhas->status_daftar_semhas_id == 3) bg-warning
+                                                         @elseif($infoPendaftaranSemhas != null && $infoPendaftaranSemhas->status_daftar_semhas_id == 1) bg-success
+                                                         @else bg-info @endif
+                                                        " id="JudulProposal" aria-describedby="JudulProposal"
                                         value=" @if ($infoPendaftaranSemhas != null) {{ $infoPendaftaranSemhas->statusDaftarSeminar->status }}@else Anda belum mendaftar Sidang Ujian Akhir @endif"
                                         readonly />
                                 </div>
@@ -209,11 +209,8 @@
                         </form>
                         <!--end::Form-->
                     </div>
-
                 </div>
             @endif
-
         </div>
-        <!-- /.content -->
     </div>
 @endsection

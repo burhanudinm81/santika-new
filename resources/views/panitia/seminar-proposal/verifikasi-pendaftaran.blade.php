@@ -210,7 +210,7 @@
                                 "
                                 class="btn btn-primary btn-block
                                     @if ($pendaftaranSemproInfo->status_daftar_sempro_id == 1) disabled @endif
-                                    ">Simpan</button>
+                                    " @if ($pendaftaranSemproInfo->status_daftar_sempro_id == 1) disabled @endif>Simpan</button>
 
                             <a href="{{ route('panitia.seminar-proposal.pendaftaran-detail', ['tahapId' => $pendaftaranSemproInfo->proposal->tahap_id]) }}"
                                 class="btn btn-info mt-2">

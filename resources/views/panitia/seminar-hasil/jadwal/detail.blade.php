@@ -13,7 +13,13 @@
     </div>
     <div class="content">
         <div class="container-fluid">
-            <div class="row">
+            <div class="row mb-2">
+                <a href="{{ route('panitia.jadwal-sidang-akhir.edit', ["periode" => $periode->id, "tahap" => $tahap->id]) }}"
+                    class="btn btn-success">
+                    Edit
+                </a>
+            </div>
+            <div class="row mb-2">
                 <div class="card-body table-responsive p-0">
                     <table id="tabel-proposal" class="table table-bordered table-head-fixed" style="table-layout: fixed;">
                         <thead>
@@ -22,7 +28,7 @@
                                 <th style="width: 100px" class="text-center">Ruang</th>
                                 <th style="width: 150px" class="text-center">Tanggal</th>
                                 <th style="width: 50px" class="text-center">Sesi</th>
-                                <th style="width: 100px" class="text-center">Waktu</th>
+                                <th style="width: 200px" class="text-center">Waktu</th>
                                 <th style="width: 300px" class="text-center">Judul</th>
                                 <th style="width: 300px" class="text-center">Mahasiswa 1</th>
                                 @if ($prodi->id == 1)
@@ -60,7 +66,7 @@
                                         @if (empty($printed[$key]))
                                             <td rowspan="{{ $rowspanMap[$key] }}">{{ $jadwal->tanggal->isoFormat("dddd, DD-MM-YYYY") ?? "-" }}</td>
                                             <td rowspan="{{ $rowspanMap[$key] }}">{{ $jadwal->sesi ?? "-" }}</td>
-                                            <td rowspan="{{ $rowspanMap[$key] }}">{{ $jadwal->waktu_mulai->isoFormat("HH:mm") ?? "-" . ' - ' . $jadwal->waktu_selesai->isoFormat("HH:mm") ?? "-" }}</td>
+                                            <td rowspan="{{ $rowspanMap[$key] }}" class="text-center">{{ $jadwal->waktu_mulai->isoFormat("HH:mm") ?? "-" }} - {{$jadwal->waktu_selesai->isoFormat("HH:mm") ?? "-" }}</td>
                                             @php $printed[$key] = true; @endphp
                                         @endif
                                         <td>{{ $jadwal->proposal->judul }}</td>

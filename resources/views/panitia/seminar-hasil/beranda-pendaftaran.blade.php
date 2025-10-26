@@ -4,14 +4,14 @@
     @if (session('success'))
         <div>
             <div style="
-                                                                                                            position: fixed;
-                                                                                                            top: 30px;
-                                                                                                            left: 60%;
-                                                                                                            transform: translateX(-50%);
-                                                                                                            z-index: 1050;
-                                                                                                            width: 50%;
-                                                                                                            transition: all 0.2s ease-in-out;
-                                                                                                        "
+                                                                                                                    position: fixed;
+                                                                                                                    top: 30px;
+                                                                                                                    left: 60%;
+                                                                                                                    transform: translateX(-50%);
+                                                                                                                    z-index: 1050;
+                                                                                                                    width: 50%;
+                                                                                                                    transition: all 0.2s ease-in-out;
+                                                                                                                "
                 class="bg-white border-bottom-0 border-right-0 border-left-0 py-4 border-success shadow shadow-md mx-auto alert alert-dismissible fade show relative"
                 role="alert">
                 <strong class="text-success">{{ session('success') }}</strong>
@@ -24,14 +24,14 @@
     @if ($errors->any())
         <div>
             <div style="
-                                                                                                            position: fixed;
-                                                                                                            top: 30px;
-                                                                                                            left: 60%;
-                                                                                                            transform: translateX(-50%);
-                                                                                                            z-index: 1050;
-                                                                                                            width: 50%;
-                                                                                                            transition: all 0.2s ease-in-out;
-                                                                                                        "
+                                                                                                                    position: fixed;
+                                                                                                                    top: 30px;
+                                                                                                                    left: 60%;
+                                                                                                                    transform: translateX(-50%);
+                                                                                                                    z-index: 1050;
+                                                                                                                    width: 50%;
+                                                                                                                    transition: all 0.2s ease-in-out;
+                                                                                                                "
                 class="bg-white border-bottom-0 border-right-0 border-left-0 py-4 border-danger shadow shadow-md mx-auto alert alert-dismissible fade show relative"
                 role="alert">
                 <ul>
@@ -90,6 +90,12 @@
                         <div class="small-box bg-info">
                             <div class="inner">
                                 <h3>Tahap {{ $tahap->tahap }}</h3>
+                                <h5 class="my-0">{{ $tahap->jumlahPendaftar }} Mahasiswa</h5>
+                                @if ($tahap->jumlahBelumVerifikasi > 0)
+                                    <span class="badge badge-warning">{{ $tahap->jumlahBelumVerifikasi }} belum diverifikasi</span>
+                                @else
+                                    <span class="badge badge-success">Semua sudah diverifikasi</span>
+                                @endif
                             </div>
                             <div class="icon">
                                 <i class="fas fa-solid fa-user"></i>
