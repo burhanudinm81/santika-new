@@ -42,6 +42,7 @@
                                     @endif
                                 </textarea>
                             </div>
+
                             <hr>
                             <div class="mb-3">
                                 <label for="DosenPenguji2" class="form-label">Dosen Penguji 2</label>
@@ -60,6 +61,50 @@
                                         {{ $revisiDosen2->catatan_revisi ?? '' }}
                                     @else
                                         Belum ada catatan dari Dosen Penguji 2.
+                                    @endif
+                                </textarea>
+                            </div>
+
+                            <hr>
+                            <div class="mb-3">
+                                <label for="DosenPenguji2" class="form-label">Dosen Pembimbing 1</label>
+                                <input type="text" class="form-control" id="DosenPenguji2"
+                                    aria-describedby="DosenPenguji2" value="{{ $mainProposalInfo->dosenPembimbing1->nama ?? '' }}" readonly />
+                            </div>
+                            <div class="mb-3">
+                                <label for="StatusNilaiPenguji2" class="form-label">Status Nilai Dosen Pembimbing 1</label>
+                                <input type="text" class="form-control" id="StatusNilaiPenguji2"
+                                    aria-describedby="StatusNilaiPenguji2" value="{{ $mainProposalInfo->statusSemhasPembimbing1->status ?? ''}}" readonly />
+                            </div>
+                            <div class="mb-3">
+                                <label for="CatatanPenguji2" class="form-label">Catatan Pembimbing 1</label>
+                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" readonly>
+                                     @if ($revisiDosbing1)
+                                        {{ $revisiDosbing1->catatan_revisi ?? '' }}
+                                    @else
+                                        Belum ada catatan dari Dosen Pembimbing 1.
+                                    @endif
+                                </textarea>
+                            </div>
+
+                             <hr>
+                            <div class="mb-3">
+                                <label for="DosenPenguji2" class="form-label">Dosen Pembimbing 2</label>
+                                <input type="text" class="form-control" id="DosenPenguji2"
+                                    aria-describedby="DosenPenguji2" value="{{ $mainProposalInfo->dosenPembimbing2->nama ?? '' }}" readonly />
+                            </div>
+                            <div class="mb-3">
+                                <label for="StatusNilaiPenguji2" class="form-label">Status Nilai Dosen Pembimbing 2</label>
+                                <input type="text" class="form-control" id="StatusNilaiPenguji2"
+                                    aria-describedby="StatusNilaiPenguji2" value="{{ $mainProposalInfo->statusSemhasPembimbing2->status ?? ''}}" readonly />
+                            </div>
+                            <div class="mb-3">
+                                <label for="CatatanPenguji2" class="form-label">Catatan Pembimbing 2</label>
+                                <textarea class="form-control" id="exampleFormControlTextarea1" rows="3" readonly>
+                                     @if ($revisiDosbing2)
+                                        {{ $revisiDosbing2->catatan_revisi ?? '' }}
+                                    @else
+                                        Belum ada catatan dari Dosen Pembimbing 2.
                                     @endif
                                 </textarea>
                             </div>

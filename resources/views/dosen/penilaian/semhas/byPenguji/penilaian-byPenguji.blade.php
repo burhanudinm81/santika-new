@@ -72,16 +72,18 @@
     {{-- mahasiswa 2 --}}
     <div class="col-md-6 student-panel">
         {{-- input hidden mahasiswa 2 --}}
-        <input type="hidden" name="mahasiswa2_id" value="{{ $mainProposal->proposalMahasiswas[1]->mahasiswa->id }}">
+        <input type="hidden" name="mahasiswa2_id" value="{{ $mainProposal->proposalMahasiswas[1]->mahasiswa->id ?? '' }}">
 
         <div class="form-group">
             <label for="nama_mahasiswa2">Nama Mahasiswa 2:</label>
             <input type="text" class="form-control" id="nama_mahasiswa2" name="nama_mahasiswa2"
-                value="{{ $mainProposal->proposalMahasiswas[1]->mahasiswa->nama ?? '-' }}" readonly>
+                value="{{ $mainProposal->proposalMahasiswas[1]->mahasiswa->nama ?? '' }}" readonly>
         </div>
         <div class="form-group">
             <label for="penguasaanMateri2">Penguasaan Materi:</label>
             <input type="number" class="form-control" id="penguasaanMateri2"
+                @if($countMahasiswa == 1) disabled @endif
+
                 @if($roleDosen == 'Dosen Penguji Sidang TA 1')
                     value="{{ $nilaiAkhirMahasiswa2->nilai_penguasaan_materi1 ?? '' }}"
                 @else
@@ -93,6 +95,8 @@
         <div class="form-group">
             <label for="presentasi2">Presentasi:</label>
             <input type="number" class="form-control" id="presentasi2"
+                @if($countMahasiswa == 1) disabled @endif
+
                 @if($roleDosen == 'Dosen Penguji Sidang TA 1')
                     value="{{ $nilaiAkhirMahasiswa2->nilai_presentasi1 ?? '' }}"
                 @else
@@ -104,6 +108,8 @@
         <div class="form-group">
             <label for="hasil_karya2">Karya Tulis:</label>
             <input type="number" class="form-control" id="karyaTulis2" name="karyaTulis2" min="0"
+                @if($countMahasiswa == 1) disabled @endif
+
                 @if($roleDosen == 'Dosen Penguji Sidang TA 1')
                     value="{{ $nilaiAkhirMahasiswa2->nilai_karya_tulis1 ?? '' }}"
                 @else
@@ -115,7 +121,7 @@
             <label for="rata_rata2">Rata-Rata:</label>
             <input type="text" class="form-control" id="rata_rata_penguji2" name="rata_rata_penguji2" readonly>
         </div>
-        <button type="button" class="btn btn-outline-danger" id="countAveragePenguji2">Kalkulasi</button>
+        <button type="button" class="btn btn-outline-danger" id="countAveragePenguji2"  @if($countMahasiswa == 1) disabled @endif >Kalkulasi</button>
         <div class="form-group">
             <label for="nilai_pembimbing2_2">Nilai Penguii 1:</label>
             <input type="text" class="form-control" value="{{ $nilaiAkhirMahasiswa2->avg_nilai_penguji1 ?? '' }}"

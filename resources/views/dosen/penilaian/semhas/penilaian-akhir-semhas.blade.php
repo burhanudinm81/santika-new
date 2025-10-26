@@ -38,7 +38,7 @@
                                 <div class="form-group">
                                     <label for="status_kelulusan">Status Kelulusan:</label>
                                     <input type="text" class="form-control bg-info"
-                                        value="{{ $mainProposal->statusSemhasTotal->status ?? "-" }}" readonly>
+                                        value="{{ $mainProposal->statusSemhasTotal->status ?? '-' }}" readonly>
                                 </div>
 
                                 {{-- input hidden --}}
@@ -51,15 +51,15 @@
                                         @include('dosen.penilaian.semhas.byPenguji.penilaian-byPenguji', [
                                             'mainProposal' => $mainProposal,
                                             'nilaiAkhirMahasiswa1' => $nilaiAkhirMahasiswa1,
-                                            'nilaiAkhirMahasiswa2' => $nilaiAkhirMahasiswa2,
-                                            'roleDosen'=> $roleDosen
+                                            'nilaiAkhirMahasiswa2' => $nilaiAkhirMahasiswa2 ?? null,
+                                            'roleDosen' => $roleDosen,
                                         ])
                                     @elseif ($roleDosen == 'Dosen Pembimbing 1' || $roleDosen == 'Dosen Pembimbing 2')
                                         @include('dosen.penilaian.semhas.byDospem.penilaian-byDospem', [
                                             'mainProposal' => $mainProposal,
-                                            'nilaiAkhirMahasiswa1' => $nilaiAkhirMahasiswa1,
-                                            'nilaiAkhirMahasiswa2' => $nilaiAkhirMahasiswa2,
-                                            'roleDosen'=>$roleDosen 
+                                            'nilaiAkhirMahasiswa1' => $nilaiAkhirMahasiswa1 ?? null,
+                                            'nilaiAkhirMahasiswa2' => $nilaiAkhirMahasiswa2 ?? null,
+                                            'roleDosen' => $roleDosen,
                                         ])
                                     @endif
                                 </div>

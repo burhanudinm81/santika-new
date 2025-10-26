@@ -45,12 +45,13 @@
                                 <div class="mb-3">
                                     <label for="NamaMahasiswa2" class="form-label">Nama Mahasiswa 2</label>
                                     <input type="text" class="form-control" id="NamaMahasiswa2"
-                                        value="{{ $listMahasiswa[1]->mahasiswa->nama }}" aria-describedby="NamaMahasiswa2"
-                                        aria-label="readonly input example" readonly>
+                                        value="{{ $listMahasiswa[1]->mahasiswa->nama ?? '-' }}"
+                                        aria-describedby="NamaMahasiswa2" aria-label="readonly input example" readonly>
                                 </div>
                             @elseif($proposal->prodi_id == 2)
                                 <div class="mb-3">
-                                    <label for="NamaMahasiswa1" class="form-label"  value="{{ $listMahasiswa[0]->mahasiswa->nama }}">Nama Mahasiswa </label>
+                                    <label for="NamaMahasiswa1" class="form-label"
+                                        value="{{ $listMahasiswa[0]->mahasiswa->nama }}">Nama Mahasiswa </label>
                                     <input type="text" class="form-control" id="NamaMahasiswa1" value="Nama Mahasiswa 1"
                                         aria-describedby="NamaMahasiswa1" aria-label="readonly input example" readonly>
                                 </div>
@@ -68,15 +69,15 @@
                             </div>
 
                             <strong></i>Catatan Revisi Akhir</strong>
-                            <textarea class="form-control" id="catatan_revisi_akhir" name="catatan_revisi_akhir" rows="6" 
+                            <textarea class="form-control" id="catatan_revisi_akhir" name="catatan_revisi_akhir" rows="6"
                             required>@if ($prevRevisi != null){{ $prevRevisi->catatan_revisi }}@else {{ $proposal->catatan_revisi }}@endif</textarea>
 
                             <div class="form-group">
                                 <label>Lihat Lembar Revisi:</label>
                                 <div>
                                     @if ($prevRevisi != null && $prevRevisi->file_lembar_revisi_dosen)
-                                        <iframe src="{{ $prevRevisi->getPathLembarRevisiSemhasForDosen() }}" frameborder="2"
-                                            width="88%" height="700px" scrolling="yes"></iframe>
+                                        <iframe src="{{ $prevRevisi->getPathLembarRevisiSemhasForDosen() }}"
+                                            frameborder="2" width="88%" height="700px" scrolling="yes"></iframe>
                                     @else
                                         <span class="text-gray-500 italic">Belum ada file</span>
                                     @endif
@@ -87,8 +88,8 @@
                                 <label>Lihat Proposal Hasil Revisi:</label>
                                 <div>
                                     @if ($prevRevisi != null && $prevRevisi->file_proposal_revisi)
-                                        <iframe src="{{ $prevRevisi->getPathLembarRevisiSemhasForDosen() }}" frameborder="2"
-                                            width="88%" height="700px" scrolling="yes"></iframe>
+                                        <iframe src="{{ $prevRevisi->getPathLembarRevisiSemhasForDosen() }}"
+                                            frameborder="2" width="88%" height="700px" scrolling="yes"></iframe>
                                     @else
                                         <span class="text-gray-500 italic">Belum ada file</span>
                                     @endif

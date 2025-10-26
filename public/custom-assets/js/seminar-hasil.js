@@ -122,21 +122,38 @@ $(document).ready(function () {
                         }
 
                         if (prodiPanitiaId == 1) {
+                            const hasMahasiswa2 = item.proposal.proposal_mahasiswas && item.proposal.proposal_mahasiswas.length > 1;
+                            console.log(hasMahasiswa2);
+
                             tbody += `
                                 <tr>
                                     <td class="text-center align-middle">${index + 1}</td>
                                     <td class="text-center align-middle">${item.proposal.proposal_mahasiswas[0].mahasiswa.nama ?? '-'}</td>
                                     <td class="text-center align-middle">${item.proposal.proposal_mahasiswas[0].mahasiswa.nim ?? '-'}</td>
-                                    <td class="text-center align-middle">${item.proposal.proposal_mahasiswas[1].mahasiswa.nama ?? '-'}</td>
-                                    <td class="text-center align-middle">${item.proposal.proposal_mahasiswas[1].mahasiswa.nim ?? '-'}</td>
-                                    <td class="text-center align-middle">${item.proposal.judul ?? '-'}</td>
-                                    <td class="text-center align-middle">
-                                        ${badge}
-                                    </td>
-                                    <td class="text-center align-middle">
-                                        <a href="/panitia/seminar-hasil/pendaftaran/${item.id}/verifikasi" class="btn btn-primary btn-sm">View</a>
-                                    </td>
-                                </tr>
+                            `;
+
+                            if (hasMahasiswa2) {
+                                tbody += `
+                                <td class="text-center align-middle">${item.proposal.proposal_mahasiswas[1].mahasiswa.nama ?? '-'}</td>
+                                <td class="text-center align-middle">${item.proposal.proposal_mahasiswas[1].mahasiswa.nim ?? '-'}</td>
+                                `;
+                            } else {
+                                tbody += `
+                                <td class="text-center align-middle">-</td>
+                                <td class="text-center align-middle">-</td>
+                                `
+                            }
+
+
+
+                            tbody += `<td class="text-center align-middle">${item.proposal.judul ?? 's-'}</td>
+                            <td class="text-center align-middle">
+                                ${badge}
+                            </td>
+                            <td class="text-center align-middle">
+                                <a href="/panitia/seminar-proposal/pendaftaran/${item.id}/verifikasi" class="btn btn-primary btn-sm">View</a>
+                            </td>
+                            </tr>
                             `;
                         } else if (prodiPanitiaId == 2) {
                             tbody += `
@@ -250,4 +267,8 @@ $(document).ready(function () {
             }
         });
     });
+
+    $('#buttonTampilByPeriodeSemhas').trigger('click');
+    $('#buttonTampilNilaiSemhasByPeriode').trigger('click');
+    $('#buttonTampilNilaiSemhasAkhirByPeriode').trigger('click');
 });
