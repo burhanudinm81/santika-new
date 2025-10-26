@@ -21,36 +21,56 @@ use Illuminate\View\View;
 
 class JadwalSemproController extends Controller
 {
-    public function index()
+    public function index(?Periode $periode = null): View
     {
         $idDosen = auth('dosen')->id();
-        $prodiPanita = Panitia::firstWhere('dosen_id', $idDosen)->prodi_id;
+        $prodiPanitia = Panitia::firstWhere('dosen_id', $idDosen)->prodi_id;
 
+        $listPeriode = Periode::all();
+        $periodeAktif = $listPeriode->firstWhere('aktif_sempro', true);
+        $periodeTerpilih = $periode ?? $periodeAktif;
+
+        // Hitung Jumlah Peserta Seminar Proposal per tahap
+        $counts = JadwalSeminarProposal::join("proposal", "jadwal_seminar_proposal.proposal_id", "=", "proposal.id")
+            ->where('proposal.prodi_id', $prodiPanitia)
+            ->selectRaw('proposal.tahap_id, proposal.periode_id, count(*) as jumlah')
+            ->groupBy('proposal.tahap_id', 'proposal.periode_id')
+            ->get()
+            ->mapWithKeys(function ($row) {
+                return [$row->tahap_id . '-' . $row->periode_id => (int) $row->jumlah];
+            })
+            ->toArray();
+        
         // Ambil pasangan unik tahap dan periode dari jadwal sempro
-        $pasangan = JadwalSeminarProposal::whereHas('proposal', function ($query) use ($prodiPanita) {
-            $query->where('prodi_id', $prodiPanita);
+        $pasangan = JadwalSeminarProposal::whereHas('proposal', function ($query) use ($prodiPanitia, $periodeTerpilih) {
+            $query->where('prodi_id', $prodiPanitia)
+                ->where("periode_id", $periodeTerpilih->id);
         })
             ->with(['proposal.tahap', 'proposal.periode'])
             ->get()
-            ->map(function ($item) {
+            ->map(function ($item) use ($counts) {
                 return [
                     'tahap_id' => $item->proposal->tahap_id,
                     'periode_id' => $item->proposal->periode_id,
                     'tahap' => $item->proposal->tahap,
                     'periode' => $item->proposal->periode,
+                    'jumlah_peserta' => $counts[$item->proposal->tahap_id . '-' . $item->proposal->periode_id] ?? 0,
                 ];
             })
             ->unique(function ($item) {
                 return $item['tahap_id'] . '-' . $item['periode_id'];
             })
-            ->sortBy(function ($item) {
+            ->sortByDesc(function ($item) {
                 return $item['tahap_id'] . '-' . $item['periode_id'];
             })
             ->values();
 
-        $prodi = Prodi::findOrFail($prodiPanita);
+        $prodi = Prodi::findOrFail($prodiPanitia);
 
-        return view('panitia.seminar-proposal.jadwal.index', compact('pasangan', 'prodi'));
+        return view(
+            'panitia.seminar-proposal.jadwal.index', compact
+            ('pasangan', 'prodi', 'listPeriode', 'periodeTerpilih')
+        );
     }
 
     public function create()
@@ -71,8 +91,15 @@ class JadwalSemproController extends Controller
             'periode_id' => 'required|exists:periode,id',
             'ruang' => 'required|array',
             'tanggal' => 'required|array',
-            'sesi' => 'required|array',
+            'jumlah_sesi' => 'required|integer|min:1',
+            "waktu_mulai" => 'required|date_format:H:i',
+            "durasi_seminar" => "required|integer|min:1",
+            "jeda_antar_seminar" => "required|integer|min:1"
         ]);
+
+        $jumlahSesi = $request->integer("jumlah_sesi");
+        $durasiSeminar = $request->integer("durasi_seminar");
+        $jedaAntarSeminar = $request->integer("jeda_antar_seminar");
 
         $idDosen = auth('dosen')->id();
         $prodiPanitia = Panitia::firstWhere('dosen_id', $idDosen)->prodi_id;
@@ -94,7 +121,20 @@ class JadwalSemproController extends Controller
 
         $ruangs = $request->ruang;
         $tanggals = $request->tanggal;
-        $sesis = $request->sesi;
+        $sesis = [];
+
+        for($i = 1; $i <= $jumlahSesi; $i++){
+            $waktuMulai = Carbon::createFromFormat('H:i', $request->waktu_mulai)
+                    ->addMinutes(($i - 1) * ($durasiSeminar + $jedaAntarSeminar))
+                    ->format('H:i');
+
+            $sesis[] = [
+                "waktu_mulai" => $waktuMulai,
+                "waktu_selesai" => Carbon::createFromFormat('H:i', $waktuMulai)
+                    ->addMinutes($durasiSeminar)
+                    ->format('H:i')
+            ];
+        }
 
         $tahapId = $request->integer("tahap_id");
         $periodeId = $request->integer("periode_id");
@@ -599,6 +639,32 @@ class JadwalSemproController extends Controller
         return response()->json([
             "success" => true,
             "message" => "Berhasil mengubah Dosen Penguji Seminar Proposal 2"
+        ]);
+    }
+
+    public function cekJumlahProposal(Request $request): JsonResponse
+    {
+        $request->validate([
+            'tahap_id' => 'required|exists:tahap,id',
+            'periode_id' => 'required|exists:periode,id',
+        ]);
+
+        $idDosen = auth('dosen')->id();
+        $prodiPanitia = Panitia::firstWhere('dosen_id', $idDosen)->prodi_id;
+
+        $jumlahProposal = Proposal::whereHas('pendaftaranSempro', function ($query) {
+            $query->where('status_daftar_sempro_id', 1);
+        })
+            ->where('tahap_id', $request->tahap_id)
+            ->where('periode_id', $request->periode_id)
+            ->where('prodi_id', $prodiPanitia)
+            ->count();
+
+        return response()->json([
+            'status' => true,
+            'data' => [
+                'jumlah_proposal' => $jumlahProposal
+            ]
         ]);
     }
 }

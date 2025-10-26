@@ -13,6 +13,7 @@ use App\Models\Prodi;
 use App\Models\Proposal;
 use App\Models\Tahap;
 use App\Services\SemhasSchedulerService;
+use Carbon\Carbon;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Log;
@@ -21,36 +22,53 @@ use Illuminate\View\View;
 
 class JadwalSemhasController extends Controller
 {
-    public function index(): View
+    public function index(?Periode $periode = null): View
     {
         $prodiPanitia = Panitia::firstWhere('dosen_id', auth('dosen')->id())->prodi_id;
         $prodi = Prodi::findOrFail($prodiPanitia);
 
+        $listPeriode = Periode::all();
+        $periodeAktif = $listPeriode->firstWhere('aktif_sempro', true);
+        $periodeTerpilih = $periode ?? $periodeAktif;
+
+        // Hitung Jumlah Peserta Sidang Tugas Akhir per tahap
+        $counts = JadwalSeminarHasil::join("proposal", "jadwal_seminar_hasil.proposal_id", "=", "proposal.id")
+            ->where('proposal.prodi_id', $prodiPanitia)
+            ->selectRaw('proposal.tahap_semhas_id, proposal.periode_semhas_id, count(*) as jumlah')
+            ->groupBy('proposal.tahap_semhas_id', 'proposal.periode_semhas_id')
+            ->get()
+            ->mapWithKeys(function ($row) {
+                return [$row->tahap_semhas_id . '-' . $row->periode_semhas_id => (int) $row->jumlah];
+            })
+            ->toArray();
+
         // Ambil pasangan unik tahap dan periode dari jadwal sidang ujian akhir / semhas
-        $pasangan = JadwalSeminarHasil::whereHas('proposal', function ($query) use ($prodi) {
-            $query->where('prodi_id', $prodi->id);
+        $pasangan = JadwalSeminarHasil::whereHas('proposal', function ($query) use ($prodi, $periodeTerpilih) {
+            $query->where('prodi_id', $prodi->id)
+                ->where('periode_semhas_id', $periodeTerpilih->id);
         })
             ->with(['proposal.tahapSemhas', 'proposal.periodeSemhas'])
             ->get()
-            ->map(function ($item) {
+            ->map(function ($item) use ($counts) {
                 return [
                     "tahap_id" => $item->proposal->tahap_semhas_id,
                     "tahap" => $item->proposal->tahapSemhas->tahap,
                     "periode_id" => $item->proposal->periode_semhas_id,
                     "periode" => $item->proposal->periodeSemhas->tahun,
+                    "jumlah_peserta" => $counts[$item->proposal->tahap_semhas_id . '-' . $item->proposal->periode_semhas_id] ?? 0,
                 ];
             })
             ->unique(function ($item) {
                 return $item['tahap_id'] . "-" . $item["periode_id"];
             })
-            ->sortBy(function ($item) {
+            ->sortByDesc(function ($item) {
                 return $item['tahap_id'] . '-' . $item['periode_id'];
             })
             ->values();
 
         return view(
             'panitia.seminar-hasil.jadwal.index',
-            compact('prodi', 'pasangan')
+            compact('prodi', 'pasangan', 'listPeriode', 'periodeTerpilih')
         );
     }
 
@@ -77,8 +95,30 @@ class JadwalSemhasController extends Controller
             'periode_id' => 'required|exists:periode,id',
             'ruang' => 'required|array',
             'tanggal' => 'required|array',
-            'sesi' => 'required|array',
+            'jumlah_sesi' => 'required|integer|min:1',
+            "waktu_mulai" => 'required|date_format:H:i',
+            "durasi_seminar" => "required|integer|min:1",
+            "jeda_antar_seminar" => "required|integer|min:1"
         ]);
+
+        $jumlahSesi = $request->integer("jumlah_sesi");
+        $durasiSeminar = $request->integer("durasi_seminar");
+        $jedaAntarSeminar = $request->integer("jeda_antar_seminar");
+
+        $sesis = [];
+
+        for ($i = 1; $i <= $jumlahSesi; $i++) {
+            $waktuMulai = Carbon::createFromFormat('H:i', $request->waktu_mulai)
+                ->addMinutes(($i - 1) * ($durasiSeminar + $jedaAntarSeminar))
+                ->format('H:i');
+
+            $sesis[] = [
+                "waktu_mulai" => $waktuMulai,
+                "waktu_selesai" => Carbon::createFromFormat('H:i', $waktuMulai)
+                    ->addMinutes($durasiSeminar)
+                    ->format('H:i')
+            ];
+        }
 
         // 2. Cek Prodi Panitia
         $idDosen = auth('dosen')->id();
@@ -100,7 +140,7 @@ class JadwalSemhasController extends Controller
         $jumlahProposal = $proposals->count();
         $jumlahRuang = count($request->ruang);
         $jumlahTanggal = count($request->tanggal);
-        $jumlahSesi = count($request->sesi);
+        $jumlahSesi = count($sesis);
         $totalSlot = $jumlahRuang * $jumlahTanggal * $jumlahSesi;
 
         if ($totalSlot <= $jumlahProposal) {
@@ -131,7 +171,7 @@ class JadwalSemhasController extends Controller
             $proposals,
             $request->ruang,
             $request->tanggal,
-            $request->sesi, // $request->sesi harus berupa array sesi: [['waktu_mulai' => ..., 'waktu_selesai' => ...], ...]
+            $sesis, // Sesi harus berupa array sesi: [['waktu_mulai' => ..., 'waktu_selesai' => ...], ...]
             $dosenKuota
         );
         $end = microtime(true);
@@ -210,6 +250,59 @@ class JadwalSemhasController extends Controller
         return view(
             "panitia.seminar-hasil.jadwal.detail",
             compact('jadwalSemhas', 'tahap', 'periode', 'prodi')
+        );
+    }
+
+    public function edit(Periode $periode, Tahap $tahap): View
+    {
+        $idDosen = auth('dosen')->id();
+        $prodiIdPanitia = Panitia::firstWhere('dosen_id', $idDosen)->prodi_id;
+
+        $jadwalSemhas = JadwalSeminarHasil::whereHas('proposal', function ($q) use ($tahap, $periode, $prodiIdPanitia) {
+            $q->where('tahap_semhas_id', $tahap->id)
+                ->where('periode_semhas_id', $periode->id)
+                ->where('prodi_id', $prodiIdPanitia);
+        })
+            ->with(['proposal.proposalMahasiswas.mahasiswa', 'proposal.dosenPembimbing1', 'proposal.dosenPengujiSidangTA1', 'proposal.dosenPengujiSidangTA2'])
+            ->orderBy('tanggal', 'asc')
+            ->orderBy('waktu_mulai', 'asc')
+            ->orderBy('ruang', 'asc')
+            ->get();
+
+        $listDosenPenguji1 = Dosen::whereHas('kuotaDosen', function ($query) use ($prodiIdPanitia) {
+            if ($prodiIdPanitia == 1) {
+                $query->where("kuota_penguji_sidang_TA_1_D3", ">", 0);
+            } else if ($prodiIdPanitia == 2) {
+                $query->where("kuota_penguji_sidang_TA_1_D4", ">", 0);
+            }
+        })->get();
+
+        $listDosenPenguji2 = Dosen::whereHas('kuotaDosen', function ($query) use ($prodiIdPanitia) {
+            if ($prodiIdPanitia == 1) {
+                $query->where("kuota_penguji_sidang_TA_2_D3", ">", 0);
+            } else if ($prodiIdPanitia == 2) {
+                $query->where("kuota_penguji_sidang_TA_2_D4", ">", 0);
+            }
+        })->get();
+
+        $listSesi = $jadwalSemhas
+            ->pluck('sesi')
+            ->unique()
+            ->sort()
+            ->values()
+            ->all();
+
+        return view(
+            'panitia.seminar-hasil.jadwal.edit',
+            compact([
+                'periode',
+                'tahap',
+                'prodiIdPanitia',
+                'jadwalSemhas',
+                'listDosenPenguji1',
+                'listDosenPenguji2',
+                'listSesi'
+            ])
         );
     }
 
@@ -367,5 +460,171 @@ class JadwalSemhasController extends Controller
         return redirect()
             ->route('panitia.jadwal-sidang-akhir.index')
             ->with('success', 'Jadwal Sidang Ujian Akhir berhasil dibuat!');
+    }
+
+    public function updateDosenPenguji1(Request $request): JsonResponse
+    {
+        $request->validate([
+            'dosen_penguji_1_id' => "required|exists:dosen,id",
+            'jadwal_id' => "required|exists:jadwal_seminar_proposal,id"
+        ]);
+
+        $dosenTerpilih = Dosen::find($request->dosen_penguji_1_id);
+        $jadwalSemhasDospeng1 = JadwalSeminarHasil::with('proposal')->find($request->jadwal_id);
+        $tanggal = $jadwalSemhasDospeng1->tanggal;
+        $sesi = $jadwalSemhasDospeng1->sesi;
+
+        $proposalList = Proposal::where('periode_id', $jadwalSemhasDospeng1->proposal->periode_id)
+            ->where('tahap_id', $jadwalSemhasDospeng1->proposal->tahap_id)
+            ->whereHas('pendaftaranSemhas', function ($q) {
+                $q->where('status_daftar_semhas_id', 1);
+            })
+            ->whereHas('jadwalSeminarHasil', function ($q) use ($tanggal, $sesi) {
+                $q->where('tanggal', $tanggal)->where('sesi', $sesi);
+            })
+            ->get();
+
+        $pengujiNotAvailable = array_merge(
+            $proposalList->pluck('penguji_sidang_ta_1_id')->toArray(),
+            $proposalList->pluck('penguji_sidang_ta_2_id')->toArray()
+        );
+
+        if (in_array($dosenTerpilih->id, $pengujiNotAvailable)) {
+            // Jika dosen yang dipilih ada didaftar dosen yg tidak tersedia di tanggal & sesi semhas terpilih
+
+            $tanggalFormatted = Carbon::parse($tanggal)->format('d-m-Y');
+
+            return response()->json([
+                "success" => false,
+                "message" => "$dosenTerpilih->nama tidak tersedia di tanggal $tanggalFormatted, sesi $sesi",
+                "errors" => [
+                    "dosen_tidak_tersedia" => "Dosen yang dipilih tidak tersedia di tanggal $tanggal, sesi $sesi"
+                ],
+                "data" => [
+                    "dosen" => [
+                        "id" => $dosenTerpilih->id,
+                        "nama" => $dosenTerpilih->nama
+                    ]
+                ]
+            ], 422);
+        }
+
+        try {
+            $proposal = $jadwalSemhasDospeng1->proposal;
+            $proposal->penguji_sidang_ta_1_id = $dosenTerpilih->id;
+            $proposal->save();
+        } catch (\Throwable $th) {
+            return response()->json([
+                "success" => false,
+                "message" => "Terjadi kesalahan saat mengubah Dosen Penguji",
+                "errors" => [
+                    "update_error" => "Terjadi kesalahan saat mengubah Dosen Penguji"
+                ],
+                "data" => [
+                    "dosen" => [
+                        "id" => $dosenTerpilih->id,
+                        "nama" => $dosenTerpilih->nama
+                    ]
+                ]
+            ], 500);
+        }
+
+        return response()->json([
+            "success" => true,
+            "message" => "Berhasil mengubah Dosen Penguji Sidang Tugas Akhir 1"
+        ]);
+    }
+
+    public function updateDosenPenguji2(Request $request): JsonResponse
+    {
+        $request->validate([
+            'dosen_penguji_2_id' => "required|exists:dosen,id",
+            'jadwal_id' => "required|exists:jadwal_seminar_proposal,id"
+        ]);
+
+        $dosenTerpilih = Dosen::find($request->dosen_penguji_2_id);
+        $jadwalSemhasDospeng2 = JadwalSeminarHasil::with('proposal')->find($request->jadwal_id);
+        $tanggal = $jadwalSemhasDospeng2->tanggal;
+        $sesi = $jadwalSemhasDospeng2->sesi;
+
+        $proposalList = Proposal::where('periode_id', $jadwalSemhasDospeng2->proposal->periode_id)
+            ->where('tahap_id', $jadwalSemhasDospeng2->proposal->tahap_id)
+            ->whereHas('pendaftaranSemhas', function ($q) {
+                $q->where('status_daftar_semhas_id', 1);
+            })
+            ->whereHas('jadwalSeminarHasil', function ($q) use ($tanggal, $sesi) {
+                $q->where('tanggal', $tanggal)->where('sesi', $sesi);
+            })
+            ->get();
+
+        $pengujiNotAvailable = array_merge(
+            $proposalList->pluck('penguji_sidang_ta_1_id')->toArray(),
+            $proposalList->pluck('penguji_sidang_ta_2_id')->toArray()
+        );
+
+        if (in_array($dosenTerpilih->id, $pengujiNotAvailable)) {
+            // Jika dosen yang dipilih ada didaftar dosen yg tidak tersedia di tanggal & sesi semhas terpilih
+
+            $tanggalFormatted = Carbon::parse($tanggal)->format('d-m-Y');
+
+            return response()->json([
+                "success" => false,
+                "message" => "$dosenTerpilih->nama tidak tersedia di tanggal $tanggalFormatted, sesi $sesi",
+                "errors" => [
+                    "dosen_tidak_tersedia" => "Dosen yang dipilih tidak tersedia di tanggal $tanggal, sesi $sesi"
+                ],
+                "data" => [
+                    "dosen" => [
+                        "id" => $dosenTerpilih->id,
+                        "nama" => $dosenTerpilih->nama
+                    ]
+                ]
+            ], 422);
+        }
+
+        try {
+            $proposal = $jadwalSemhasDospeng2->proposal;
+            $proposal->penguji_sidang_ta_2_id = $dosenTerpilih->id;
+            $proposal->save();
+        } catch (\Throwable $th) {
+            return response()->json([
+                "success" => false,
+                "message" => "Terjadi kesalahan saat mengubah Dosen Penguji",
+                "errors" => [
+                    "update_error" => "Terjadi kesalahan saat mengubah Dosen Penguji"
+                ],
+            ], 500);
+        }
+
+        return response()->json([
+            "success" => true,
+            "message" => "Berhasil mengubah Dosen Penguji Sidang Tugas Akhir 2"
+        ]);
+    }
+
+    public function cekJumlahProposal(Request $request): JsonResponse
+    {
+        $request->validate([
+            'tahap_id' => 'required|exists:tahap,id',
+            'periode_id' => 'required|exists:periode,id',
+        ]);
+
+        $idDosen = auth('dosen')->id();
+        $prodiPanitia = Panitia::firstWhere('dosen_id', $idDosen)->prodi_id;
+
+        $jumlahProposal = Proposal::whereHas('pendaftaranSemhas', function ($query) {
+            $query->where('status_daftar_semhas_id', 1);
+        })
+            ->where('tahap_semhas_id', $request->tahap_id)
+            ->where('periode_semhas_id', $request->periode_id)
+            ->where('prodi_id', $prodiPanitia)
+            ->count();
+
+        return response()->json([
+            'status' => true,
+            'data' => [
+                'jumlah_proposal' => $jumlahProposal
+            ]
+        ]);
     }
 }

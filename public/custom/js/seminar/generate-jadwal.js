@@ -87,4 +87,46 @@ $(document).ready(function() {
             $(tr).find('td:first').text(i+1);
         });
     });
+
+    // Tambah Ruang jika tombol "Tambah Ruang" diklik
+    $(document).on('click', '#tambah-ruang', function() {
+        var tbody = $('#ruang-table-body');
+        var idx = tbody.find('tr').length;
+        var html = '<tr>' +
+            '<td>' + (idx + 1) + '</td>' +
+            '<td><input type="text" class="form-control" name="ruang[]" required></td>' +
+            '<td class="td-100-wrapper"><button type="button" class="btn btn-danger remove-ruang">Hapus</button></td>' +
+            '</tr>';
+        tbody.append(html);
+    });
+
+    // Hapus Ruang jika tombol "Hapus" pada baris ruang diklik
+    $(document).on('click', '.remove-ruang', function() {
+        $(this).closest('tr').remove();
+        // Update nomor urut
+        $('#ruang-table-body tr').each(function(i, tr) {
+            $(tr).find('td:first').text(i+1);
+        });
+    });
+
+    // Tambah Tanggal jika tombol "Tambah Tanggal" diklik
+    $(document).on('click', '#tambah-tanggal', function() {
+        var tbody = $('#tanggal-table-body');
+        var idx = tbody.find('tr').length;
+        var html = '<tr>' +
+            '<td>' + (idx + 1) + '</td>' +
+            '<td><input type="date" class="form-control" name="tanggal[]" required></td>' +
+            '<td class="td-100-wrapper"><button type="button" class="btn btn-danger remove-tanggal">Hapus</button></td>' +
+            '</tr>';
+        tbody.append(html);
+    });
+
+    // Hapus Tanggal jika tombol "Hapus" pada baris tanggal diklik
+    $(document).on('click', '.remove-tanggal', function() {
+        $(this).closest('tr').remove();
+        // Update nomor urut
+        $('#tanggal-table-body tr').each(function(i, tr) {
+            $(tr).find('td:first').text(i+1);
+        });
+    });
 });

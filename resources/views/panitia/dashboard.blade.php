@@ -74,11 +74,8 @@
                 });
             </script>
 
-            @if ($pendingSempro > 0 && !is_null($tahap))
-                <a href="{{ route('panitia.seminar-proposal.pendaftaran-detail', [
-                    'tahapId' => $tahap,
-                    'periode' => $periode,
-                ]) }}"
+            @if ($pendingSempro > 0)
+                <a href="{{ route("panitia.seminar-proposal.pendaftaran") }}"
                     class="text-decoration-none">
                     <div class="alert alert-warning d-flex justify-content-between align-items-center">
                         <strong><i class="fas fa-exclamation-circle me-2"></i> Pendaftaran Sempro yang Perlu
@@ -88,11 +85,8 @@
                 </a>
             @endif
 
-            @if ($pendingSemhas > 0 && !is_null($tahap))
-                <a href="{{ route('panitia.seminar-hasil.pendaftaran-detail', [
-                    'tahapId' => $tahap,
-                    'periode' => $periode,
-                ]) }}"
+            @if ($pendingSemhas > 0)
+                <a href="{{ route("panitia.seminar-hasil.pendaftaran") }}"
                     class="text-decoration-none">
                     <div class="alert alert-warning d-flex justify-content-between align-items-center">
                         <strong><i class="fas fa-exclamation-circle me-2"></i> Pendaftaran Semhas yang Perlu

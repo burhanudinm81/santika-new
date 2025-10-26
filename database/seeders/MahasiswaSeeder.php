@@ -85,7 +85,7 @@ class MahasiswaSeeder extends Seeder
         Mahasiswa::create([
             "nim" => "2141720092",
             "nama" => "Udin Perseneleng",
-            "password" => Hash::make("udin123"),
+            "password" => Hash::make("udin1234"),
             "prodi_id" => $prodiD3->id,
             "periode_id" => $periode2025->id,
             "kelas" => "3G",

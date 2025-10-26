@@ -23,6 +23,33 @@ class SeminarHasilPanitiaController extends Controller
 
         $periodeAktif = $listPeriode->firstWhere('aktif_sidang_akhir', true);
         $tahapAktif = $listTahap->firstWhere('aktif_sidang_akhir', true);
+        $prodiPanitia = Panitia::where('dosen_id', auth('dosen')->user()->id)->first()->prodi_id;
+
+        $pendaftaranBelumDiverifikasi = PendaftaranSemhas::where('status_daftar_semhas_id', 3)
+            ->whereHas('proposal', function ($query) use ($periodeAktif) {
+                $query->where('periode_id', $periodeAktif->id);
+            })
+            ->join('proposal', 'pendaftaran_seminar_hasil.proposal_id', '=', 'proposal.id')
+            ->select('proposal.tahap_semhas_id')
+            ->groupBy('proposal.tahap_semhas_id')
+            ->selectRaw('proposal.tahap_semhas_id, count(*) as jumlah')
+            ->get();
+
+        $pendaftaranSemhas = PendaftaranSemhas::whereHas('proposal', function ($query) use ($periodeAktif, $prodiPanitia) {
+            $query->where('periode_id', $periodeAktif->id)
+                ->where('prodi_id', $prodiPanitia);
+        })
+            ->join('proposal', 'pendaftaran_seminar_hasil.proposal_id', '=', 'proposal.id')
+            ->select('proposal.tahap_semhas_id')
+            ->groupBy('proposal.tahap_semhas_id')
+            ->selectRaw('proposal.tahap_semhas_id, count(*) as jumlah')
+            ->get();
+
+        $listTahap = $listTahap->map(function ($tahap) use ($pendaftaranBelumDiverifikasi, $pendaftaranSemhas) {
+            $tahap->jumlahBelumVerifikasi = $pendaftaranBelumDiverifikasi->firstWhere('tahap_semhas_id', $tahap->id)->jumlah ?? 0;
+            $tahap->jumlahPendaftar = $pendaftaranSemhas->firstWhere('tahap_semhas_id', $tahap->id)->jumlah ?? 0;
+            return $tahap;
+        });
 
         return view(
             'panitia.seminar-hasil.beranda-pendaftaran',
@@ -71,9 +98,9 @@ class SeminarHasilPanitiaController extends Controller
         $pendaftaranSemhas = PendaftaranSemhas::find($pendaftaranId);
 
         $pendaftaranSemhas->update([
-            'status_file_rekom_dosen' =>  $statusRekomDospem,
+            'status_file_rekom_dosen' => $statusRekomDospem,
             'status_file_proposal_semhas' => $statusProposalSemhas,
-            'status_file_draft_jurnal' =>  $statusDraftJurnal,
+            'status_file_draft_jurnal' => $statusDraftJurnal,
             'status_file_bebas_tanggungan_pkl' => $statusBebasTanggunganPKL,
             'status_file_skla' => $statusSKLA
         ]);
