@@ -24,9 +24,10 @@ class StoreLogbookRequest extends FormRequest
         return [
             'roleDospem' => 'required|integer',
             'jenisKegiatanId' => 'required',
-            'namaKegiatan' => 'required',
-            'tanggalKegiatan' => 'required',
-            'hasilKegiatan' => 'required',
+            'namaKegiatan' => 'required|string|max:255',
+            'tanggalKegiatan' => 'required|string',
+            'hasilKegiatan' => 'required|string|max:1000',
+            'tempat' => 'required|string|max:200',
         ];
     }
 
@@ -35,8 +36,12 @@ class StoreLogbookRequest extends FormRequest
         return [
             'jenisKegiatanId.required' => 'Jenis Kegiatan wajib diisi',
             'namaKegiatan.required' => 'Nama Kegiatan wajib diisi',
+            'namaKegiatan.max' => 'Nama Kegiatan maksimal 255 karakter',
             'tanggalKegiatan.required' => 'Tanggal Kegiatan wajib diisi',
             'hasilKegiatan.required' => 'Hasil Kegiatan wajib diisi',
+            'hasilKegiatan.max' => 'Hasil Kegiatan maksimal 1000 karakter',
+            'tempat.required' => 'Tempat wajib diisi',
+            'tempat.max' => 'Tempat maksimal 200 karakter',
         ];
     }
 }

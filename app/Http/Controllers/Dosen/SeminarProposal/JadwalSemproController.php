@@ -100,6 +100,7 @@ class JadwalSemproController extends Controller
         })
             ->where("jenis_revisi", "sempro")
             ->where("status", "pending")
+            ->where("dosen_id", $idDosen)
             ->get();
 
         $revisiBelumCekAsDosPeng2D3 = Revisi::whereHas('proposal', function($q) use($tahapId, $periodeId, $idDosen) {
@@ -110,6 +111,7 @@ class JadwalSemproController extends Controller
         })
             ->where("jenis_revisi", "sempro")
             ->where("status", "pending")
+            ->where("dosen_id", $idDosen)
             ->get();
 
         $jadwalSeminarProposalD3->map(function ($item) use ($belumNilaiAsDospeng1D3, $belumNilaiAsDospeng2D3, $revisiBelumCekAsDosPeng1D3, $revisiBelumCekAsDosPeng2D3) {
@@ -169,6 +171,7 @@ class JadwalSemproController extends Controller
         })
             ->where("jenis_revisi", "sempro")
             ->where("status", "pending")
+            ->where("dosen_id", $idDosen)
             ->get();
 
         $revisiBelumCekAsDosPeng2D4 = Revisi::whereHas('proposal', function($q) use($tahapId, $periodeId, $idDosen) {
@@ -179,6 +182,7 @@ class JadwalSemproController extends Controller
         })
             ->where("jenis_revisi", "sempro")
             ->where("status", "pending")
+            ->where("dosen_id", $idDosen)
             ->get();
 
         $jadwalSeminarProposalD4->map(function ($item) use ($belumNilaiAsDospeng1D4, $belumNilaiAsDospeng2D4, $revisiBelumCekAsDosPeng1D4, $revisiBelumCekAsDosPeng2D4) {

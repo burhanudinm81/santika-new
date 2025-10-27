@@ -566,7 +566,7 @@ Route::middleware(["auth:dosen", "auth.session", "password.changed", "is.panitia
 
     Route::controller(PlottingPembimbingController::class)->group(function () {
         // Route untuk membuka halaman plotting pembimbing
-        Route::get('/panitia/plotting-pembimbing', 'index')->name('panitia.plotting-pembimbing.index');
+        Route::get('/panitia/plotting-pembimbing/periode/{periode?}', 'index')->name('panitia.plotting-pembimbing.index');
 
         // Route untuk mengedit pembimbing
         Route::post('/panitia/plotting-pembimbing/update', 'update')->name('panitia.plotting-pembimbing.update');
