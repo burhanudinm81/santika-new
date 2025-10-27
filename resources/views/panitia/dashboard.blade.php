@@ -85,6 +85,30 @@
                 </a>
             @endif
 
+            @if ($prodiPanitiaId == 1)
+                @if ($mhsD3BelumPunyaDosbing2 > 0)
+                    <a href="{{ route('panitia.plotting-pembimbing.index') }}"
+                        class="text-decoration-none">
+                        <div class="alert alert-warning d-flex justify-content-between align-items-center">
+                            <strong><i class="fas fa-exclamation-circle me-2"></i> Mahasiswa D3 yang Belum Memiliki
+                                Dosen Pembimbing 2</strong>
+                            <span class="badge bg-dark text-white">{{ $mhsD3BelumPunyaDosbing2 }} Mahasiswa</span>
+                        </div>
+                    </a>
+                @endif
+            @elseif ($prodiPanitiaId == 2)
+                @if ($mhsD4BelumPunyaDosbing2 > 0)
+                    <a href="{{ route('panitia.plotting-pembimbing.index') }}"
+                        class="text-decoration-none">
+                        <div class="alert alert-warning d-flex justify-content-between align-items-center">
+                            <strong><i class="fas fa-exclamation-circle me-2"></i> Mahasiswa D4 yang Belum Memiliki
+                                Dosen Pembimbing 2</strong>
+                            <span class="badge bg-dark text-white">{{ $mhsD4BelumPunyaDosbing2 }} Mahasiswa</span>
+                        </div>
+                    </a>
+                @endif
+            @endif
+
             @if ($pendingSemhas > 0)
                 <a href="{{ route("panitia.seminar-hasil.pendaftaran") }}"
                     class="text-decoration-none">

@@ -58,4 +58,11 @@ function main() {
             });
         });
     });
+
+    document.getElementById("periode_id").addEventListener("change", function(){
+        const selectedPeriodeId = this.value;
+        if (selectedPeriodeId) {
+            window.location.href = '/panitia/plotting-pembimbing/periode/' + selectedPeriodeId;
+        }
+    });
 }
