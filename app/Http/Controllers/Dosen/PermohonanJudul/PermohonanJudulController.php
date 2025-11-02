@@ -25,15 +25,18 @@ class PermohonanJudulController extends Controller
 
 
         // ambil list data permohonan dari mahasiswa D3
-        $groupedPermohonanD3 = ProposalDosenMahasiswa::with(['mahasiswa', 'proposal', 'statusProposalMahasiswa'])
+        $listPermohonanD3 = ProposalDosenMahasiswa::with(['mahasiswa', 'proposal', 'statusProposalMahasiswa'])
             ->where('dosen_id', auth('dosen')->user()->id)
             ->whereRelation('mahasiswa', 'prodi_id', 1)
             ->distinct('proposal_id')
+            ->orderByDesc('status_proposal_mahasiswa_id')
             ->latest()
-            ->paginate(perPage: 15, pageName: 'd3Page');
+            ->get();
+            // ->paginate(perPage: 15, pageName: 'd3Page');
 
         // meng-group data permohonan D3 sesuai proposal_id
-        // $groupedPermohonanD3 = $listPermohonanD3->groupBy('proposal_id');
+        $groupedPermohonanD3 = $listPermohonanD3->groupBy('proposal_id')
+            ->paginate(perPage: 15, pageName: 'd3Page');
 
         // dd($groupedPermohonanD3, $listPermohonanD4);
 

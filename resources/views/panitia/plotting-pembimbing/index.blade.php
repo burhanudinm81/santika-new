@@ -1,5 +1,13 @@
 @extends('panitia.home')
 
+@section('page-style')
+    <style>
+        .highlighted-red{
+            background-color: rgba(255, 0, 0, 0.5);
+        }
+    </style>
+@endsection
+
 @section('content-panitia')
     <div class="content-header">
         <div class="container-fluid">
@@ -84,7 +92,10 @@
                                     @else
                                         @foreach ($listProposalD3 as $index => $proposal)
                                             <tr data-proposal-id="{{ $proposal->id }}" data-dosbing1-id="{{ $proposal->dosenPembimbing1->id ?? "" }}" 
-                                                data-dosbing2-id="{{ $proposal->dosenPembimbing2->id ?? "" }}">
+                                                data-dosbing2-id="{{ $proposal->dosenPembimbing2->id ?? "" }}"
+                                                @if (is_null( $proposal->dosenPembimbing2))
+                                                    class="highlighted-red"
+                                                @endif>
                                                 <td class="text-center align-middle">{{ $index + 1 }}</td>
                                                 <td class="text-center align-middle">{{ $proposal->proposalMahasiswas[0]->mahasiswa->nim ?? "-" }}</td>
                                                 <td class="text-center align-middle">{{ $proposal->proposalMahasiswas[0]->mahasiswa->nama ?? "-" }}</td>
@@ -153,7 +164,10 @@
                                     @else
                                         @foreach ($listProposalD4 as $index => $proposal)
                                             <tr data-proposal-id="{{ $proposal->id }}" data-dosbing1-id="{{ $proposal->dosenPembimbing1->id ?? "" }}" 
-                                                data-dosbing2-id="{{ $proposal->dosenPembimbing2->id ?? "" }}">
+                                                data-dosbing2-id="{{ $proposal->dosenPembimbing2->id ?? "" }}"
+                                                @if (is_null( $proposal->dosenPembimbing2))
+                                                    class="highlighted-red"
+                                                @endif>
                                                 <td class="text-center align-middle" >{{ $index + 1 }}</td>
                                                 <td class="text-center align-middle">{{ $proposal->proposalMahasiswas[0]->mahasiswa->nim ?? "-" }}</td>
                                                 <td class="text-center align-middle">{{ $proposal->proposalMahasiswas[0]->mahasiswa->nama ?? "-" }}</td>

@@ -24,7 +24,7 @@
                         <!-- kotak tahap -->
                         <div class="small-box bg-info">
                             <div class="inner">
-                                <h5>{{ $tahap->jumlahPeserta }} Mahasiswa</h5>
+                                <h5>{{ $tahap->jumlahPeserta }} Proposal</h5>
                                 <h3>Tahap {{ $tahap->tahap }}</h3>
                             </div>
                             <div class="icon">
