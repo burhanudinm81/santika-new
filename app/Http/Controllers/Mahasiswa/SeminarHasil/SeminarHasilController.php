@@ -205,6 +205,10 @@ class SeminarHasilController extends Controller
 
     public function showHasilSementaraSemhas()
     {
+        $statusKelulusanSempro = null;
+        $isPengujiNotAssigned = false;
+        $revisiSelesai = false;
+
         $proposalInfo = ProposalDosenMahasiswa::with('proposal', 'mahasiswa')
             ->where('mahasiswa_id', auth('mahasiswa')->user()->id)
             ->where('status_proposal_mahasiswa_id', 1)
@@ -215,28 +219,55 @@ class SeminarHasilController extends Controller
             ->where('id', $proposalInfo->proposal_id)
             ->first();
 
-        $revisiDosen1 = Revisi::where('proposal_id', $mainProposalInfo->id)
-            ->where('dosen_id', $mainProposalInfo->dosenPengujiSidangTA1->id)
-            ->where('jenis_revisi', 'semhas')
-            ->first();
+        if (!is_null($mainProposalInfo)) {
+            if (!is_null($mainProposalInfo->dosenPengujiSidangTA1) && !is_null($mainProposalInfo->dosenPengujiSidangTA2)) {
+                $revisiDosen1 = Revisi::where('proposal_id', $mainProposalInfo->id)
+                    ->where('dosen_id', $mainProposalInfo->dosenPengujiSidangTA1->id)
+                    ->where('jenis_revisi', 'semhas')
+                    ->first();
 
-        $revisiDosen2 = Revisi::where('proposal_id', $mainProposalInfo->id)
-            ->where('dosen_id', $mainProposalInfo->dosenPengujiSidangTA2->id)
-            ->where('jenis_revisi', 'semhas')
-            ->first();
+                $revisiDosen2 = Revisi::where('proposal_id', $mainProposalInfo->id)
+                    ->where('dosen_id', $mainProposalInfo->dosenPengujiSidangTA2->id)
+                    ->where('jenis_revisi', 'semhas')
+                    ->first();
 
-        $revisiDosbing1 = Revisi::where('proposal_id', $mainProposalInfo->id)
-            ->where('dosen_id', $mainProposalInfo->dosenPembimbing1->id)
-            ->where('jenis_revisi', 'semhas')
-            ->first();
-        $revisiDosbing2 = Revisi::where('proposal_id', $mainProposalInfo->id)
-            ->where('dosen_id', $mainProposalInfo->dosenPembimbing2->id)
-            ->where('jenis_revisi', 'semhas')
-            ->first();
+                $revisiDosbing1 = Revisi::where('proposal_id', $mainProposalInfo->id)
+                    ->where('dosen_id', $mainProposalInfo->dosenPembimbing1->id)
+                    ->where('jenis_revisi', 'semhas')
+                    ->first();
+                $revisiDosbing2 = Revisi::where('proposal_id', $mainProposalInfo->id)
+                    ->where('dosen_id', $mainProposalInfo->dosenPembimbing2->id)
+                    ->where('jenis_revisi', 'semhas')
+                    ->first();
+
+                if ($revisiDosen1->status == "diterima" && $revisiDosen2->status == "diterima")
+                    $revisiSelesai = true;
+
+                if (in_array(3, [$mainProposalInfo->statusSemhasPenguji1->id, $mainProposalInfo->statusSemhasPenguji2->id])) {
+                    $statusKelulusanSemhas = 3;     // 3 = Tidak Lulus
+                } else if (in_array(2, [$mainProposalInfo->statusSemhasPenguji1->id, $mainProposalInfo->statusSemhasPenguji2->id])) {
+                    $statusKelulusanSemhas = 2;     // 2 = Lulus dengan revisi
+                } else if (in_array(1, [$mainProposalInfo->statusSemhasPenguji1->id, $mainProposalInfo->statusSemhasPenguji2->id])) {
+                    $statusKelulusanSemhas = 1;     // 1 = Lulus tanpa revisi
+                }
+            } else {
+                $isPengujiNotAssigned = true;
+            }
+        }
 
         return view(
             'mahasiswa.seminar-hasil.hasil-semhas-sementara',
-            compact(['proposalInfo', 'mainProposalInfo', 'revisiDosen1', 'revisiDosen2', 'revisiDosbing1', 'revisiDosbing2'])
+            compact([
+                'proposalInfo',
+                'mainProposalInfo',
+                'revisiDosen1',
+                'revisiDosen2',
+                'revisiDosbing1',
+                'revisiDosbing2',
+                'statusKelulusanSemhas',
+                'isPengujiNotAssigned',
+                'revisiSelesai'
+            ])
         );
     }
 
