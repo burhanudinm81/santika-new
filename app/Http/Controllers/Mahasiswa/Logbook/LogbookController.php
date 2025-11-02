@@ -101,6 +101,7 @@ class LogbookController extends Controller
             $namaKegiatan = $request->validated()['namaKegiatan'];
             $tanggalKegiatan = $request->validated()['tanggalKegiatan'];
             $hasilKegiatan = $request->validated()['hasilKegiatan'];
+            $tempat = $request->validated()['tempat'];
 
             $proposalMahasiswa = ProposalDosenMahasiswa::where('mahasiswa_id', $mahasiswaId)
                 ->latest()
@@ -112,6 +113,7 @@ class LogbookController extends Controller
                 'mahasiswa_id' => $mahasiswaId,
                 'jenis_kegiatan_id' => $jenisKegiatanId,
                 'nama_kegiatan' => $namaKegiatan,
+                'tempat' => $tempat,
                 'tanggal_kegiatan' => $tanggalKegiatan,
                 'hasil_kegiatan' => $hasilKegiatan,
             ]);

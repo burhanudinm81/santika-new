@@ -193,8 +193,9 @@
                                                     <td class="text-center td-200-wrapper">
                                                         {{ $jadwal->proposal?->proposalMahasiswas[0]?->mahasiswa?->nama ?? '-' }}</td>
                                                     @if ($prodiIdPanitia == 1)
-                                                        <th style="width: 300px" class="text-center td-200-wrapper">
-                                                            {{ $jadwal->proposal?->proposalMahasiswas[1]?->mahasiswa?->nama ?? '-' }}</th>
+                                                        <td style="width: 300px" class="text-center td-200-wrapper">
+                                                            {{ $jadwal->proposal?->proposalMahasiswas[1]?->mahasiswa?->nama ?? '-' }}
+                                                        </td>
                                                     @endif
                                                     <td class="text-center">
                                                         {{ $jadwal->proposal?->dosenPembimbing1?->nama ?? "-" }}</td>

@@ -85,6 +85,7 @@
                         <div class="small-box bg-info">
                             <div class="inner">
                                 <h3>Tahap {{ $tahap->tahap }}</h3>
+                                <h5 class="my-0">{{ $tahap->jumlahPendaftar }} Proposal</h5>
                                 @if ($tahap->jumlahBelumVerifikasi > 0)
                                     <span class="badge badge-warning">{{ $tahap->jumlahBelumVerifikasi }} belum diverifikasi</span>
                                 @else

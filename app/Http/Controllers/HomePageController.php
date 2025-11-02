@@ -186,20 +186,59 @@ class HomePageController extends Controller
             ->take(5)
             ->get();
 
-        $dosenId = Auth::guard('dosen')->id();
+        $periodeAktif = Periode::firstWhere("aktif_sempro", true);
+        $prodiPanitiaId = Panitia::firstWhere("dosen_id", auth("dosen")->id())->prodi_id;
 
-        $pendingSempro = PendaftaranSeminarProposal::where(function ($q) use ($dosenId) {
-            $q->whereHas('proposal', function ($p) use ($dosenId) {
-                $p->where('dosen_pembimbing_1_id', $dosenId)
-                    ->orWhere('dosen_pembimbing_2_id', $dosenId);
+        // Jumlah Proposal yg lulus tanpa revisi untuk D3 yang belum punya dosen pembimbing 2
+        $jmlProposalD3LulusTanpaRevisi = Proposal::where('prodi_id', 1)
+            ->where('periode_id', $periodeAktif->id)
+            ->where('status_sempro_proposal_id', 1)
+            ->whereNull('dosen_pembimbing_2_id')
+            ->count();
+
+        // Jumlah Proposal yg lulus dengan revisi untuk D3 yang belum punya dosen pembimbing 2
+        $jmlProposalD3LulusDenganRevisi = Proposal::where('prodi_id', 1)
+            ->where('periode_id', $periodeAktif->id)
+            ->where('status_sempro_proposal_id', 2)
+            ->whereNull('dosen_pembimbing_2_id')
+            ->whereHas('revisi', function ($query) {
+                $query->where("jenis_revisi", "sempro")
+                    ->where("status", "diterima");
+            })
+            ->count();
+
+        // Jumlah Proposal yg lulus tanpa revisi untuk D4 yang belum punya dosen pembimbing 2
+        $jmlProposalD4LulusTanpaRevisi = Proposal::where('prodi_id', 2)
+            ->where('periode_id', $periodeAktif->id)
+            ->where('status_sempro_proposal_id', 1)
+            ->whereNull('dosen_pembimbing_2_id')
+            ->count();
+
+        // Jumlah Proposal yg lulus dengan revisi untuk D4 yang belum punya dosen pembimbing 2
+        $jmlProposalD4LulusDenganRevisi = Proposal::where('prodi_id', 2)
+            ->where('periode_id', $periodeAktif->id)
+            ->where('status_sempro_proposal_id', 2)
+            ->whereNull('dosen_pembimbing_2_id')
+            ->whereHas('revisi', function ($query) {
+                $query->where("jenis_revisi", "sempro")
+                    ->where("status", "diterima");
+            })
+            ->count();
+
+        $mhsD3BelumPunyaDosbing2 = $jmlProposalD3LulusTanpaRevisi + $jmlProposalD3LulusDenganRevisi;
+        $mhsD4BelumPunyaDosbing2 = $jmlProposalD4LulusTanpaRevisi + $jmlProposalD4LulusDenganRevisi;
+
+
+        $pendingSempro = PendaftaranSeminarProposal::where(function ($q) use ($periodeAktif) {
+            $q->whereHas('proposal', function ($p) use ($periodeAktif) {
+                $p->where('periode_id', $periodeAktif->id);
             });
         })->where('status_daftar_sempro_id', 3)
             ->count();
 
-        $pendingSemhas = PendaftaranSemhas::where(function ($q) use ($dosenId) {
-            $q->whereHas('proposal', function ($p) use ($dosenId) {
-                $p->where('dosen_pembimbing_1_id', $dosenId)
-                    ->orWhere('dosen_pembimbing_2_id', $dosenId);
+        $pendingSemhas = PendaftaranSemhas::where(function ($q) use ($periodeAktif) {
+            $q->whereHas('proposal', function ($p) use ($periodeAktif) {
+                $p->where('periode_id', $periodeAktif->id);
             });
         })->where('status_daftar_semhas_id', 3)
             ->count();
@@ -210,8 +249,9 @@ class HomePageController extends Controller
             'notifikasi' => $notifikasi,
             'pendingSempro' => $pendingSempro,
             'pendingSemhas' => $pendingSemhas,
-            'tahap' => Tahap::where('aktif_sempro', 1)->first()->id ?? null,
-            'periode' => Periode::where('aktif_sempro', 1)->first()->id ?? null,
+            'prodiPanitiaId' => $prodiPanitiaId,
+            'mhsD3BelumPunyaDosbing2' => $mhsD3BelumPunyaDosbing2,
+            'mhsD4BelumPunyaDosbing2' => $mhsD4BelumPunyaDosbing2
         ]);
     }
 }

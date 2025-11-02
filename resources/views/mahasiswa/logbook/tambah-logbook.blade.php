@@ -75,6 +75,11 @@
                                         required />
                                 </div>
                                 <div class="mb-3">
+                                    <label for="tempat" class="form-label">Tempat</label>
+                                    <input type="text" name="tempat" class="form-control" id="tempat"
+                                        required />
+                                </div>
+                                <div class="mb-3">
                                     <label for="TanggalKegiatan" class="form-label">Tanggal</label>
                                     <input type="date" name="tanggalKegiatan" class="form-control" id="TanggalKegiatan"
                                         required />

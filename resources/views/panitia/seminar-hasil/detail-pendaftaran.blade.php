@@ -4,14 +4,14 @@
     @if (session('success'))
         <div>
             <div style="
-                                                                                                                                                                                    position: fixed;
-                                                                                                                                                                                    top: 30px;
-                                                                                                                                                                                    left: 60%;
-                                                                                                                                                                                    transform: translateX(-50%);
-                                                                                                                                                                                    z-index: 1050;
-                                                                                                                                                                                    width: 50%;
-                                                                                                                                                                                    transition: all 0.2s ease-in-out;
-                                                                                                                                                                                "
+                                                                                                                                                                                            position: fixed;
+                                                                                                                                                                                            top: 30px;
+                                                                                                                                                                                            left: 60%;
+                                                                                                                                                                                            transform: translateX(-50%);
+                                                                                                                                                                                            z-index: 1050;
+                                                                                                                                                                                            width: 50%;
+                                                                                                                                                                                            transition: all 0.2s ease-in-out;
+                                                                                                                                                                                        "
                 class="bg-white border-bottom-0 border-right-0 border-left-0 py-4 border-success shadow shadow-md mx-auto alert alert-dismissible fade show relative"
                 role="alert">
                 <strong class="text-success">{{ session('success') }}</strong>
@@ -42,12 +42,13 @@
                         <div class="card-header">
                             <div class="card-tools d-flex justify-content-between align-items-center w-100 mx-1">
                                 <div class="ml-1">
-                                    <button type="button" class="btn btn-success" id="btn-buka-pendaftaran-sidang-ta">
-                                        Buka Pendaftaran
-                                    </button>
                                     @if ($tahapInfo->aktif_sidang_akhir)
                                         <button type="button" class="btn btn-danger" id="btn-nonaktifkan-tahap-sidang-ta">
                                             Tutup Pendaftaran
+                                        </button>
+                                    @else
+                                        <button type="button" class="btn btn-success" id="btn-buka-pendaftaran-sidang-ta">
+                                            Buka Pendaftaran
                                         </button>
                                     @endif
                                 </div>
@@ -132,7 +133,17 @@
                 </div>
             </div>
             <div class="row">
-                <a href="{{ route('panitia.seminar-hasil.pendaftaran') }}" class="btn btn-info mt-2">
+                <p>
+                    Status Pendaftaran:
+                    @if ($tahapInfo->aktif_sidang_akhir)
+                        <b class="text-success">Dibuka</b>
+                    @else
+                        <b class="text-danger">Ditutup</b>
+                    @endif
+                </p>
+            </div>
+            <div class="row">
+                <a href="{{ route("panitia.seminar-hasil.pendaftaran") }}" class="btn btn-info mt-2">
                     Kembali
                 </a>
             </div>

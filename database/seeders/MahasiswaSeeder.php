@@ -85,7 +85,7 @@ class MahasiswaSeeder extends Seeder
         Mahasiswa::create([
             "nim" => "2141720092",
             "nama" => "Udin Perseneleng",
-            "password" => Hash::make("udin123"),
+            "password" => Hash::make("udin1234"),
             "prodi_id" => $prodiD3->id,
             "periode_id" => $periode2025->id,
             "kelas" => "3G",
@@ -148,6 +148,26 @@ class MahasiswaSeeder extends Seeder
             "password" => Hash::make("rahasia2"),
             "prodi_id" => $prodiD3->id,
             "periode_id" => $periode2025->id,
+            "kelas" => "3F",
+            "angkatan" => 2022
+        ]);
+
+        Mahasiswa::create([
+            "nim" => "2241140601",
+            "nama" => "Eka Ramdani",
+            "password" => Hash::make("password123"),
+            "prodi_id" => 1,
+            "periode_id" => 1,
+            "kelas" => "3F",
+            "angkatan" => 2022
+        ]);
+
+        Mahasiswa::create([
+            "nim" => "2241140602",
+            "nama" => "Satria Tama",
+            "password" => Hash::make("password123"),
+            "prodi_id" => 1,
+            "periode_id" => 1,
             "kelas" => "3F",
             "angkatan" => 2022
         ]);

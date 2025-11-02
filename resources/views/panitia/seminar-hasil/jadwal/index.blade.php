@@ -62,6 +62,20 @@
     <div class="content">
         <div class="container-fluid">
             <div class="row">
+                <div class="my-2 ml-2" style="width: 300px;">
+                    <div class="input-group">
+                        <select class="custom-select" id="periode_id" aria-label="Example select with button addon">
+                            <option disabled selected>Pilih Periode</option>
+                            @foreach ($listPeriode as $periode)
+                                <option value="{{ $periode->id }}" {{ $periodeTerpilih->id == $periode->id ? 'selected' : '' }}>
+                                    {{ $periode->tahun }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </div>
+                </div>
+            </div>
+            <div class="row">
                 <div class="card-body table-responsive p-0">
                     <table id="tabel-proposal" class="table table-head-fixed text-nowrap">
                         <thead>
@@ -69,12 +83,14 @@
                                 <th>No</th>
                                 <th>Tahap</th>
                                 <th>Periode</th>
+                                <th>Jumlah Peserta</th>
+                                <th>Aksi</th>
                             </tr>
                         </thead>
                         <tbody>
                             @if(is_null($pasangan) || $pasangan->isEmpty())
                                 <tr>
-                                    <td colspan="3" class="text-center">Tidak ada data jadwal seminar proposal</td>
+                                    <td colspan="5" class="text-center">Tidak ada data jadwal seminar proposal</td>
                                 </tr>
                             @else
                                 @foreach ($pasangan as $index => $item)
@@ -90,6 +106,18 @@
                                                 {{ $item['periode'] }}
                                             </a>
                                         </td>
+                                        <td>
+                                            <a
+                                                href="{{ route('panitia.jadwal-sidang-akhir.detail', ['tahap_id' => $item['tahap_id'], 'periode_id' => $item['periode_id']]) }}">
+                                                {{ $item['jumlah_peserta'] }}
+                                            </a>
+                                        </td>
+                                        <td>
+                                            <a href="{{ route('panitia.jadwal-sidang-akhir.edit', ["periode" => $item['periode_id'], "tahap" => $item['tahap_id']]) }}"
+                                                class="btn btn-success">
+                                                Edit
+                                            </a>
+                                        </td>
                                     </tr>
                                 @endforeach
                             @endif
@@ -101,4 +129,16 @@
             </div>
         </div>
     </div>
+@endsection
+@section('scripts-panitia')
+    <script>
+        $(document).ready(function () {
+            $('#periode_id').on('change', function () {
+                var selectedPeriodeId = $(this).val();
+                if (selectedPeriodeId) {
+                    window.location.href = '/panitia/jadwal-sidang-akhir/periode/' + selectedPeriodeId;
+                }
+            });
+        });
+    </script>
 @endsection

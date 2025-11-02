@@ -20,18 +20,25 @@ class PermohonanJudulController extends Controller
             ->where('dosen_id', auth('dosen')->user()->id)
             ->whereRelation('mahasiswa', 'prodi_id', 2)
             // ->where('status_proposal_mahasiswa_id', 3)
-            ->get();
+            ->latest()
+            ->paginate(perPage: 15, pageName: 'd4Page');
 
 
         // ambil list data permohonan dari mahasiswa D3
         $listPermohonanD3 = ProposalDosenMahasiswa::with(['mahasiswa', 'proposal', 'statusProposalMahasiswa'])
             ->where('dosen_id', auth('dosen')->user()->id)
             ->whereRelation('mahasiswa', 'prodi_id', 1)
+            ->distinct('proposal_id')
+            ->orderByDesc('status_proposal_mahasiswa_id')
+            ->latest()
             ->get();
-        // meng-group data permohonan D3 sesuai proposal_id
-        $groupedPermohonanD3 = $listPermohonanD3->groupBy('proposal_id');
+            // ->paginate(perPage: 15, pageName: 'd3Page');
 
-        // dd($groupedPermohonanD3);
+        // meng-group data permohonan D3 sesuai proposal_id
+        $groupedPermohonanD3 = $listPermohonanD3->groupBy('proposal_id')
+            ->paginate(perPage: 15, pageName: 'd3Page');
+
+        // dd($groupedPermohonanD3, $listPermohonanD4);
 
         // ambil kuota pembimbing dari dosen
         $kuotaPembimbing = KuotaDosen::where('dosen_id', auth('dosen')->user()->id)->first();

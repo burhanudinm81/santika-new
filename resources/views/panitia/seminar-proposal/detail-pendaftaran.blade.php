@@ -161,6 +161,12 @@
                     @endif
                 </p>
             </div>
+            <div class="row">
+                <a href="{{ route("panitia.seminar-proposal.pendaftaran") }}"
+                    class="btn btn-info mt-2">
+                    Kembali
+                </a>
+            </div>
         </div>
     </div>
 @endsection

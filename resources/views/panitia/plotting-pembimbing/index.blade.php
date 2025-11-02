@@ -1,5 +1,13 @@
 @extends('panitia.home')
 
+@section('page-style')
+    <style>
+        .highlighted-red{
+            background-color: rgba(255, 0, 0, 0.5);
+        }
+    </style>
+@endsection
+
 @section('content-panitia')
     <div class="content-header">
         <div class="container-fluid">
@@ -23,6 +31,21 @@
 
     <div class="content">
         <div class="container-fluid">
+            <div class="row">
+                <div class="my-2 ml-2" style="width: 300px;">
+                    <div class="input-group">
+                        <select class="custom-select" id="periode_id" aria-label="Example select with button addon">
+                            <option disabled selected>Pilih Periode</option>
+                                @foreach ($listPeriode as $periode)
+                                    <option value="{{ $periode->id }}"
+                                        {{ $periodeTerpilih->id == $periode->id ? 'selected' : '' }}>
+                                        {{ $periode->tahun }}
+                                    </option>
+                                @endforeach
+                        </select>
+                    </div>
+                </div>
+            </div>
             <div class="row">
                 <div class="col-12">
                     <div class="card">
@@ -68,7 +91,11 @@
                                         </tr>
                                     @else
                                         @foreach ($listProposalD3 as $index => $proposal)
-                                            <tr data-proposal-id="{{ $proposal->id }}" data-dosbing1-id="{{ $proposal->dosenPembimbing1->id ?? "" }}" data-dosbing2-id="{{ $proposal->dosenPembimbing2->id ?? "" }}">
+                                            <tr data-proposal-id="{{ $proposal->id }}" data-dosbing1-id="{{ $proposal->dosenPembimbing1->id ?? "" }}" 
+                                                data-dosbing2-id="{{ $proposal->dosenPembimbing2->id ?? "" }}"
+                                                @if (is_null( $proposal->dosenPembimbing2))
+                                                    class="highlighted-red"
+                                                @endif>
                                                 <td class="text-center align-middle">{{ $index + 1 }}</td>
                                                 <td class="text-center align-middle">{{ $proposal->proposalMahasiswas[0]->mahasiswa->nim ?? "-" }}</td>
                                                 <td class="text-center align-middle">{{ $proposal->proposalMahasiswas[0]->mahasiswa->nama ?? "-" }}</td>
@@ -77,7 +104,10 @@
                                                 <td class="text-center align-middle">{{ $proposal->dosenPembimbing1->nama ?? "-" }}</td>
                                                 <td class="text-center align-middle">{{ $proposal->dosenPembimbing2->nama ?? "-" }}</td>
                                                 <td class="text-center align-middle">
-                                                    <button class="btn btn-warning btn-sm" data-prodi-id="{{ $proposal->prodi_id }}" onclick="editItem(this)">
+                                                    <button class="btn btn-warning btn-sm" data-prodi-id="{{ $proposal->prodi_id }}" onclick="editItem(this)" 
+                                                        @if ($proposal->prodi_id != $prodiPanitiaId)
+                                                            disabled
+                                                        @endif>
                                                         <i class="fas fa-edit"></i> Edit
                                                     </button>
                                                 </td>
@@ -133,7 +163,11 @@
                                         </tr>
                                     @else
                                         @foreach ($listProposalD4 as $index => $proposal)
-                                            <tr data-proposal-id="{{ $proposal->id }}" data-dosbing1-id="{{ $proposal->dosenPembimbing1->id ?? "" }}" data-dosbing2-id="{{ $proposal->dosenPembimbing2->id ?? "" }}">
+                                            <tr data-proposal-id="{{ $proposal->id }}" data-dosbing1-id="{{ $proposal->dosenPembimbing1->id ?? "" }}" 
+                                                data-dosbing2-id="{{ $proposal->dosenPembimbing2->id ?? "" }}"
+                                                @if (is_null( $proposal->dosenPembimbing2))
+                                                    class="highlighted-red"
+                                                @endif>
                                                 <td class="text-center align-middle" >{{ $index + 1 }}</td>
                                                 <td class="text-center align-middle">{{ $proposal->proposalMahasiswas[0]->mahasiswa->nim ?? "-" }}</td>
                                                 <td class="text-center align-middle">{{ $proposal->proposalMahasiswas[0]->mahasiswa->nama ?? "-" }}</td>
@@ -171,7 +205,6 @@
                 <div class="modal-body">
                     <form id="edit-pembimbing-form-d3" action="{{ route('panitia.plotting-pembimbing.update') }}" method="POST">
                         @csrf
-                        <input type="hidden" name="prodi_id" value="1">
                         <input type="hidden" name="proposal_id">
                         <div class="form-group">
                             <label for="namaMahasiswa">Nama Mahasiswa 1</label>
@@ -196,7 +229,7 @@
                             <select class="form-control" id="dosen-pembimbing-2" name="dosen_pembimbing_2_id">
                                 @foreach ($listDosen as $dosen)
                                     <option value="{{ $dosen->id }}">
-                                        {{ $dosen->nama }} - - Jumlah MHS Bimbingan: {{ $dosen->dosbing2_count_d3 ?? '-' }}
+                                        {{ $dosen->nama }} - Jumlah MHS Bimbingan: {{ $dosen->dosbing2_count_d3 ?? '-' }}
                                     </option>
                                 @endforeach
                             </select>
@@ -222,7 +255,6 @@
                 <div class="modal-body">
                     <form id="edit-pembimbing-form-d4" action="{{ route('panitia.plotting-pembimbing.update') }}" method="POST">
                         @csrf
-                        <input type="hidden" name="prodi_id" value="2">
                         <input type="hidden" name="proposal_id">
                         <!-- Menambahkan Nama Mahasiswa yang Read-Only -->
                         <div class="form-group">

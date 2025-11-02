@@ -70,9 +70,9 @@
                                         <td>{{ $logbook->tanggal_kegiatan }}</td>
                                         <td>
                                             @if ($logbook->status_logbook_id == 1)
-                                                <span class="badge badge-warning">{{ $logbook->statusLogbook->status }}</span> <br>
+                                                <span class="badge badge-warning">{{ $logbook->statusLogbook->status }}</span>
                                             @elseif ($logbook->status_logbook_id == 2)
-                                                <span class="badge badge-danger">{{ $logbook->statusLogbook->status }}</span> <br>
+                                                <span class="badge badge-danger">{{ $logbook->statusLogbook->status }}</span>
                                             @elseif ($logbook->status_logbook_id == 3)
                                                 <span class="badge badge-success">{{ $logbook->statusLogbook->status }}</span>
                                             @endif

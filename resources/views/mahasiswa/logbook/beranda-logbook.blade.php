@@ -23,9 +23,18 @@
                     <div class="card card-primary card-outline mb-4">
                         <div class="card-header">
                             <div>
-                                <a href="{{ route('mahasiswa.logbook.tambah-baru', $roleDospem) }}"
-                                    class="btn btn-primary">Tambah
-                                    Logbook</a>
+                                @if ($roleDospem == 1)
+                                    @if (!is_null($logbooksDospem1))
+                                            <a href="{{ route('mahasiswa.logbook.tambah-baru', $roleDospem) }}"
+                                                class="btn btn-primary">Tambah Logbook</a>
+                                    @endif
+                                @elseif($roleDospem == 2)
+                                    @if (!is_null($logbooksDospem2))
+                                        <a href="{{ route('mahasiswa.logbook.tambah-baru', $roleDospem) }}"
+                                            class="btn btn-primary">Tambah Logbook</a>
+                                    @endif
+                                @endif
+                                
                             </div>
                         </div>
                         <div class="card-body">
@@ -54,8 +63,8 @@
                                                     <td>{{ $loop->iteration }}</td>
                                                     <td>{{ $dospem1Info->nama }}</td>
                                                     <td>{{ $logbook->jenisKegiatanLogbook->nama_kegiatan }}</td>
-                                                    <td>{{ $logbook->nama_kegiatan }}</td>
-                                                    <td>{{ $logbook->tanggal_kegiatan }}</td>
+                                                    <td>{{ $logbook->nama_kegiatan ?? "-" }}</td>
+                                                    <td>{{ $logbook->tanggal ?? "-" }}</td>
                                                     <td>
                                                         @if($logbook->status_logbook_id == 1)
                                                             <span class="badge badge-warning">{{ $logbook->statusLogbook->status }}</span>

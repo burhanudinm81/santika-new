@@ -57,30 +57,47 @@
                                 </div>
                                 <div class="mb-3">
                                     <label for="NamaKegiatan" class="form-label">Nama Kegiatan</label>
-                                    <input type="text" value="{{ $logbook->nama_kegiatan }}" name="namaKegiatan"
+                                    <input type="text" value="{{ $logbook->nama_kegiatan ?? "-" }}" 
                                         class="form-control" id="NamaKegiatan" readonly />
                                 </div>
                                 <div class="mb-3">
+                                    <label for="tempat" class="form-label">Tempat Kegiatan</label>
+                                    <input type="text" value="{{ $logbook->tempat ?? "-" }}"
+                                        class="form-control" id="tempat" readonly />
+                                </div>
+                                <div class="mb-3">
                                     <label for="TanggalKegiatan" class="form-label">Tanggal</label>
-                                    <input type="date" value="{{ $logbook->tanggal_kegiatan }}" name="tanggalKegiatan"
+                                    <input type="date" value="{{ $logbook->tanggal_kegiatan ?? "-" }}" 
                                         class="form-control" id="TanggalKegiatan" readonly />
                                 </div>
                                 <div class="mb-3">
                                     <label for="hasilKegiatan" class="form-label">Catatan Kegiatan</label>
-                                    <textarea class="form-control" name="hasilKegiatan" id="hasilKegiatan" rows="3" readonly>{{ $logbook->hasil_kegiatan }}</textarea>
+                                    <textarea class="form-control" name="hasilKegiatan" id="hasilKegiatan" rows="3" readonly>{{ $logbook->hasil_kegiatan ?? "-" }}</textarea>
                                 </div>
                                 <div class="mb-3">
                                     <label for="catatanDosen" class="form-label">Catatan Dosen</label>
-                                    <textarea class="form-control" name="catatanDosen" id="catatanDosen" rows="3" readonly>{{ $logbook->catatan_khusus_dosen }}</textarea>
+                                    <textarea class="form-control" name="catatanDosen" id="catatanDosen" rows="3" readonly>{{ $logbook->catatan_khusus_dosen ?? "-" }}</textarea>
                                 </div>
                                 <div class="mb-3">
                                     <label for="StatusVerifikasi" class="form-label">Status Verifikasi</label>
                                     <input type="text"
-                                        value="{{ $logbook->status == 1 ? 'Diverifikasi Berhasil' : 'Belum Diverifikasi' }}"
+                                        @if ($logbook->status_logbook_id == 1)
+                                            value="Belum Diverifikasi"
+                                        @elseif($logbook->status_logbook_id == 2)
+                                            value="Ditolak"
+                                        @elseif($logbook->status_logbook_id == 3)
+                                            value="Diverifikasi Berhasil"
+                                        @endif
                                         class="form-control
-                                            @if ($logbook->status != 1) bg-warning
-                                            @elseif($logbook->status == 1) bg-success
-                                            @else bg-info @endif
+                                            @if ($logbook->status_logbook_id == 1)
+                                                bg-warning
+                                            @elseif($logbook->status_logbook_id == 2)
+                                                bg-danger
+                                            @elseif($logbook->status_logbook_id == 3)
+                                                bg-success
+                                            @else 
+                                                bg-info 
+                                            @endif
                                         " id="StatusVerifikasi" readonly />
 
                                 </div>

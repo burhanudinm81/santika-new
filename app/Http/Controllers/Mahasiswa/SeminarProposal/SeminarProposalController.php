@@ -222,8 +222,10 @@ class SeminarProposalController extends Controller
                     ->where('dosen_id', $mainProposalInfo->dosenPengujiSempro2->id)
                     ->first();
 
-                if($revisiDosen1->status == "diterima" && $revisiDosen2->status == "diterima")
-                    $revisiSelesai = true;
+                if (!is_null($revisiDosen1) && !is_null($revisiDosen2)) {
+                    if ($revisiDosen1->status == "diterima" && $revisiDosen2->status == "diterima")
+                        $revisiSelesai = true;
+                }
 
                 if (in_array(3, [$mainProposalInfo->status_sempro_penguji_1_id, $mainProposalInfo->status_sempro_penguji_2_id])) {
                     $statusKelulusanSempro = 3;     // 3 = Tidak Lulus

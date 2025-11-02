@@ -1,0 +1,160 @@
+@extends("panitia.home")
+
+@section('page-style')
+    <style>
+        .required {
+            color: #dc3545;
+        }
+
+        .btn-container {
+            display: flex;
+            justify-content: flex-start;
+            gap: 10px;
+            margin-top: 25px;
+        }
+
+        .btn {
+            padding: 12px 20px;
+            border: none;
+            border-radius: 6px;
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            text-decoration: none;
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .btn-primary {
+            background-color: #007bff;
+            color: #fff;
+        }
+
+        .btn-primary:hover {
+            background-color: #0056b3;
+        }
+
+        .btn-secondary {
+            background-color: #6c757d;
+            color: #fff;
+        }
+
+        .btn-secondary:hover {
+            background-color: #545b62;
+        }
+
+        .error-message {
+            color: #dc3545;
+            font-size: 12px;
+            margin-top: 5px;
+            display: block;
+        }
+
+        .manual-input {
+            margin-top: 10px;
+            display: none;
+        }
+
+        .manual-input .form-control {
+            width: 50%;
+            margin-bottom: 8px;
+        }
+
+        .manual-input small {
+            color: #666;
+            font-size: 12px;
+            display: block;
+            margin-top: 4px;
+        }
+
+        @media (max-width: 768px) {
+            .manual-input .form-control {
+                width: 100%;
+            }
+
+            .btn-container {
+                flex-direction: column;
+            }
+
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+@endsection
+
+@section("content-panitia")
+    @if ($errors->any())
+        <div>
+            <div style="
+                                                                                                                                                                    position: fixed;
+                                                                                                                                                                    top: 30px;
+                                                                                                                                                                    left: 60%;
+                                                                                                                                                                    transform: translateX(-50%);
+                                                                                                                                                                    z-index: 1050;
+                                                                                                                                                                    width: 50%;
+                                                                                                                                                                    transition: all 0.2s ease-in-out;
+                                                                                                                                                                "
+                class="bg-white border-bottom-0 border-right-0 border-left-0 py-4 border-danger shadow shadow-md mx-auto alert alert-dismissible fade show relative"
+                role="alert">
+                <ul>
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
+                <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+        </div>
+    @endif
+
+    <div class="content-header">
+        <div class="container-fluid">
+            <div class="row mb-2">
+                <div class="col-sm-7">
+                    <h1 class="m-0">Input Data Hasil Seminar Proposal</h1>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="content">
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-12">
+                    <div class="card">
+                        <div class="card-body">
+                            <form action="{{ route('panitia.surat.hasil-sempro.preview') }}" method="POST">
+                                @csrf
+                                <div class="form-group">
+                                    <label for="tahap">Tahap <span class="required"></span></label>
+                                    <select name="tahap" id="tahap" class="form-control" name="tahap" required>
+                                        <option value="">-- Pilih Tahap --</option>
+                                        @foreach($daftarTahap as $tahap)
+                                            <option value="{{ $tahap->id }}" {{ old('tahap') == $tahap->id ? 'selected' : '' }}>
+                                                {{ $tahap->tahap }}
+                                            </option>
+                                        @endforeach
+                                    </select>
+                                    @error('tahap')
+                                        <small class="error-message">{{ $message }}</small>
+                                    @enderror
+                                </div>
+
+                                <div class="btn-container">
+                                    <button type="submit" class="btn btn-primary">
+                                        Preview
+                                    </button>
+                                </div>
+                            </form>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+@endsection

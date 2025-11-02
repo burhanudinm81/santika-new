@@ -53,7 +53,7 @@
                         <li id="judul-mandiri-item" class="nav-item">
                             <a href="{{ route('mahasiswa.pengajuan-judul') }}" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
-                                <p>Judul Mandiri</p>
+                                <p>Ajukan Judul</p>
                             </a>
                         </li>
                         <!-- <li class="nav-item">

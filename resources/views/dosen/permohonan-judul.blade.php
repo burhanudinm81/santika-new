@@ -56,7 +56,7 @@
                                             <tr>
                                                 <td>{{ $loop->iteration }}</td>
                                                 {{-- <td>{{ $proposalId }}</td> --}}
-                                                <td>{{ $permohonan[0]->mahasiswa->nama }}</td>
+                                                <td>{{ $permohonan[0]->mahasiswa->nama ?? "-" }}</td>
                                                 <td>{{ $permohonan[1]->mahasiswa->nama ?? '-' }}</td>
                                                 <td>{{ $permohonan->first()->proposal->judul }}</td>
                                                 <td>{{ $permohonan->first()->proposal->jenisJudul->jenis }}</td>
@@ -87,6 +87,7 @@
                             </table>
                         </div>
                         <p id="kuota-dosen-d3"><b>Sisa Kuota: </b>{{ $kuotaPembimbing->kuota_pembimbing_1_D3 }}</p>
+                        <p>{{ $groupedPermohonanD3->links('pagination::bootstrap-4', ['pageName' => 'd3Page']) }}</p>
                     </div>
 
                     <div class="card-body" id="Permohonan-Judul-D4JTD">
@@ -150,12 +151,10 @@
                             </table>
                         </div>
                         <p id="kuota-dosen-d4"><b>Sisa Kuota: </b>{{ $kuotaPembimbing->kuota_pembimbing_1_D4 }}</p>
+                        <p>{{ $listPermohonanD4->links('pagination::bootstrap-4', ['pageName' => 'd4Page']) }}</p>
                     </div>
-                    <!--end::Body-->
-
-                    <!--end::Form-->
                 </div>
-            </div><!-- /.container-fluid -->
+            </div>
         </div>
         <!-- /.content -->
     </div>
