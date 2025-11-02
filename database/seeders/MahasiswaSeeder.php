@@ -151,5 +151,25 @@ class MahasiswaSeeder extends Seeder
             "kelas" => "3F",
             "angkatan" => 2022
         ]);
+
+        Mahasiswa::create([
+            "nim" => "2241140601",
+            "nama" => "Eka Ramdani",
+            "password" => Hash::make("password123"),
+            "prodi_id" => 1,
+            "periode_id" => 1,
+            "kelas" => "3F",
+            "angkatan" => 2022
+        ]);
+
+        Mahasiswa::create([
+            "nim" => "2241140602",
+            "nama" => "Satria Tama",
+            "password" => Hash::make("password123"),
+            "prodi_id" => 1,
+            "periode_id" => 1,
+            "kelas" => "3F",
+            "angkatan" => 2022
+        ]);
     }
 }

@@ -33,6 +33,13 @@ use App\Http\Controllers\Panitia\SeminarHasil\JadwalSemhasController as JadwalSe
 use App\Http\Controllers\Panitia\SeminarHasil\SeminarHasilPanitiaController;
 use App\Http\Controllers\Panitia\SeminarProposal\JadwalSemproController as JadwalSemproPanitiaController;
 use App\Http\Controllers\Panitia\SeminarProposal\SeminarProposalController as SeminarProposalPanitiaController;
+use App\Http\Controllers\Panitia\Surat\BeritaAcaraYudisiumController;
+use App\Http\Controllers\Panitia\Surat\DaftarDosenPembimbingMahasiswaController;
+use App\Http\Controllers\Panitia\Surat\HasilSemproController;
+use App\Http\Controllers\Panitia\Surat\SuratTugasSemproController;
+use App\Http\Controllers\Panitia\Surat\SuratTugasUjianAkhirController;
+use App\Http\Controllers\Panitia\Surat\UndanganSemproController;
+use App\Http\Controllers\Panitia\Surat\UndanganUjianAkhirController;
 use App\Http\Controllers\PanitiaController;
 use App\Http\Controllers\PengujianPenjadwalanAG;
 use App\Http\Controllers\PrivateFileController;
@@ -656,6 +663,180 @@ Route::middleware(["auth:dosen", "auth.session", "password.changed", "is.panitia
             Route::post('/hide', 'hideNilai')->name('hide');
         });
 
+    Route::prefix("/panitia/surat")->name("panitia.surat.")->group(function(){
+        // Route Undangan Seminar Proposal
+        Route::controller(UndanganSemproController::class)->group(function(){
+            // Route untuk menampilkan halaman Pembuatan Surat
+            Route::get("/undangan-sempro/create", "create")
+                ->name("undangan-sempro.create");
+
+            // Route untuk menampilkan halaman Preview Surat
+            Route::post("/undangan-sempro/preview", "previewPage")
+                ->name("undangan-sempro.preview");
+
+            // Route untuk menampilkan Preview PDF Undangan Seminar Proposal
+            Route::get("/undangan-sempro/surat", "previewSurat")
+                ->name("undangan-sempro.surat.preview");
+
+            // Route untuk menampilkan Preview PDF Lampiran Surat Tugas Seminar Proposal
+            Route::get("/undangan-sempro/lampiran", "previewLampiran")
+                ->name("undangan-sempro.lampiran.preview");
+
+            // Route untuk download PDF Undangan Seminar Proposal
+            Route::get("/undangan-sempro/surat/download", "downloadSurat")
+                ->name("undangan-sempro.surat.download");
+
+            // Route untuk download PDF Lampiran Undangan Seminar Proposal
+            Route::get("/undangan-sempro/lampiran/download", "downloadLampiran")
+                ->name("undangan-sempro.lampiran.download");
+        });
+
+        // Route Surat Tugas Seminar Proposal
+        Route::controller(SuratTugasSemproController::class)->group(function(){
+            // Route untuk menampilkan halaman Pembuatan Surat
+            Route::get("/surat-tugas-sempro/create", "create")
+                ->name("surat-tugas-sempro.create");
+
+            // Route untuk menampilkan halaman Preview Surat
+            Route::post("/surat-tugas-sempro/preview", "previewPage")
+                ->name("surat-tugas-sempro.preview");
+
+            // Route untuk menampilkan Preview PDF Surat Tugas Seminar Proposal
+            Route::get("/surat-tugas-sempro/surat", "previewSurat")
+                ->name("surat-tugas-sempro.surat.preview");
+
+            // Route untuk menampilkan Preview PDF Lampiran Surat Tugas Seminar Proposal
+            Route::get("/surat-tugas-sempro/lampiran", "previewLampiran")
+                ->name("surat-tugas-sempro.lampiran.preview");
+
+            // Route untuk download PDF Surat Tugas Sempro
+            Route::get("/surat-tugas-sempro/surat/download", "downloadSurat")
+                ->name("surat-tugas-sempro.surat.download");
+
+            // Route untuk download PDF Lampiran Surat Tugas Sempro
+            Route::get("/surat-tugas-sempro/lampiran/download", "downloadLampiran")
+                ->name("surat-tugas-sempro.lampiran.download");
+        });
+
+        // Route Pengumuman Hasil Seminar Proposal
+        Route::controller(HasilSemproController::class)->group(function(){
+            // Route untuk menampilkan halaman Pembuatan Surat
+            Route::get("/hasil-sempro/create", "create")
+                ->name("hasil-sempro.create");
+
+            // Route untuk menampilkan halaman Preview Surat
+            Route::post("/hasil-sempro/preview", "previewPage")
+                ->name("hasil-sempro.preview");
+
+            // Route untuk menampilkan Preview PDF Hasil Seminar Proposal
+            Route::get("/hasil-sempro/surat", "previewSurat")
+                ->name("hasil-sempro.surat.preview");
+
+            // Route untuk download PDF Hasil Seminar Proposal
+            Route::get("/hasil-sempro/surat/download", "downloadSurat")
+                ->name("hasil-sempro.surat.download");
+        });
+
+        // Route Daftar Dosen Pembimbing Mahasiswa
+        Route::controller(DaftarDosenPembimbingMahasiswaController::class)->group(function(){
+            // Route untuk menampilkan halaman Pembuatan Surat
+            Route::get("/daftar-dosen-pembimbing-mahasiswa/create", "create")
+                ->name("daftar-dosen-pembimbing-mahasiswa.create");
+
+            // Route untuk menampilkan halaman Preview Surat
+            Route::post("/daftar-dosen-pembimbing-mahasiswa/preview", "previewPage")
+                ->name("daftar-dosen-pembimbing-mahasiswa.preview");
+
+            // Route untuk menampilkan Preview PDF Surat Daftar Dosen Pembimbing
+            Route::get("/daftar-dosen-pembimbing-mahasiswa/surat", "previewSurat")
+                ->name("daftar-dosen-pembimbing-mahasiswa.surat.preview");
+
+            // Route untuk download PDF Daftar Dosen Pembimbing
+            Route::get("/daftar-dosen-pembimbing-mahasiswa/surat/download", "downloadSurat")
+                ->name("daftar-dosen-pembimbing-mahasiswa.surat.download");
+        });
+
+        // Route Undangan Ujian Akhir
+        Route::controller(UndanganUjianAkhirController::class)->group(function(){
+            // Route untuk menampilkan halaman Pembuatan Surat
+            Route::get("/undangan-ujian-akhir/create", "create")
+                ->name("undangan-ujian-akhir.create");
+
+            // Route untuk menampilkan halaman Preview Surat
+            Route::post("/undangan-ujian-akhir/preview", "previewPage")
+                ->name("undangan-ujian-akhir.preview");
+
+            // Route untuk menampilkan Preview PDF Undangan Ujian Akhir
+            Route::get("/undangan-ujian-akhir/surat", "previewSurat")
+                ->name("undangan-ujian-akhir.surat.preview");
+
+            // Route untuk menampilkan Preview PDF Lampiran Undangan Ujian Akhir
+            Route::get("/undangan-ujian-akhir/lampiran", "previewLampiran")
+                ->name("undangan-ujian-akhir.lampiran.preview");
+
+            // Route untuk download PDF Undangan Ujian Akhir
+            Route::get("/undangan-ujian-akhir/surat/download", "downloadSurat")
+                ->name("undangan-ujian-akhir.surat.download");
+
+            // Route untuk download PDF Lampiran Undangan Ujian Akhir
+            Route::get("/undangan-ujian-akhir/lampiran/download", "downloadLampiran")
+                ->name("undangan-ujian-akhir.lampiran.download");
+        });
+        
+        // Route Surat Tugas Ujian Akhir
+        Route::controller(SuratTugasUjianAkhirController::class)->group(function(){
+            // Route untuk menampilkan halaman Pembuatan Surat
+            Route::get("/surat-tugas-ujian-akhir/create", "create")
+                ->name("surat-tugas-ujian-akhir.create");
+
+            // Route untuk menampilkan halaman Preview Surat
+            Route::post("/surat-tugas-ujian-akhir/preview", "previewPage")
+                ->name("surat-tugas-ujian-akhir.preview");
+
+            // Route untuk menampilkan Preview PDF Surat Tugas Ujian Akhir
+            Route::get("/surat-tugas-ujian-akhir/surat", "previewSurat")
+                ->name("surat-tugas-ujian-akhir.surat.preview");
+
+            // Route untuk menampilkan Preview PDF Lampiran Surat Tugas Ujian Akhir
+            Route::get("/surat-tugas-ujian-akhir/lampiran", "previewLampiran")
+                ->name("surat-tugas-ujian-akhir.lampiran.preview");
+
+            // Route untuk download PDF Surat Tugas Ujian Akhir
+            Route::get("/surat-tugas-ujian-akhir/surat/download", "downloadSurat")
+                ->name("surat-tugas-ujian-akhir.surat.download");
+
+            // Route untuk download PDF Lampiran Surat Tugas Ujian Akhir
+            Route::get("/surat-tugas-ujian-akhir/lampiran/download", "downloadLampiran")
+                ->name("surat-tugas-ujian-akhir.lampiran.download");
+        });
+
+        // Route Berita Acara Yudisium
+        Route::controller(BeritaAcaraYudisiumController::class)->group(function(){
+            // Route untuk menampilkan halaman Pembuatan Surat
+            Route::get("/berita-acara-yudisium/create", "create")
+                ->name("berita-acara-yudisium.create");
+
+            // Route untuk menampilkan halaman Preview Surat
+            Route::post("/berita-acara-yudisium/preview", "previewPage")
+                ->name("berita-acara-yudisium.preview");
+
+            // Route untuk menampilkan Preview PDF Berita Acara Yudisium
+            Route::get("/berita-acara-yudisium/surat", "previewSurat")
+                ->name("berita-acara-yudisium.surat.preview");
+
+            // Route untuk menampilkan Preview PDF Lampiran Berita Acara Yudisium
+            Route::get("/berita-acara-yudisium/lampiran", "previewLampiran")
+                ->name("berita-acara-yudisium.lampiran.preview");
+
+            // Route untuk download PDF Berita Acara Yudisium
+            Route::get("/berita-acara-yudisium/surat/download", "downloadSurat")
+                ->name("berita-acara-yudisium.surat.download");
+
+            // Route untuk download PDF Lampiran Berita Acara Yudisium
+            Route::get("/berita-acara-yudisium/lampiran/download", "downloadLampiran")
+                ->name("berita-acara-yudisium.lampiran.download");
+        });
+    });
 });
 
 Route::get("/hyper-parameter-tuning", [PengujianPenjadwalanAG::class, "pengujianHyperTuningParameter"]);

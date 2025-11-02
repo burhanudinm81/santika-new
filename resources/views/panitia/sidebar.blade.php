@@ -144,37 +144,37 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="#"  class="nav-link">
+                            <a href="{{ route("panitia.surat.undangan-sempro.create") }}"  class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Undangan Sempro</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a href="{{ route("panitia.surat.surat-tugas-sempro.create") }}" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Surat Tugas Sempro</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a href="{{ route("panitia.surat.hasil-sempro.create") }}" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Hasil Sempro</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a href="{{ route("panitia.surat.daftar-dosen-pembimbing-mahasiswa.create") }}" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
-                                <p>Daftar Dosen Pembimbing Mahasiswa</p>
+                                <p>Daftar Dosen Pembimbing</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a href="{{ route("panitia.surat.undangan-ujian-akhir.create") }}" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Undangan Ujian Akhir</p>
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a href="{{ route("panitia.surat.surat-tugas-ujian-akhir.create") }}" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Surat Tugas Ujian Akhir</p>
                             </a>
