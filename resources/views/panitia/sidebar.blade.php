@@ -5,14 +5,24 @@
         <span class="brand-text font-weight-light">S A N T I K A</span>
     </a>
     <div class="sidebar">
+        <div class="user-panel">
+            <ul class="nav nav-pills nav-sidebar flex-column">
+                <li class="nav-item">
+                    <a href="#" class="nav-link text-center" id="dashboard-item">
+                        PANITIA
+                    </a>
+                </li>
+            </ul>
+        </div>
+
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
             <div class="image">
                 @if (is_null(auth('dosen')->user()->foto_profil))
-                    <img src={{ url('/images/blank-profile-128x128.png') }} class="img-circle elevation-2"
-                        alt="User Image" id="user-image">
+                    <img src={{ url('/images/blank-profile-128x128.png') }} class="img-circle elevation-2" alt="User Image"
+                        id="user-image">
                 @else
-                    <img src={{ asset('/storage/' . auth('dosen')->user()->foto_profil) }}
-                        class="img-circle elevation-2" alt="User Image" id="user-image" width="30px" height="30px">
+                    <img src={{ asset('/storage/' . auth('dosen')->user()->foto_profil) }} class="img-circle elevation-2"
+                        alt="User Image" id="user-image" width="30px" height="30px">
                 @endif
             </div>
             <div class="info">
@@ -21,8 +31,7 @@
         </div>
 
         <nav class="mt-2">
-            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu"
-                data-accordion="false">
+            <ul class="nav nav-pills nav-sidebar flex-column" data-widget="treeview" role="menu" data-accordion="false">
                 <li class="nav-item">
                     <a href="/panitia/home" class="nav-link" id="dashboard-item">
                         <i class="nav-icon fas fa-home"></i>
@@ -108,7 +117,7 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="{{ route('panitia.seminar-hasil.pendaftaran') }}"  class="nav-link">
+                            <a href="{{ route('panitia.seminar-hasil.pendaftaran') }}" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Pendaftaran</p>
                             </a>
@@ -122,7 +131,7 @@
                         <li class="nav-item">
                             <a href="{{ route('panitia.seminar-hasil.tahap-rekap-nilai') }}" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
-                                <p>Rekap Nilai</p>
+                                <p>Rekap Nilai Sementara</p>
                             </a>
                         </li>
                         <li class="nav-item">
@@ -144,7 +153,7 @@
                     </a>
                     <ul class="nav nav-treeview">
                         <li class="nav-item">
-                            <a href="{{ route("panitia.surat.undangan-sempro.create") }}"  class="nav-link">
+                            <a href="{{ route("panitia.surat.undangan-sempro.create") }}" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Undangan Sempro</p>
                             </a>
@@ -162,7 +171,8 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="{{ route("panitia.surat.daftar-dosen-pembimbing-mahasiswa.create") }}" class="nav-link">
+                            <a href="{{ route("panitia.surat.daftar-dosen-pembimbing-mahasiswa.create") }}"
+                                class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Daftar Dosen Pembimbing</p>
                             </a>
@@ -180,7 +190,7 @@
                             </a>
                         </li>
                         <li class="nav-item">
-                            <a href="#" class="nav-link">
+                            <a href="{{ route("panitia.surat.berita-acara-yudisium.create") }}" class="nav-link">
                                 <i class="far fa-circle nav-icon"></i>
                                 <p>Berita Acara Yudisium</p>
                             </a>

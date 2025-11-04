@@ -82,32 +82,71 @@ class DosenController extends Controller
             ], 422);
         }
 
-        try {
-            $fileExcel = $request->file("file_excel");                    // Mengambil file
-            $filename = time() . "_" . $fileExcel->getClientOriginalName();    // Membuat nama file
+        $fileExcel = $request->file("file_excel");             // Mengambil file
+        $filename = time() . "_" . $fileExcel->getClientOriginalName();    // Membuat nama file
 
-            // Menyimpan file
-            $fileExcel->storeAs(
+        // Menyimpan file
+        $fileExcel->storeAs(
+            $this->excelFilePath,
+            $filename
+        );
+
+        try {
+            $nidnList = $this->dosenImportService->getNidnList(
                 $this->excelFilePath,
                 $filename
             );
 
-            // Dispatch (kirim) Job ke ProcessDosenImport
-            ProcessDosenImport::dispatch(
+            if ($nidnList) {
+                $nidnDuplikat = Dosen::whereIn('nidn', $nidnList)->pluck("nidn");
+
+                if ($nidnDuplikat->isNotEmpty()) {
+                    $nidnDuplikatStr = $nidnDuplikat->implode(", ");
+
+                    return response()->json([
+                        "success" => false,
+                        "message" => "Tidak dapat mengimpor data! Terdapat NIDN Duplikat: $nidnDuplikatStr"
+                    ], 422);
+                }
+            } else {
+                return response()->json([
+                    "success" => false,
+                    "message" => "Data NIDN tidak ditemukan."
+                ], 422);
+            }
+        } catch (Exception $e) {
+            // Tangkap error tak terduga lainnya
+            Log::error("Gagal Membaca NIDN di File Excel: " . $e->getMessage());
+            return response()->json([
+                "success" => false,
+                "message" => "Terjadi kesalahan server saat mengimpor file."
+            ], 500);
+        }
+
+        try {
+            // Panggil mahasiswaImportService
+            $this->dosenImportService->import(
                 $this->excelFilePath,
                 $filename
             );
 
             return response()->json([
                 "success" => true,
-                "message" => "Data Dosen Sedang Diimpor! Refresh secara berkala untuk melihat perubahan!"
+                "message" => "Data Dosen berhasil diimpor!"
             ]);
+        } catch (ImportDataException $e) {
+            // Tangkap error spesifik dari dosenImportService
+            return response()->json([
+                "success" => false,
+                "message" => $e->getMessage()
+            ], 422); // 422 Unprocessable Entity
+
         } catch (Exception $e) {
             // Tangkap error tak terduga lainnya
             Log::error("Import Gagal Total: " . $e->getMessage());
             return response()->json([
                 "success" => false,
-                "message" => "Terjadi kesalahan pada server saat mengimpor file."
+                "message" => "Terjadi kesalahan server saat mengimpor file."
             ], 500);
         }
     }
@@ -194,7 +233,7 @@ class DosenController extends Controller
         $dosen->password = Hash::make($data["new_password"]);
         $savedDosen = $dosen->save();
 
-        if(!$savedDosen){
+        if (!$savedDosen) {
             return response()->json([
                 "success" => false,
                 "message" => "Server Gagal mengganti Password Dosen!"

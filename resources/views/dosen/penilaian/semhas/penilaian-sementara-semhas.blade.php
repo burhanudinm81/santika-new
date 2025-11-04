@@ -16,6 +16,33 @@
     <!-- Main content -->
     <div class="content">
         <div class="container-fluid">
+            @if ($errors->any())
+                <div>
+                    {{-- modal popup error --}}
+                    <div style="
+                                                                            position: fixed;
+                                                                            top: 30px;
+                                                                            left: 60%;
+                                                                            transform: translateX(-50%);
+                                                                            z-index: 1050;
+                                                                            width: 50%;
+                                                                            transition: all 0.2s ease-in-out;
+                                                                        "
+                        class="bg-white border-bottom-0 border-right-0 border-left-0 py-4 border-danger shadow shadow-md mx-auto alert alert-dismissible fade show relative"
+                        role="alert">
+                        <strong class="text-danger">
+                            <ul>
+                                @foreach ($errors->all() as $error)
+                                    <li>{{ $error }}</li>
+                                @endforeach
+                            </ul>
+                        </strong>
+                        <button type="button" class="close" data-dismiss="alert" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+                </div>
+            @endif
 
             @if (session()->has('success'))
                 @include('notifications.success-alert', ['message' => session('success')])
@@ -28,7 +55,7 @@
                         @csrf
                         @method('PUT')
 
-                        {{-- hidden input  --}}
+                        {{-- hidden input --}}
                         <input type="hidden" name="proposal_id" value="{{ $proposal->id }}">
                         <input type="hidden" name="dosen_id" value="{{ auth('dosen')->user()->id }}">
 
@@ -59,25 +86,50 @@
 
                             <div class="mb-3">
                                 <label for="status_penilaian">Status Kelulusan Sementara</label>
-                                <select class="form-control" id="status_penilaian_sementara"
-                                    name="status_penilaian_sementara" required>
+                                <select class="form-control" id="status_penilaian" name="status_penilaian" required>
                                     <option value="" disabled selected>-- Pilih Status Penilaian --</option>
-                                    @foreach ($listStatusPenilaian as $status)
-                                        <option value="{{ $status->id }}">{{ $status->status }}</option>
-                                    @endforeach
+                                    @if (auth("dosen")->id() == $proposal->penguji_sidang_ta_1_id)
+                                        @foreach ($listStatusPenilaian as $status)
+                                            <option @if($status->id == $proposal->status_semhas_penguji_1_id) selected @endif
+                                                value="{{ $status->id }}">
+                                                {{ $status->status }}
+                                            </option>
+                                        @endforeach
+                                    @elseif(auth("dosen")->id() == $proposal->penguji_sidang_ta_2_id)
+                                        @foreach ($listStatusPenilaian as $status)
+                                            <option @if($status->id == $proposal->status_semhas_penguji_2_id) selected @endif
+                                                value="{{ $status->id }}">
+                                                {{ $status->status }}
+                                            </option>
+                                        @endforeach
+                                    @elseif(auth("dosen")->id() == $proposal->dosen_pembimbing_1_id)
+                                        @foreach ($listStatusPenilaian as $status)
+                                            <option @if($status->id == $proposal->status_semhas_dosbing_1_id) selected @endif
+                                                value="{{ $status->id }}">
+                                                {{ $status->status }}
+                                            </option>
+                                        @endforeach
+                                    @elseif(auth("dosen")->id() == $proposal->dosen_pembimbing_2_id)
+                                        @foreach ($listStatusPenilaian as $status)
+                                            <option @if($status->id == $proposal->status_semhas_dosbing_2_id) selected @endif
+                                                value="{{ $status->id }}">
+                                                {{ $status->status }}
+                                            </option>
+                                        @endforeach
+                                    @endif
                                 </select>
                             </div>
 
-                            <strong></i>Catatan Revisi Akhir</strong>
-                            <textarea class="form-control" id="catatan_revisi_akhir" name="catatan_revisi_akhir" rows="6"
-                            required>@if ($prevRevisi != null){{ $prevRevisi->catatan_revisi }}@else {{ $proposal->catatan_revisi }}@endif</textarea>
+                            <strong></i>Catatan Revisi</strong>
+                            <textarea class="form-control" id="catatan_revisi" name="catatan_revisi"
+                                rows="6">@if ($prevRevisi != null){{ $prevRevisi->catatan_revisi }}@else {{ $proposal->catatan_revisi }}@endif</textarea>
 
                             <div class="form-group">
                                 <label>Lihat Lembar Revisi:</label>
                                 <div>
                                     @if ($prevRevisi != null && $prevRevisi->file_lembar_revisi_dosen)
-                                        <iframe src="{{ $prevRevisi->getPathLembarRevisiSemhasForDosen() }}"
-                                            frameborder="2" width="88%" height="700px" scrolling="yes"></iframe>
+                                        <iframe src="{{ $prevRevisi->getPathLembarRevisiSemhasForDosen() }}" frameborder="2"
+                                            width="88%" height="700px" scrolling="yes"></iframe>
                                     @else
                                         <span class="text-gray-500 italic">Belum ada file</span>
                                     @endif
@@ -88,8 +140,8 @@
                                 <label>Lihat Proposal Hasil Revisi:</label>
                                 <div>
                                     @if ($prevRevisi != null && $prevRevisi->file_proposal_revisi)
-                                        <iframe src="{{ $prevRevisi->getPathLembarRevisiSemhasForDosen() }}"
-                                            frameborder="2" width="88%" height="700px" scrolling="yes"></iframe>
+                                        <iframe src="{{ $prevRevisi->getPathLembarRevisiSemhasForDosen() }}" frameborder="2"
+                                            width="88%" height="700px" scrolling="yes"></iframe>
                                     @else
                                         <span class="text-gray-500 italic">Belum ada file</span>
                                     @endif

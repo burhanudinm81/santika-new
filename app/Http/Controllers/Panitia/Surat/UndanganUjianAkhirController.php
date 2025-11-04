@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\JadwalSeminarHasil;
 use App\Models\Panitia;
 use App\Models\Periode;
+use App\Models\Prodi;
 use App\Models\Proposal;
 use App\Models\Tahap;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -20,7 +21,7 @@ class UndanganUjianAkhirController extends Controller
     {
         $daftarTahap = Tahap::all();
         return view(
-            "panitia.surat.tampilan-web.undangan-ujian-akhir.create", 
+            "panitia.surat.tampilan-web.undangan-ujian-akhir.create",
             compact('daftarTahap')
         );
     }
@@ -95,6 +96,7 @@ class UndanganUjianAkhirController extends Controller
         $tahap = Tahap::find($request->integer("tahap"));
         $periode = Periode::find($request->integer("periode"));
         $prodiPanitia = Panitia::firstWhere("dosen_id", auth("dosen")->id())->prodi_id;
+        $prodi = Prodi::find($prodiPanitia);
 
         $jadwalSemhas = JadwalSeminarHasil::whereHas('proposal', function ($q) use ($tahap, $periode, $prodiPanitia) {
             $q->where('tahap_semhas_id', $tahap->id)
@@ -122,7 +124,8 @@ class UndanganUjianAkhirController extends Controller
             'tahun_akademik' => $periode->tahun,
             'hari_tanggal' => $request->get('hari_tanggal', ''),
             'waktu_pelaksanaan' => $request->get("waktu_pelaksanaan", ""),
-            'tempat' => $request->get("tempat", "")
+            'tempat' => $request->get("tempat", ""),
+            'prodi' => $prodi->prodi
         ];
 
         $pdf = Pdf::loadView('panitia.surat.template-surat.undangan-ujian-akhir.undangan', compact('data'));
@@ -198,6 +201,7 @@ class UndanganUjianAkhirController extends Controller
         $tahap = Tahap::find($request->integer("tahap"));
         $periode = Periode::find($request->integer("periode"));
         $prodiPanitia = Panitia::firstWhere("dosen_id", auth("dosen")->id())->prodi_id;
+        $prodi = Prodi::find($prodiPanitia);
 
         $jadwalSemhas = JadwalSeminarHasil::whereHas('proposal', function ($q) use ($tahap, $periode, $prodiPanitia) {
             $q->where('tahap_semhas_id', $tahap->id)
@@ -225,7 +229,8 @@ class UndanganUjianAkhirController extends Controller
             'tahun_akademik' => $periode->tahun,
             'hari_tanggal' => $request->get('hari_tanggal', ''),
             'waktu_pelaksanaan' => $request->get("waktu_pelaksanaan", ""),
-            'tempat' => $request->get("tempat", "")
+            'tempat' => $request->get("tempat", ""),
+            'prodi' => $prodi->prodi
         ];
 
         $pdf = Pdf::loadView('panitia.surat.template-surat.undangan-ujian-akhir.undangan', compact('data'));

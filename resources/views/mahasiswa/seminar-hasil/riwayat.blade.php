@@ -6,7 +6,7 @@
         <div class="container-fluid">
             <div class="row mb-2">
                 <div class="col-sm-6">
-                    <h1 class="m-0">Riwayat Pendaftaran Seminar Proposal</h1>
+                    <h1 class="m-0">Riwayat Pendaftaran Sidang Tugas Akhir</h1>
                 </div><!-- /.col -->
             </div><!-- /.row -->
         </div><!-- /.container-fluid -->
@@ -30,31 +30,29 @@
                                         <th>Judul</th>
                                         <th>Jenis Judul</th>
                                         <th>Dosen Pembimbing 1</th>
+                                        <th>Dosen Pembimbing 2</th>
                                         <th>Status</th>
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    @foreach ($data as $key => $peserta)
+                                    @foreach ($data as $key => $pendaftaranSemhas)
                                         <tr class="row-clickable">
                                             <td>{{ $key + 1 }}</td>
-                                            <td>{{ $peserta->proposal->tahap->tahap }}</td>
-                                            <td>{{ $peserta->proposal->judul }}</td>
-                                            <td>{{ $peserta->proposal->jenisJudul->jenis }}</td>
-                                            <td>{{ $peserta->dosen->nama }}</td>
+                                            <td>{{ $pendaftaranSemhas->proposal->tahap->tahap ?? "-" }}</td>
+                                            <td>{{ $pendaftaranSemhas->proposal->judul ?? "-" }}</td>
+                                            <td>{{ $pendaftaranSemhas->proposal->jenisJudul->jenis ?? "-" }}</td>
+                                            <td>{{ $pendaftaranSemhas->proposal->dosenPembimbing1->nama ?? "-" }}</td>
+                                            <td>{{ $pendaftaranSemhas->proposal->dosenPembimbing2->nama ?? "-" }}</td>
                                             <td class="d-flex align-items-center">
-                                                @php
-                                                    $statusId =
-                                                        $peserta->proposal->pendaftaranSempro->status_daftar_sempro_id;
-                                                @endphp
-                                                @if ($statusId == 2)
+                                                @if ($pendaftaranSemhas->status_daftar_semhas_id == 2)
                                                     <span
-                                                        class="badge badge-danger">{{ $statusPendaftaran[$statusId] }}</span>
-                                                @elseif ($statusId == 1)
+                                                        class="badge badge-danger">Ditolak</span>
+                                                @elseif ($pendaftaranSemhas->status_daftar_semhas_id == 1)
                                                     <span
-                                                        class="badge badge-success">{{ $statusPendaftaran[$statusId] }}</span>
-                                                @elseif ($statusId == 3)
+                                                        class="badge badge-success">Diterima</span>
+                                                @elseif ($pendaftaranSemhas->status_daftar_semhas_id == 3)
                                                     <span
-                                                        class="badge badge-warning">{{ $statusPendaftaran[$statusId] }}</span>
+                                                        class="badge badge-warning">Belum Dicek</span>
                                                 @endif
                                             </td>
                                         </tr>

@@ -4,14 +4,14 @@
 <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1" />
-    <title>Undangan Ujian Akhir</title>
+    <title>Surat Tugas Seminar Proposal</title>
     <style>
         body {
             font-family: "Times New Roman", Times, serif;
             font-size: 16px;
-            /* isi = 12pt Word */
+            /* isi = 12pt Word - sama dengan template lain */
             margin: 10px 40px 20px 40px;
-            /* atas kanan bawah kiri */
+            /* atas kanan bawah kiri - sama dengan template lain */
             color: black;
             position: relative;
         }
@@ -19,9 +19,11 @@
         .header {
             text-align: center;
             line-height: 1.1;
-            /* lebih rapat */
-            margin-bottom: 70px;
+            /* lebih rapat - sama dengan template lain */
+            margin-bottom: 0px;
             background: white;
+            position: relative;
+            /* tidak fixed, bisa discroll */
         }
 
         .logo-container {
@@ -68,7 +70,7 @@
 
         .content {
             line-height: 1.3;
-            /* isi lebih resmi */
+            /* isi lebih resmi - sama dengan template lain */
             margin-top: -10px;
             font-size: 16px;
             /* 12pt Word */
@@ -91,27 +93,16 @@
             line-height: 1.3;
         }
 
-        .info-table {
-            margin: 15px 0;
-            font-size: 16px;
-            /* isi 12pt Word */
-            border-collapse: collapse;
-            line-height: 1.3;
-        }
-
-        .info-table td {
-            padding: 0px 4px;
-            vertical-align: top;
-        }
-
-        .info-table td:first-child {
-            padding-left: 0;
-            width: 100px;
-        }
-
-        .info-table td:nth-child(2) {
-            width: 10px;
+        .center-text {
             text-align: center;
+        }
+
+        .center-text p {
+            text-align: center;
+        }
+
+        .content-text {
+            text-align: justify;
         }
 
         .signature-section {
@@ -163,10 +154,6 @@
                 margin: 5px 0;
             }
 
-            .info-table {
-                page-break-inside: avoid;
-            }
-
             .signature-section {
                 page-break-inside: avoid;
             }
@@ -192,79 +179,43 @@
     </div>
 
     <div class="content">
-        <table class="info-table">
-            <tr>
-                <td>Nomor</td>
-                <td>:</td>
-                <td>{{ $data['nomor_surat'] ?? '123/UN10.2.11/PP/2024' }}</td>
-            </tr>
-            <tr>
-                <td>Lampiran</td>
-                <td>:</td>
-                <td>{{ $data['total_lampiran'] ?? 0 }} lembar</td>
-            </tr>
-            <tr>
-                <td>Perihal</td>
-                <td>:</td>
-                <td>Undangan Ujian Akhir Skripsi Tahap {{ $data['tahap'] ?? 'I' }} Tahun Akademik
-                    {{ $data['tahun_akademik'] ?? '2024/2025' }}</td>
-            </tr>
-        </table>
+        <div class="center-text">
+            <p style="margin-top: 30px; margin-bottom: 5px;"><strong><u>SURAT TUGAS</u></strong></p>
+            <p style="margin-top: -5px;">NOMOR: {{ $data['nomor_surat'] ?? '' }}</p>
+        </div>
 
-        <p>Kepada Yth.</p>
-        <p style="margin-top: -5px;">Bapak/Ibu Dosen (terlampir sesuai jadwal)</p>
-        <p style="margin-top: -5px;">Di Tempat</p>
+        <p style="margin-top: 20px;" class="content-text">
+            Direktur Politeknik Negeri Malang dengan ini memberikan tugas kepada Tenaga Pengajar Program Studi Teknik
+            Telekomunikasi Jurusan Teknik Elektro pada Semester {{ $data['semester'] ?? 'Genap' }} Tahun
+            Akademik {{ $data['tahun_akademik'] ?? '2024/2025' }} yang
+            dilaksanakan pada tanggal {{ $data['tanggal_mulai'] ?? '' }} sampai dengan
+            {{ $data['tanggal_selesai'] ?? '' }} yang namanya tercantum di dalam kolom (4) sebagai Dosen
+            Penguji (Ketua/Anggota) Seminar Proposal Skripsi/Tesis. Adapun nama-nama Tenaga Pengajar tersebut terlampir
+            pada surat tugas ini. Selesai melaksanakan tugas harap menyampaikan laporan tertulis kepada Direktur.
+        </p>
 
-        <p style="margin-top: 20px;">Dengan Hormat,</p>
-        <p style="margin-top: -5px; text-align: justify;">Sehubungan dengan tindak lanjut dari proses Skripsi Program
-            Studi {{ $data["prodi"] }}, bersama surat
-            ini kami memohon kehadiran Bapak/Ibu dosen pada acara Ujian Akhir Skripsi Tahap {{ $data['tahap'] ?? 'I' }}
-            yang akan
-            dilaksanakan pada:</p>
-
-        <table class="info-table">
-            <tr>
-                <td>Hari/Tanggal</td>
-                <td>:</td>
-                <td>{{ $data['hari_tanggal'] ?? 'Senin, 15 Juli 2024' }}</td>
-            </tr>
-            <tr>
-                <td>Waktu</td>
-                <td>:</td>
-                <td>{{ $data['waktu'] ?? '08.00 - 16.00 WIB' }}</td>
-            </tr>
-            <tr>
-                <td>Tempat</td>
-                <td>:</td>
-                <td>{{ $data['tempat'] ?? 'Ruang Kuliah Jurusan Teknik Elektro' }}</td>
-            </tr>
-            <tr>
-                <td>Acara</td>
-                <td>:</td>
-                <td>Ujian Akhir</td>
-            </tr>
-            <tr>
-                <td>Daftar Proposal</td>
-                <td>:</td>
-                <td>Terlampir</td>
-            </tr>
-        </table>
-
-        <p>Berkas laporan sudah kami letakkan di atas meja Bapak/Ibu.</p>
-
-        <p style="margin-top: 5px;">Demikian undangan ini kami sampaikan, atas kehadiran dan perhatian Bapak/Ibu kami
-            ucapkan terima kasih.</p>
+        <p style="margin-top: 15px;" class="content-text">
+            Demikian Surat Tugas ini dibuat untuk dilaksanakan dengan sebaik-baiknya dan penuh tanggung jawab.
+        </p>
         <br>
         <br>
         <div class="signature-section">
             <div class="signature-box">
-                <p style="margin-top: -5px;">Ketua Jurusan Teknik Elektro</p>
+                <p style="margin-top: -5px;">Malang, {{ $data['tanggal_tanda_tangan'] ?? '' }}</p>
+                <p style="margin-top: -5px;">Direktur,</p>
                 <div class="signature-space">
-                    <p><strong>{{ $data['nama_penandatangan'] ?? 'Nama belum dipilih' }}</strong></p>
-                    <p style="margin-top: -5px;">NIP. {{ $data['nip_penandatangan'] ?? 'NIP belum dipilih' }}</p>
+                    <p><strong>{{ $data['nama_penandatangan'] ?? '' }}</strong></p>
+                    <p style="margin-top: -5px;">NIP. {{ $data['nip_penandatangan'] ?? '' }}</p>
                 </div>
             </div>
         </div>
+
+        <p style="margin-top: 40px;">
+            <strong>Tembusan:</strong><br>
+            1. Wakil Direktur<br>
+            2. Ketua Jurusan<br>
+            3. Pokja Kepegawaian
+        </p>
     </div>
 
 </body>

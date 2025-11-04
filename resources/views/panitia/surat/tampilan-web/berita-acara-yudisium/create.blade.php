@@ -169,8 +169,17 @@
                                 <div class="form-group">
                                     <label for="tanggal-tanda-tangan">Tanggal Tanda Tangan<span class="required"></span></label>
                                     <input type="date" class="form-control" id="tanggal-tanda-tangan" name="tanggal_tanda_tangan" placeholder="Opsional"
-                                        value="{{ old('tanggal') }}">
-                                    @error('tanggal')
+                                        value="{{ old('tanggal_tanda_tangan') }}">
+                                    @error('tanggal_tanda_tangan')
+                                        <small class="error-message">{{ $message }}</small>
+                                    @enderror
+                                </div>
+
+                                <div class="form-group">
+                                    <label for="tanggal-yudisium">Tanggal Yudisium<span class="required"></span></label>
+                                    <input type="date" class="form-control" id="tanggal-yudisium" name="tanggal_yudisium" placeholder="Opsional"
+                                        value="{{ old('tanggal_yudisium') }}">
+                                    @error('tanggal_yudisium')
                                         <small class="error-message">{{ $message }}</small>
                                     @enderror
                                 </div>

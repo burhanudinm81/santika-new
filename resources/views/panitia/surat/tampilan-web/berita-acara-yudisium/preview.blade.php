@@ -110,7 +110,6 @@
                                 <a href="{{ route('panitia.surat.berita-acara-yudisium.surat.download', [
         'nomor_surat' => $data['nomor_surat'],
         'tahap' => $data['tahap']->id,
-        'periode' => $data['periode']->id,
         'semester' => $data['semester'],
         'nama_penandatangan' => $data['nama_penandatangan'],
         'nip_penandatangan' => $data['nip_penandatangan'],
@@ -132,10 +131,8 @@
                         <div class="card-body">
                             <div class="iframe-container">
                                 <iframe src="{{ route('panitia.surat.berita-acara-yudisium.lampiran.preview', [
-        'nomor_surat' => $data['nomor_surat'],
+        'tanggal_yudisium' => $data['tanggal_yudisium'],
         'tahap' => $data['tahap']->id,
-        'periode' => $data['periode']->id,
-        'semester' => $data['semester'],
         'nama_penandatangan' => $data['nama_penandatangan'],
         'nip_penandatangan' => $data['nip_penandatangan'],
         'tanggal_tanda_tangan' => $data['tanggal_tanda_tangan']

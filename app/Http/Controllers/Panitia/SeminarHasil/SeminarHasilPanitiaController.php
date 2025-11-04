@@ -166,7 +166,26 @@ class SeminarHasilPanitiaController extends Controller
         // ambil semua tahap
         $listTahap = Tahap::all();
 
-        return view('panitia.seminar-hasil.tahap-rekap-nilai', compact('listTahap'));
+        // Menghitung jumlah peserta Sidang Laporan Akhir dikelompokkan berdasarkan jadwal
+        $prodiPanitia = Panitia::where('dosen_id', auth('dosen')->user()->id)->first()->prodi_id;
+        $periodeAktif = Periode::where('aktif_sidang_akhir', true)->first();
+
+        $jumlahPesertaSemhas = Proposal::where("periode_id", $periodeAktif->id)
+            ->where('prodi_id', $prodiPanitia)
+            ->whereHas('pendaftaranSemhas', function ($query) {
+                $query->where('status_daftar_semhas_id', 1); // Hanya yang diterima
+            })
+            ->groupBy('tahap_id')
+            ->selectRaw('tahap_id, count(*) as jumlah')
+            ->get();
+
+        $listTahap = $listTahap->map(function ($tahap) use ($jumlahPesertaSemhas) {
+            $tahap->jumlahPeserta = $jumlahPesertaSemhas->firstWhere('tahap_id', $tahap->id)->jumlah ?? 0;
+            return $tahap;
+        });
+
+
+        return view('panitia.seminar-hasil.tahap-rekap-nilai', compact('listTahap', 'periodeAktif'));
     }
 
     public function showBerandaRekapNilai($tahapId)
@@ -179,7 +198,24 @@ class SeminarHasilPanitiaController extends Controller
         // ambil data dosen yang menjadi panitia, berdasarkan id dosen yang saat ini sedang login
         $dosenPanitiaInfo = Panitia::where('dosen_id', auth('dosen')->user()->id)->first();
 
-        return view('panitia.seminar-hasil.beranda-rekap-nilai', compact(['tahapInfo', 'periodeInfo', 'dosenPanitiaInfo']));
+        $periodeAktif = Periode::where('aktif_sidang_akhir', true)->first();
+        $visibilitasNilai = $tahapInfo->visibilitasNilai()->where('periode_id', $periodeAktif->id)
+            ->where('jenis_nilai_seminar', 2) // 2 = Nilai Sementara Sidang Tugas Akhir
+            ->first()
+            ->visibilitas ?? false;
+
+        return view(
+            'panitia.seminar-hasil.beranda-rekap-nilai',
+            compact(
+                [
+                    'tahapInfo',
+                    'periodeInfo',
+                    'dosenPanitiaInfo',
+                    'periodeAktif',
+                    'visibilitasNilai'
+                ]
+            )
+        );
     }
 
     public function showDetailVerifikasiRevisi($proposalId)
@@ -220,7 +256,25 @@ class SeminarHasilPanitiaController extends Controller
         // ambil semua tahap
         $listTahap = Tahap::all();
 
-        return view('panitia.seminar-hasil.tahap-rekap-nilai-akhir', compact('listTahap'));
+        // Menghitung jumlah peserta Sidang Laporan Akhir dikelompokkan berdasarkan jadwal
+        $prodiPanitia = Panitia::where('dosen_id', auth('dosen')->user()->id)->first()->prodi_id;
+        $periodeAktif = Periode::where('aktif_sidang_akhir', true)->first();
+
+        $jumlahPesertaSemhas = Proposal::where("periode_id", $periodeAktif->id)
+            ->where('prodi_id', $prodiPanitia)
+            ->whereHas('pendaftaranSemhas', function ($query) {
+                $query->where('status_daftar_semhas_id', 1); // Hanya yang diterima
+            })
+            ->groupBy('tahap_id')
+            ->selectRaw('tahap_id, count(*) as jumlah')
+            ->get();
+
+        $listTahap = $listTahap->map(function ($tahap) use ($jumlahPesertaSemhas) {
+            $tahap->jumlahPeserta = $jumlahPesertaSemhas->firstWhere('tahap_id', $tahap->id)->jumlah ?? 0;
+            return $tahap;
+        });
+
+        return view('panitia.seminar-hasil.tahap-rekap-nilai-akhir', compact('listTahap', 'periodeAktif'));
     }
 
     public function showBerandaRekapNilaiAkhir($tahapId)
@@ -238,10 +292,39 @@ class SeminarHasilPanitiaController extends Controller
 
     public function showDetailNilai(Request $request, $proposalId)
     {
-        $proposalInfo = Proposal::find($proposalId);
-        $nilaiAkhir = NilaiAkhirMahasiswa::where('proposal_id', $proposalId)->where('mahasiswa_id', $request->id)->first();
+        $mahasiswa1 = null;
+        $mahasiswa2 = null;
+        $nilaiAkhirMahasiswa1 = null;
+        $nilaiAkhirMahasiswa2 = null;
 
-        return view('panitia.seminar-hasil.detail-nilai', compact('proposalInfo', 'nilaiAkhir'));
+        $proposalInfo = Proposal::with('proposalMahasiswas.mahasiswa')->find($proposalId);
+
+        $mahasiswa1 = $proposalInfo->proposalMahasiswas[0]?->mahasiswa ?? null;
+        $mahasiswa2 = $proposalInfo->proposalMahasiswas[1]?->mahasiswa ?? null;
+
+        $nilaiAkhirMahasiswa1 = NilaiAkhirMahasiswa::where('proposal_id', $proposalId)
+            ->where('mahasiswa_id', $mahasiswa1->id)
+            ->latest()
+            ->first();
+
+        if ($mahasiswa2) {
+            $nilaiAkhirMahasiswa2 = NilaiAkhirMahasiswa::where('proposal_id', $proposalId)
+                ->where('mahasiswa_id', $mahasiswa2->id)
+                ->latest()
+                ->first();
+        }
+
+
+        return view(
+            'panitia.seminar-hasil.detail-nilai',
+            compact(
+                'proposalInfo',
+                'nilaiAkhirMahasiswa1',
+                'nilaiAkhirMahasiswa2',
+                'mahasiswa1',
+                'mahasiswa2'
+            )
+        );
     }
 
     public function updateNilai(Request $request, $id)

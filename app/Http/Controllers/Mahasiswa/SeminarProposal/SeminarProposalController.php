@@ -305,7 +305,7 @@ class SeminarProposalController extends Controller
                 $statusKelulusanSempro = 3;     // 3 = Tidak Lulus
             } else if (in_array(2, [$mainProposalInfo->status_sempro_penguji_1_id, $mainProposalInfo->status_sempro_penguji_2_id])) {
                 $statusKelulusanSempro = 2;     // 2 = Lulus dengan revisi
-            } else {
+            } else if(in_array(1, [$mainProposalInfo->status_sempro_penguji_1_id, $mainProposalInfo->status_sempro_penguji_2_id])) {
                 $statusKelulusanSempro = 1;     // 1 = Lulus tanpa revisi
             }
 
@@ -332,7 +332,7 @@ class SeminarProposalController extends Controller
                 $namaProposal = $matchesProposal[1];
         }
 
-        if (!is_null($revisiPenguji1)) {
+        if (!is_null($revisiPenguji2)) {
             $patternLembarRevisi2 = '/seminar-proposal\/revisi\/lembar-revisi-penguji-2\/(.*)$/';
 
             // Jalankan pencocokan RegEx
@@ -342,10 +342,12 @@ class SeminarProposalController extends Controller
                 $namaLembarRevisi2 = $matchesLembarRevisi2[1];
         }
 
-        if ($revisiPenguji1 && $revisiPenguji1->status == "diterima" && $revisiPenguji2->status == "diterima")
-            $statusRevisi = "Diterima";
-        else
-            $statusRevisi = "Pending";
+        if (!is_null($revisiPenguji1) && !is_null($revisiPenguji2)) {
+            if ($revisiPenguji1 && $revisiPenguji1->status == "diterima" && $revisiPenguji2->status == "diterima")
+                $statusRevisi = "Diterima";
+            else
+                $statusRevisi = "Pending";
+        }
 
         return view(
             'mahasiswa.seminar-proposal.upload-revisi',

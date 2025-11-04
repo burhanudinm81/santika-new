@@ -68,10 +68,10 @@
                         <div class="card-header">
                             <div class="card-tools d-flex justify-content-between align-items-center w-100 mx-1">
                                 <div class="ml-1">
-                                    <button type="button" class="btn btn-success" id="btn-publish-nilai">
+                                    <button type="button" class="btn btn-success" id="btn-publish-nilai-sempro">
                                         Publish Nilai
                                     </button>
-                                    <button type="button" class="btn btn-danger" id="btn-hide-nilai">
+                                    <button type="button" class="btn btn-danger" id="btn-hide-nilai-sempro">
                                         Sembunyikan Nilai
                                     </button>
                                 </div>

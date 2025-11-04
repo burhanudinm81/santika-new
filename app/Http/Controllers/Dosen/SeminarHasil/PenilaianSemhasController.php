@@ -3,6 +3,7 @@
 namespace App\Http\Controllers\Dosen\SeminarHasil;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\UpdatePenilaianRequest;
 use App\Models\NilaiAkhirMahasiswa;
 use App\Models\Proposal;
 use App\Models\Revisi;
@@ -82,15 +83,13 @@ class PenilaianSemhasController extends Controller
         );
     }
 
-    public function updatePenilaianSementara(Request $request)
+    public function updatePenilaianSementara(UpdatePenilaianRequest $request)
     {
         // ambil value dari request
         $proposalId = $request->input('proposal_id');
         $dosenId = $request->input('dosen_id');
-        $statusPenilaianSementara = $request->input('status_penilaian_sementara');
-        $catatanRevisiAkhir = $request->input('catatan_revisi_akhir');
-
-
+        $statusPenilaianSementara = $request->input('status_penilaian');
+        $catatanRevisiAkhir = $request->input('catatan_revisi');
 
         // cek apakah revisi yang dibuat dosen saat ini sebelumnya sudah dibuat
         $prevRevisi = Revisi::where('proposal_id', $proposalId)
@@ -224,6 +223,7 @@ class PenilaianSemhasController extends Controller
                 'nilai_hasilKarya_pemb1' => $nilaiHasilKarya1 ?? $nilaiAkhirMahasiswa1->nilai_hasilKarya_pemb1,
                 'nilai_laporan_pemb1' => $nilaiLaporan1 ?? $nilaiAkhirMahasiswa1->nilai_laporan_pemb1,
                 'avg_nilai_dospem1' => $nilaiRataRata1 ?? $nilaiAkhirMahasiswa1->avg_nilai_dospem1,
+                'pembimbing_1_id' => auth("dosen")->id()
             ]);
 
             if ($prodiId == 1 && $mahasiswa2Id != null) {
@@ -233,6 +233,7 @@ class PenilaianSemhasController extends Controller
                     'nilai_hasilKarya_pemb1' => $nilaiHasilKarya2 ?? $nilaiAkhirMahasiswa2->nilai_hasilKarya_pemb1,
                     'nilai_laporan_pemb1' => $nilaiLaporan2 ?? $nilaiAkhirMahasiswa2->nilai_laporan_pemb1,
                     'avg_nilai_dospem1' => $nilaiRataRata2 ?? $nilaiAkhirMahasiswa2->avg_nilai_dospem1,
+                    'pembimbing_1_id' => auth("dosen")->id()
                 ]);
             }
         } else if ($roleDosen == 'Dosen Pembimbing 2') {
@@ -242,6 +243,7 @@ class PenilaianSemhasController extends Controller
                 'nilai_hasilKarya_pemb2' => $nilaiHasilKarya1 ?? $nilaiAkhirMahasiswa1->nilai_hasilKarya_pemb2,
                 'nilai_laporan_pemb2' => $nilaiLaporan1 ?? $nilaiAkhirMahasiswa1->nilai_laporan_pemb2,
                 'avg_nilai_dospem2' => $nilaiRataRata1 ?? $nilaiAkhirMahasiswa1->avg_nilai_dospem2,
+                'pembimbing_2_id' => auth("dosen")->id()
             ]);
 
             if ($prodiId == 1 && $mahasiswa2Id != null) {
@@ -251,6 +253,7 @@ class PenilaianSemhasController extends Controller
                     'nilai_hasilKarya_pemb2' => $nilaiHasilKarya2 ?? $nilaiAkhirMahasiswa2->nilai_hasilKarya_pemb2,
                     'nilai_laporan_pemb2' => $nilaiLaporan2 ?? $nilaiAkhirMahasiswa2->nilai_laporan_pemb2,
                     'avg_nilai_dospem2' => $nilaiRataRata2 ?? $nilaiAkhirMahasiswa2->avg_nilai_dospem2,
+                    'pembimbing_2_id' => auth("dosen")->id()
                 ]);
             }
         } else if ($roleDosen == 'Dosen Penguji Sidang TA 1') {
@@ -258,7 +261,8 @@ class PenilaianSemhasController extends Controller
                 'nilai_penguasaan_materi1' => $nilaiPenguasaanMateri1 ?? $nilaiAkhirMahasiswa1->nilai_penguasaan_materi1,
                 'nilai_presentasi1' => $nilaiPresentasi1 ?? $nilaiAkhirMahasiswa1->nilai_presentasi1,
                 'nilai_karya_tulis1' => $nilaiKaryaTulis1 ?? $nilaiAkhirMahasiswa1->nilai_karya_tulis1,
-                'avg_nilai_penguji1' => $nilaiRataRataPengujiMhs1 ?? $nilaiAkhirMahasiswa1->avg_nilai_penguji1
+                'avg_nilai_penguji1' => $nilaiRataRataPengujiMhs1 ?? $nilaiAkhirMahasiswa1->avg_nilai_penguji1,
+                'penguji_1_id' => auth("dosen")->id()
             ]);
 
             if ($prodiId == 1 && $mahasiswa2Id != null) {
@@ -266,7 +270,8 @@ class PenilaianSemhasController extends Controller
                     'nilai_penguasaan_materi1' => $nilaiPenguasaanMateri2 ?? $nilaiAkhirMahasiswa2->nilai_penguasaan_materi1,
                     'nilai_presentasi1' => $nilaiPresentasi2 ?? $nilaiAkhirMahasiswa2->nilai_presentasi1,
                     'nilai_karya_tulis1' => $nilaiKaryaTulis2 ?? $nilaiAkhirMahasiswa2->nilai_karya_tulis1,
-                    'avg_nilai_penguji1' => $nilaiRataRataPengujiMhs2 ?? $nilaiAkhirMahasiswa2->avg_nilai_penguji1
+                    'avg_nilai_penguji1' => $nilaiRataRataPengujiMhs2 ?? $nilaiAkhirMahasiswa2->avg_nilai_penguji1,
+                    'penguji_1_id' => auth("dosen")->id()
                 ]);
             }
         } else if ($roleDosen == 'Dosen Penguji Sidang TA 2') {
@@ -274,7 +279,8 @@ class PenilaianSemhasController extends Controller
                 'nilai_penguasaan_materi2' => $nilaiPenguasaanMateri1 ?? $nilaiAkhirMahasiswa1->nilaiPenguasaanMateri2,
                 'nilai_presentasi2' => $nilaiPresentasi1 ?? $nilaiAkhirMahasiswa1->nilaiPresentasi2,
                 'nilai_karya_tulis2' => $nilaiKaryaTulis1 ?? $nilaiAkhirMahasiswa1->nilaiKaryaTulis2,
-                'avg_nilai_penguji2' => $nilaiRataRataPengujiMhs1 ?? $nilaiAkhirMahasiswa1->avg_nilai_penguji2
+                'avg_nilai_penguji2' => $nilaiRataRataPengujiMhs1 ?? $nilaiAkhirMahasiswa1->avg_nilai_penguji2,
+                'penguji_2_id' => auth("dosen")->id()
             ]);
 
             if ($prodiId == 1 && $mahasiswa2Id != null) {
@@ -282,7 +288,8 @@ class PenilaianSemhasController extends Controller
                     'nilai_penguasaan_materi2' => $nilaiPenguasaanMateri2 ?? $nilaiAkhirMahasiswa2->nilaiPenguasaanMateri2,
                     'nilai_presentasi2' => $nilaiPresentasi2 ?? $nilaiAkhirMahasiswa2->nilaiPresentasi2,
                     'nilai_karya_tulis2' => $nilaiKaryaTulis2 ?? $nilaiAkhirMahasiswa2->nilaiKaryaTulis2,
-                    'avg_nilai_penguji2' => $nilaiRataRataPengujiMhs2     ?? $nilaiAkhirMahasiswa2->avg_nilai_penguji2
+                    'avg_nilai_penguji2' => $nilaiRataRataPengujiMhs2     ?? $nilaiAkhirMahasiswa2->avg_nilai_penguji2,
+                    'penguji_2_id' => auth("dosen")->id()
                 ]);
             }
         }

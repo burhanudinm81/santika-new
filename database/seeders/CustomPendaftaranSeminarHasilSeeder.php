@@ -6,6 +6,7 @@ use App\Models\PendaftaranSemhas;
 use App\Models\Proposal;
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\Log;
 
 class CustomPendaftaranSeminarHasilSeeder extends Seeder
 {
@@ -28,7 +29,7 @@ class CustomPendaftaranSeminarHasilSeeder extends Seeder
             ->get();
 
         $daftarProposal->each(function($proposal){
-            PendaftaranSemhas::create([
+            $pendaftaranSemhas = PendaftaranSemhas::create([
                 "proposal_id" => $proposal->id,
                 "status_daftar_semhas_id" => 1,
                 "file_rekom_dospem" => "seminar-hasil/pendaftaran/rekomdosem/rekom-dospem.pdf",
@@ -42,6 +43,11 @@ class CustomPendaftaranSeminarHasilSeeder extends Seeder
                 "status_file_bebas_tanggungan_pkl" => true,
                 "status_file_skla" => true
             ]);
+
+            $proposal->pendaftaran_semhas_id = $pendaftaranSemhas->id;
+            $proposal->tahap_semhas_id = $proposal->tahap_id;
+            $proposal->periode_semhas_id = $proposal->periode_id;
+            $proposal->save();
         });
     }
 }

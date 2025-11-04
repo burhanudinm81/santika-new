@@ -5,8 +5,10 @@
     <div class="content-header">
         <div class="container-fluid">
             <div class="row mb-2">
-                <div class="col-sm-6">
-                    <h1 class="m-0">Rekap Nilai Seminar Hasil</h1>
+                <div class="col-sm-12">
+                    <h1 class="m-0">Rekap Nilai Sidang Laporan Akhir</h1>
+                    <hr>
+                    <h5>Periode {{ $periodeAktif->tahun }}</h5>
                 </div><!-- /.col -->
             </div><!-- /.row -->
         </div><!-- /.container-fluid -->
@@ -22,7 +24,7 @@
                         <!-- kotak tahap -->
                         <div class="small-box bg-info">
                             <div class="inner">
-                                <h5>15 Mahasiswa</h5>
+                                <h5>{{ $tahap->jumlahPeserta }} Proposal</h5>
                                 <h3>Tahap {{ $tahap->tahap }}</h3>
                             </div>
                             <div class="icon">

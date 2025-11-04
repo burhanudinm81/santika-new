@@ -17,11 +17,12 @@ class AjaxRekapNilaiSemhasController extends Controller
 
         // filter ke tabel proposal yang pendaftaran_sempro_id != null, status_sempro_proposal_id != null (berarti sudah melakukan sempro dan dinilai penguji)
         $proposalDoneSemhas = Proposal::with(['proposalMahasiswas.mahasiswa', 'statusSemhasTotal'])
-            ->where('tahap_id', $tahapId)
+            ->where('tahap_semhas_id', $tahapId)
             ->where('prodi_id', $prodiDosenPanitiaId)
-            ->where('periode_id', $periodeId)
-            ->where('pendaftaran_semhas_id', '!=', null)
-            ->where('status_semhas_proposal_id', '!=', null)
+            ->where('periode_semhas_id', $periodeId)
+            ->whereNotNull('pendaftaran_semhas_id')
+            ->whereNotNull('status_semhas_proposal_id')
+            ->whereNot('status_semhas_proposal_id', 3)
             ->get();
 
         return response()->json($proposalDoneSemhas);
@@ -35,9 +36,9 @@ class AjaxRekapNilaiSemhasController extends Controller
 
         // filter ke tabel proposal yang pendaftaran_sempro_id != null, status_sempro_proposal_id != null (berarti sudah melakukan semhas dan dinilai penguji)
         $proposalDoneSemhas = Proposal::with(['proposalMahasiswas.mahasiswa', 'statusSemhasTotal'])
-            ->where('tahap_id', $tahapId)
+            ->where('tahap_semhas_id', $tahapId)
             ->where('prodi_id', $prodiDosenPanitiaId)
-            ->where('periode_id', $periodeId)
+            ->where('periode_semhas_id', $periodeId)
             ->whereNotNull('pendaftaran_semhas_id')
             ->whereNotNull('status_semhas_proposal_id')
             ->whereNot('status_semhas_proposal_id', 3)

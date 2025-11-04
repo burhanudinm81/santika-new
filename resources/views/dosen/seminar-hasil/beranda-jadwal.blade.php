@@ -18,6 +18,11 @@
                         <div class="small-box bg-info">
                             <div class="inner">
                                 <h3>Tahap {{ $tahap->tahap ?? "-"}}</h3>
+                                @if ($tahap->jumlahBelumNilaiSementara > 0)
+                                    <span class="badge badge-warning">Belum Diberi Nilai Sementara: {{ $tahap->jumlahBelumNilaiSementara }}</span>
+                                @else
+                                    <span class="badge badge-success">Semua Sudah Diberi Nilai Sementara</span>
+                                @endif
                             </div>
                             <div class="icon">
                                 <i class="fas fa-solid fa-user"></i>

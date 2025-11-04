@@ -234,7 +234,7 @@
         }
 
         .highlighted-dosen {
-            background-color: #cb9815ff !important;
+            background-color: #d2e430ff !important;
             color: black !important;
         }
 
@@ -275,7 +275,7 @@
             <div class="content">
                 @if ($pageIndex === 0)
                     <div class="table-header">
-                        <h4 class="center-text">DAFTAR DOSEN PEMBIMBING MAHASISWA JARINGAN TELEKOMUNIKASI DIGITAL TAHUN
+                        <h4 class="center-text">DAFTAR DOSEN PEMBIMBING MAHASISWA TEKNIK TELEKOMUNIKASI TAHUN
                             {{ $tahunAkademik }}</h4>
                         <div class="dosen-info"><strong>Nama Dosen : {{ $namaDosen }}</strong></div>
                     </div>

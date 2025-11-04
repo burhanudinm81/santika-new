@@ -220,8 +220,7 @@
 
         <p style="margin-top: 20px;">Dengan Hormat,</p>
         <p style="margin-top: -5px; text-align: justify;">Sehubungan dengan tindak lanjut dari proses Skripsi Program
-            Studi D4 Jaringan
-            Telekomunikasi Digital, bersama surat
+            Studi {{ $data["prodi"] }}, bersama surat
             ini kami memohon kehadiran Bapak/Ibu dosen pada acara Seminar Proposal Skripsi Tahap
             {{ $data['tahap'] ?? 'I' }} yang akan
             dilaksanakan pada:

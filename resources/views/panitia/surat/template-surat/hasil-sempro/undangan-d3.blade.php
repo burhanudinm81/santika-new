@@ -242,7 +242,7 @@
             <div class="content">
                 @if ($pageIndex === 0)
                     <div class="table-header center-text">
-                        <strong>HASIL UJIAN SEMINAR PROPOSAL<br>D4 JARINGAN TELEKOMUNIKASI DIGITAL MAHASISWA TAHAP  {{ $tahap->tahap }}
+                        <strong>HASIL UJIAN SEMINAR PROPOSAL<br>D3 TEKNIK TELEKOMUNIKASI MAHASISWA TAHAP  {{ $tahap->tahap }}
                             {{ $periodeAktif->tahun }}</strong>
                     </div>
                 @endif
