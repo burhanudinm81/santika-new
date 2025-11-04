@@ -26,6 +26,15 @@ $("document").ready(function () {
                                     <td>${mahasiswa.prodi.prodi}</td> 
                                     <td>${mahasiswa.kelas}</td>
                                     <td>${mahasiswa.angkatan}</td>
+                                    <td class="d-flex justify-content-center align-items-center">
+                                        <div class="dropdown">
+                                            <button type="button" class="btn btn-dark dropdown-toggle" data-toggle="dropdown" aria-expanded="false">Aksi</button>
+                                            <div class="dropdown-menu">
+                                                <a class="btn btn-hapus-data d-block w-100" data-id="${mahasiswa.id}" data-nama="${mahasiswa.nama}">Hapus</a>
+                                                <a class="btn btn-ganti-password d-block w-100" data-id="${mahasiswa.id}" data-nama="${mahasiswa.nama}">Ganti Password</a>
+                                            </div>
+                                        </div>
+                                    </td>
                                 </tr>
                     `;
 
