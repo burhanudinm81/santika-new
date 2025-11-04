@@ -176,4 +176,9 @@ class Proposal extends Model
     {
         return $this->hasMany(Revisi::class, 'proposal_id');
     }
+
+    public function nilaiAkhirMahasiswa(): HasMany
+    {
+        return $this->hasMany(NilaiAkhirMahasiswa::class, 'proposal_id');
+    }
 }

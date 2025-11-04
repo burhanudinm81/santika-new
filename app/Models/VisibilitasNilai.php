@@ -7,6 +7,18 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class VisibilitasNilai extends Model
 {
+    /*
+    visibilitas_nilai
+    -id
+    -periode_id
+    -tahap_id
+    -jenis_nilai_seminar (int)
+    -visibilitas (boolean)
+
+    Jenis Seminar
+    1 -> Status Kelulusan Seminar Proposal
+    2 -> Nilai Sidang Tugas Akhir
+    */
     protected $table = "visibilitas_nilai";
     protected $guarded = ["id"];
 

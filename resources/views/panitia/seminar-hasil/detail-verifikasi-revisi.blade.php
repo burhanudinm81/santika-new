@@ -63,15 +63,16 @@
                                     <span class="text-gray-500 italic">Belum ada file</span>
                                 @endif
                             </div>
+                            
                             <div class="form-group">
                                 <label for="exampleInputFile">Status Revisi</label>
                                 <div class="input-group">
                                     {{-- input dropdown select --}}
                                     <select class="custom-select" id="status_revisi" name="status_revisi"
                                         aria-label="Example select with button addon">
-                                        <option value="pending" @if ($revisi1->status == 'pending') selected @endif>Pending
+                                        <option value="pending" @if ($revisi1?->status == 'pending') selected @endif>Pending
                                         </option>
-                                        <option value="diterima" @if ($revisi1->status == 'diterima') selected @endif>Diterima
+                                        <option value="diterima" @if ($revisi1?->status == 'diterima') selected @endif>Diterima
                                         </option>
                                     </select>
                                 </div>

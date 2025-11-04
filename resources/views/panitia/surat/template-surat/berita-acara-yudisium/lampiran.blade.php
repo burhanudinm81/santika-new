@@ -266,13 +266,7 @@ td {
         FRM.RTD.01.34.03
     </div>
 
-    @php
-        $rowsPerPage = 9;
-        $totalStudents = count($data);
-        $totalPages = ceil($totalStudents / $rowsPerPage);
-    @endphp
-
-    @foreach ($data->chunk($rowsPerPage) as $pageIndex => $chunk)
+    @foreach ($daftarNilaiAkhir->chunk($rowsPerPage) as $pageIndex => $chunk)
         <div class="page">
             @if ($pageIndex === 0)
                 <div class="header">
@@ -331,16 +325,16 @@ td {
                         </tr>
                     </thead>
                     <tbody>
-                        @foreach ($chunk as $index => $student)
+                        @foreach ($chunk as $index => $nilaiAkhir)
                             <tr>
                                 <td class="center-text">{{ $pageIndex * $rowsPerPage + $loop->iteration }}</td>
-                                <td>{{ $student->nama }}</td>
-                                <td class="center-text">{{ $student->nim }}</td>
-                                <td class="center-text">{{ $student->kelas }}</td>
-                                <td>{{ $student->judulskripsi }}</td>
-                                <td class="center-text">{{ $student->nilaiangka }}</td>
-                                <td class="center-text">{{ $student->nilaihuruf }}</td>
-                                <td class="center-text">{{ $student->status }}</td>
+                                <td>{{ $nilaiAkhir->mahasiswa->nama }}</td>
+                                <td class="center-text">{{ $nilaiAkhir->mahasiswa->nim }}</td>
+                                <td class="center-text">{{ $nilaiAkhir->mahasiswa->kelas }}</td>
+                                <td>{{ $nilaiAkhir->proposal->judul }}</td>
+                                <td class="center-text">{{ $nilaiAkhir->nilaiAngka }}</td>
+                                <td class="center-text">{{ $nilaiAkhir->nilaiHuruf }}</td>
+                                <td class="center-text">{{ $nilaiAkhir->statusKelulusan }}</td>
                             </tr>
                         @endforeach
                     </tbody>

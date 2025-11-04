@@ -13,6 +13,7 @@ use App\Models\Proposal;
 use App\Models\ProposalDosenMahasiswa;
 use App\Models\Revisi;
 use App\Models\Tahap;
+use App\Models\VisibilitasNilai;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 
@@ -205,9 +206,15 @@ class SeminarHasilController extends Controller
 
     public function showHasilSementaraSemhas()
     {
-        $statusKelulusanSempro = null;
+        $statusKelulusanSemhas = null;
+        $mainProposalInfo = null;
         $isPengujiNotAssigned = false;
         $revisiSelesai = false;
+        $revisiDosen1 = null;
+        $revisiDosen2 = null;
+        $revisiDosbing1 = null;
+        $revisiDosbing2 = null;
+        $visible = false;
 
         $proposalInfo = ProposalDosenMahasiswa::with('proposal', 'mahasiswa')
             ->where('mahasiswa_id', auth('mahasiswa')->user()->id)
@@ -215,9 +222,30 @@ class SeminarHasilController extends Controller
             ->orderBy('created_at', 'desc')
             ->first();
 
-        $mainProposalInfo = Proposal::with(['dosenPengujiSidangTA1', 'dosenPengujiSidangTA2', 'statusSemhasPenguji1', 'statusSemhasPenguji2', 'dosenPembimbing1', 'dosenPembimbing2', 'statusSemhasPembimbing1', 'statusSemhasPembimbing2'])
-            ->where('id', $proposalInfo->proposal_id)
-            ->first();
+        if (!is_null($proposalInfo)) {
+            $mainProposalInfo = Proposal::with([
+                'dosenPengujiSidangTA1',
+                'dosenPengujiSidangTA2',
+                'statusSemhasPenguji1',
+                'statusSemhasPenguji2',
+                'dosenPembimbing1',
+                'dosenPembimbing2',
+                'statusSemhasPembimbing1',
+                'statusSemhasPembimbing2'
+            ])
+                ->where('id', $proposalInfo->proposal_id)
+                ->first();
+
+            $tahapIdPeserta = $proposalInfo->proposal->tahap_id;
+            $periodeIdPeserta = $proposalInfo->proposal->periode_id;
+
+            $visible = VisibilitasNilai::where('tahap_id', $tahapIdPeserta)
+                ->where('periode_id', $periodeIdPeserta)
+                ->where('jenis_nilai_seminar', 2) // 2 = Nilai Sidang Tugas Akhir
+                ->first()
+                ->visibilitas ?? false;
+        }
+
 
         if (!is_null($mainProposalInfo)) {
             if (!is_null($mainProposalInfo->dosenPengujiSidangTA1) && !is_null($mainProposalInfo->dosenPengujiSidangTA2)) {
@@ -240,14 +268,57 @@ class SeminarHasilController extends Controller
                     ->where('jenis_revisi', 'semhas')
                     ->first();
 
-                if ($revisiDosen1->status == "diterima" && $revisiDosen2->status == "diterima")
-                    $revisiSelesai = true;
+                if (
+                    !is_null($revisiDosen1) &&
+                    !is_null($revisiDosen2) &&
+                    !is_null($revisiDosbing1) &&
+                    !is_null($revisiDosbing2)
+                ) {
+                    if (
+                        $revisiDosen1->status == "diterima" &&
+                        $revisiDosen2->status == "diterima" &&
+                        $revisiDosbing1->status == "diterima" &&
+                        $revisiDosbing2->status == "diterima"
+                    ) {
+                        $revisiSelesai = true;
+                    }
+                }
 
-                if (in_array(3, [$mainProposalInfo->statusSemhasPenguji1->id, $mainProposalInfo->statusSemhasPenguji2->id])) {
+                if (
+                    in_array(
+                        3,
+                        [
+                            $mainProposalInfo->status_semhas_penguji_1_id,
+                            $mainProposalInfo->status_semhas_penguji_2_id,
+                            $mainProposalInfo->status_semhas_dosbing_1_id,
+                            $mainProposalInfo->status_semhas_dosbing_2_id
+                        ]
+                    )
+                ) {
                     $statusKelulusanSemhas = 3;     // 3 = Tidak Lulus
-                } else if (in_array(2, [$mainProposalInfo->statusSemhasPenguji1->id, $mainProposalInfo->statusSemhasPenguji2->id])) {
+                } else if (
+                    in_array(
+                        2,
+                        [
+                            $mainProposalInfo->status_semhas_penguji_1_id,
+                            $mainProposalInfo->status_semhas_penguji_2_id,
+                            $mainProposalInfo->status_semhas_dosbing_1_id,
+                            $mainProposalInfo->status_semhas_dosbing_2_id
+                        ]
+                    )
+                ) {
                     $statusKelulusanSemhas = 2;     // 2 = Lulus dengan revisi
-                } else if (in_array(1, [$mainProposalInfo->statusSemhasPenguji1->id, $mainProposalInfo->statusSemhasPenguji2->id])) {
+                } else if (
+                    in_array(
+                        1,
+                        [
+                            $mainProposalInfo->status_semhas_penguji_1_id,
+                            $mainProposalInfo->status_semhas_penguji_2_id,
+                            $mainProposalInfo->status_semhas_dosbing_1_id,
+                            $mainProposalInfo->status_semhas_dosbing_2_id
+                        ]
+                    )
+                ) {
                     $statusKelulusanSemhas = 1;     // 1 = Lulus tanpa revisi
                 }
             } else {
@@ -266,42 +337,196 @@ class SeminarHasilController extends Controller
                 'revisiDosbing2',
                 'statusKelulusanSemhas',
                 'isPengujiNotAssigned',
-                'revisiSelesai'
+                'revisiSelesai',
+                'visible'
             ])
         );
     }
 
     public function showUploadRevisi()
     {
+        $mainProposalInfo = null;
+        $revisiPenguji1 = null;
+        $revisiPenguji2 = null;
+        $revisiPembimbing1 = null;
+        $revisiPembimbing2 = null;
+        $namaLembarRevisiPenguji1 = null;
+        $namaLembarRevisiPenguji2 = null;
+        $namaLembarRevisiPembimbing1 = null;
+        $namaLembarRevisiPembimbing2 = null;
+        $namaProposal = null;
+        $isPengujiNotAssigned = false;
+        $statusKelulusanSemhas = null;
+        $statusRevisi = null;
+
         $proposalInfo = ProposalDosenMahasiswa::with('proposal', 'mahasiswa')
             ->where('mahasiswa_id', auth('mahasiswa')->user()->id)
             ->where('status_proposal_mahasiswa_id', 1)
             ->first();
 
-        $mainProposalInfo = Proposal::with(['dosenPengujiSidangTA1', 'dosenPengujiSidangTA2', 'statusSemhasPenguji1', 'statusSemhasPenguji2', 'statusSemhasTotal', 'dosenPembimbing1', 'dosenPembimbing2'])
-            ->where('id', $proposalInfo->proposal_id)
-            ->first();
-
-        $revisiPeng1 = Revisi::where('proposal_id', $mainProposalInfo->id)
-            ->where('dosen_id', $mainProposalInfo->dosenPengujiSidangTA1->id)
-            ->where('jenis_revisi', 'semhas')
-            ->first();
-        if ($revisiPeng1 == null) {
-            $revisiPeng1 = null;
+        if (!is_null($proposalInfo)) {
+            $mainProposalInfo = Proposal::with([
+                'dosenPengujiSidangTA1',
+                'dosenPengujiSidangTA2',
+                'statusSemhasPenguji1',
+                'statusSemhasPenguji2',
+                'dosenPembimbing1',
+                'dosenPembimbing2',
+                'statusSemhasPembimbing1',
+                'statusSemhasPembimbing2'
+            ])
+                ->where('id', $proposalInfo->proposal_id)
+                ->first();
         }
 
-        $revisiPeng2 = Revisi::where('proposal_id', $mainProposalInfo->id)
-            ->where('dosen_id', $mainProposalInfo->dosenPengujiSidangTA2->id)
-            ->where('jenis_revisi', 'semhas')
-            ->first();
-        if ($revisiPeng2 == null) {
-            $revisiPeng2 = null;
+        if (
+            !is_null($mainProposalInfo) &&
+            !is_null($mainProposalInfo->dosenPengujiSidangTA1) &&
+            !is_null($mainProposalInfo->dosenPengujiSidangTA2)
+        ) {
+            $revisiPenguji1 = Revisi::where('proposal_id', $mainProposalInfo->id)
+                ->where('dosen_id', $mainProposalInfo->dosenPengujiSidangTA1->id)
+                ->where('jenis_revisi', 'semhas')
+                ->first();
+
+            $revisiPenguji2 = Revisi::where('proposal_id', $mainProposalInfo->id)
+                ->where('dosen_id', $mainProposalInfo->dosenPengujiSidangTA2->id)
+                ->where('jenis_revisi', 'semhas')
+                ->first();
+
+            $revisiPembimbing1 = Revisi::where('proposal_id', $mainProposalInfo->id)
+                ->where('dosen_id', $mainProposalInfo->dosenPembimbing1->id)
+                ->where('jenis_revisi', 'semhas')
+                ->first();
+            $revisiPembimbing2 = Revisi::where('proposal_id', $mainProposalInfo->id)
+                ->where('dosen_id', $mainProposalInfo->dosenPembimbing2->id)
+                ->where('jenis_revisi', 'semhas')
+                ->first();
+
+            if (
+                in_array(
+                    3,
+                    [
+                        $mainProposalInfo->status_semhas_penguji_1_id,
+                        $mainProposalInfo->status_semhas_penguji_2_id,
+                        $mainProposalInfo->status_semhas_dosbing_1_id,
+                        $mainProposalInfo->status_semhas_dosbing_2_id
+                    ]
+                )
+            ) {
+                $statusKelulusanSemhas = 3;     // 3 = Tidak Lulus
+            } else if (
+                in_array(
+                    2,
+                    [
+                        $mainProposalInfo->status_semhas_penguji_1_id,
+                        $mainProposalInfo->status_semhas_penguji_2_id,
+                        $mainProposalInfo->status_semhas_dosbing_1_id,
+                        $mainProposalInfo->status_semhas_dosbing_2_id
+                    ]
+                )
+            ) {
+                $statusKelulusanSemhas = 2;     // 2 = Lulus dengan revisi
+            } else if (
+                in_array(
+                    1,
+                    [
+                        $mainProposalInfo->status_semhas_penguji_1_id,
+                        $mainProposalInfo->status_semhas_penguji_2_id,
+                        $mainProposalInfo->status_semhas_dosbing_1_id,
+                        $mainProposalInfo->status_semhas_dosbing_2_id
+                    ]
+                )
+            ) {
+                $statusKelulusanSemhas = 1;     // 1 = Lulus tanpa revisi
+            }
+
+            $visible = VisibilitasNilai::where('tahap_id', $mainProposalInfo->tahap_id)
+                ->where('periode_id', $mainProposalInfo->periode_id)
+                ->where('jenis_nilai_seminar', 2) // 2 = Nilai Sidang Tugas Akhir
+                ->first()
+                ->visibilitas ?? false;
+        } else {
+            $isPengujiNotAssigned = true;
+        }
+
+        if (!is_null($revisiPenguji1)) {
+            $patternLembarRevisiPenguji1 = '/seminar-hasil\/revisi\/lembar-revisi-penguji-1\/(.*)$/';
+            $patternProposal = '/seminar-hasil\/revisi\/proposal\/(.*)$/';
+
+            // Jalankan pencocokan RegEx
+            preg_match($patternLembarRevisiPenguji1, $revisiPenguji1->file_lembar_revisi_dosen, $matchesLembarRevisiPenguji1);
+            preg_match($patternProposal, $revisiPenguji1->file_proposal_revisi, $matchesProposal);
+
+            if (isset($matchesLembarRevisiPenguji1[1]))
+                $namaLembarRevisiPenguji1 = $matchesLembarRevisiPenguji1[1];
+            if (isset($matchesProposal[1]))
+                $namaProposal = $matchesProposal[1];
+        }
+
+        if (!is_null($revisiPenguji2)) {
+            $patternLembarRevisiPenguji2 = '/seminar-hasil\/revisi\/lembar-revisi-penguji-2\/(.*)$/';
+
+            // Jalankan pencocokan RegEx
+            preg_match($patternLembarRevisiPenguji2, $revisiPenguji2->file_lembar_revisi_dosen, $matchesLembarRevisiPenguji2);
+
+            if (isset($matchesLembarRevisiPenguji2[1]))
+                $namaLembarRevisiPenguji2 = $matchesLembarRevisiPenguji2[1];
+        }
+
+        if (!is_null($revisiPembimbing1)) {
+            $patternLembarRevisiPembimbing1 = '/seminar-hasil\/revisi\/lembar-revisi-pembimbing-1\/(.*)$/';
+
+            // Jalankan pencocokan RegEx
+            preg_match($patternLembarRevisiPembimbing1, $revisiPembimbing1->file_lembar_revisi_dosen, $matchesLembarRevisiPembimbing1);
+
+            if (isset($matchesLembarRevisiPembimbing1[1]))
+                $namaLembarRevisiPembimbing1 = $matchesLembarRevisiPembimbing1[1];
+        }
+
+        if (!is_null($revisiPembimbing2)) {
+            $patternLembarRevisiPembimbing2 = '/seminar-hasil\/revisi\/lembar-revisi-pembimbing-2\/(.*)$/';
+
+            // Jalankan pencocokan RegEx
+            preg_match($patternLembarRevisiPembimbing2, $revisiPembimbing2->file_lembar_revisi_dosen, $matchesLembarRevisiPembimbing2);
+
+            if (isset($matchesLembarRevisiPembimbing2[1]))
+                $namaLembarRevisiPembimbing2 = $matchesLembarRevisiPembimbing2[1];
+        }
+
+        if (
+            !is_null($revisiPenguji1) &&
+            !is_null($revisiPenguji2) &&
+            !is_null($revisiPembimbing1) &&
+            !is_null($revisiPembimbing2)
+        ) {
+            if (
+                $revisiPenguji1->status == "diterima" &&
+                $revisiPenguji2->status == "diterima" &&
+                $revisiPembimbing1->status == "diterima" &&
+                $revisiPembimbing2->status == "diterima"
+            ) {
+                $statusRevisi = "Diterima";
+            } else {
+                $statusRevisi = "Pending";
+            }
         }
 
         return view('mahasiswa.seminar-hasil.upload-revisi', compact([
             'mainProposalInfo',
-            'revisiPeng1',
-            'revisiPeng2'
+            'revisiPenguji1',
+            'revisiPenguji2',
+            'revisiPembimbing1',
+            'revisiPembimbing2',
+            'namaProposal',
+            'namaLembarRevisiPenguji1',
+            'namaLembarRevisiPenguji2',
+            'namaLembarRevisiPembimbing1',
+            'namaLembarRevisiPembimbing2',
+            'isPengujiNotAssigned',
+            'statusKelulusanSemhas',
+            'statusRevisi',
+            'visible'
         ]));
     }
 
@@ -315,11 +540,15 @@ class SeminarHasilController extends Controller
         $proposalID = $request->input('proposal_id');
         $fileLembarRevisiPenguji1 = $request->file('lembar_revisi_penguji_1');
         $fileLembarRevisiPenguji2 = $request->file('lembar_revisi_penguji_2');
+        $fileLembarRevisiPembimbing1 = $request->file('lembar_revisi_pembimbing_1');
+        $fileLembarRevisiPembimbing2 = $request->file('lembar_revisi_pembimbing_2');
         $fileProposalRevisi = $request->file('proposal_revisi');
 
         // rename file
-        $nameLembarRevisi1 = uniqid() . '.' . $fileLembarRevisiPenguji1->getClientOriginalExtension();
-        $nameLembarRevisi2 = uniqid() . '.' . $fileLembarRevisiPenguji2->getClientOriginalExtension();
+        $nameLembarRevisiPenguji1 = uniqid() . '.' . $fileLembarRevisiPenguji1->getClientOriginalExtension();
+        $nameLembarRevisiPenguji2 = uniqid() . '.' . $fileLembarRevisiPenguji2->getClientOriginalExtension();
+        $nameLembarRevisiPembimbing1 = uniqid() . '.' . $fileLembarRevisiPembimbing1->getClientOriginalExtension();
+        $nameLembarRevisiPembimbing2 = uniqid() . '.' . $fileLembarRevisiPembimbing2->getClientOriginalExtension();
         $nameProposalRevisi = uniqid() . '.' . $fileProposalRevisi->getClientOriginalExtension();
 
         $pathProposalRevisi = $fileProposalRevisi->storeAs(
@@ -327,22 +556,32 @@ class SeminarHasilController extends Controller
             $nameProposalRevisi,
             'local'
         );
-        $pathLembarRevisi1 = $fileLembarRevisiPenguji1->storeAs(
+        $pathLembarRevisiPenguji1 = $fileLembarRevisiPenguji1->storeAs(
             'seminar-hasil/revisi/lembar-revisi-penguji-1',
-            $nameLembarRevisi1,
+            $nameLembarRevisiPenguji1,
             'local'
         );
-        $pathLembarRevisi2 = $fileLembarRevisiPenguji2->storeAs(
+        $pathLembarRevisiPenguji2 = $fileLembarRevisiPenguji2->storeAs(
             'seminar-hasil/revisi/lembar-revisi-penguji-2',
-            $nameLembarRevisi2,
+            $nameLembarRevisiPenguji2,
+            'local'
+        );
+        $pathLembarRevisiPembimbing1 = $fileLembarRevisiPembimbing1->storeAs(
+            'seminar-hasil/revisi/lembar-revisi-pembimbing-1',
+            $nameLembarRevisiPembimbing1,
+            'local'
+        );
+        $pathLembarRevisiPembimbing2 = $fileLembarRevisiPembimbing2->storeAs(
+            'seminar-hasil/revisi/lembar-revisi-pembimbing-2',
+            $nameLembarRevisiPembimbing2,
             'local'
         );
 
-        $revisi1 = Revisi::where('proposal_id', $proposalID)
+        $revisiPenguji1 = Revisi::where('proposal_id', $proposalID)
             ->where('dosen_id', $penguji1ID)
             ->where('jenis_revisi', 'semhas')
             ->first();
-        $revisi2 = Revisi::where('proposal_id', $proposalID)
+        $revisiPenguji2 = Revisi::where('proposal_id', $proposalID)
             ->where('dosen_id', $penguji2ID)
             ->where('jenis_revisi', 'semhas')
             ->first();
@@ -356,21 +595,25 @@ class SeminarHasilController extends Controller
             ->first();
 
 
-        $revisi1->update([
+        $revisiPenguji1->update([
             'file_proposal_revisi' => $pathProposalRevisi,
-            'file_lembar_revisi_dosen' => $pathLembarRevisi1
+            'file_lembar_revisi_dosen' => $pathLembarRevisiPenguji1,
+            "status" => "diterima"
         ]);
-        $revisi2->update([
+        $revisiPenguji2->update([
             'file_proposal_revisi' => $pathProposalRevisi,
-            'file_lembar_revisi_dosen' => $pathLembarRevisi2
+            'file_lembar_revisi_dosen' => $pathLembarRevisiPenguji2,
+            "status" => "diterima"
         ]);
         $revisiPembimbing1->update([
             'file_proposal_revisi' => $pathProposalRevisi,
-            'file_lembar_revisi_dosen' => $pathLembarRevisi1
+            'file_lembar_revisi_dosen' => $pathLembarRevisiPembimbing1,
+            "status" => "diterima"
         ]);
         $revisiPembimbing2->update([
             'file_proposal_revisi' => $pathProposalRevisi,
-            'file_lembar_revisi_dosen' => $pathLembarRevisi1
+            'file_lembar_revisi_dosen' => $pathLembarRevisiPembimbing2,
+            "status" => "diterima"
         ]);
 
 
@@ -379,18 +622,14 @@ class SeminarHasilController extends Controller
 
     public function riwayat()
     {
-        $data = ProposalDosenMahasiswa::with('dosen', 'proposal')
-            ->where('mahasiswa_id', auth('mahasiswa')->user()->id)
-            ->where('status_proposal_mahasiswa_id', 1)
+        $data = PendaftaranSemhas::with('proposal.dosenPembimbing1', 'proposal.dosenPembimbing2', 'statusDaftarSeminar')
+            ->whereHas('proposal.proposalMahasiswas', function ($query) {
+                $query->where('mahasiswa_id', auth('mahasiswa')->user()->id)
+                    ->where('status_proposal_mahasiswa_id', 1);
+            })
             ->latest()
             ->get();
 
-        $statusPendaftaran = [
-            1 => 'Diterima',
-            2 => 'Ditolak',
-            3 => 'Belum Dicek',
-        ];
-
-        return view('mahasiswa.seminar-proposal.riwayat', compact('data', 'statusPendaftaran'));
+        return view('mahasiswa.seminar-hasil.riwayat', compact('data'));
     }
 }

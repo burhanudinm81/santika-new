@@ -17,7 +17,7 @@ class JadwalSemproController extends Controller
     {
         $periodeAktif = Periode::where('aktif_sempro', 1)->first();
 
-        $jmlBelumNilaiDospeng1 = Proposal::where('periode_id', operator: $periodeAktif->id)
+        $jmlBelumNilaiDospeng1 = Proposal::where('periode_id', $periodeAktif->id)
             ->where('penguji_sempro_1_id', auth("dosen")->id())
             ->whereNull('status_sempro_penguji_1_id')
             ->select('tahap_id')
@@ -25,7 +25,7 @@ class JadwalSemproController extends Controller
             ->selectRaw('tahap_id, count(*) as jumlah')
             ->get();
 
-        $jmlBelumNilaiDospeng2 = Proposal::where('periode_id', operator: $periodeAktif->id)
+        $jmlBelumNilaiDospeng2 = Proposal::where('periode_id', $periodeAktif->id)
             ->where('penguji_sempro_2_id', auth("dosen")->id())
             ->whereNull('status_sempro_penguji_2_id')
             ->select('tahap_id')

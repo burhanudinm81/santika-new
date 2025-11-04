@@ -19,7 +19,7 @@ class SuratTugasUjianAkhirController extends Controller
     {
         $daftarTahap = Tahap::all();
         return view(
-            'panitia.surat.tampilan-web.surat-tugas-ujian-akhir.create', 
+            'panitia.surat.tampilan-web.surat-tugas-ujian-akhir.create',
             compact('daftarTahap')
         );
     }
@@ -126,8 +126,23 @@ class SuratTugasUjianAkhirController extends Controller
             'tanggal_selesai' => $tanggalSelesaiFormatted
         ];
 
+        if ($prodiPanitia == 1) {
+            // Jika Prodi Panitia D3
+            $pdf = Pdf::loadView(
+                'panitia.surat.template-surat.surat-tugas-ujian-akhir.undangan-d3',
+                compact('data')
+            );
+
+            $pdf->setOptions([
+                'isHtml5ParserEnabled' => true,
+                'isRemoteEnabled' => true
+            ]);
+
+            return $pdf->stream('surat_tugas_ujian_akhir_tahap_' . $tahap->tahap . '.pdf');
+        }
+
         $pdf = Pdf::loadView(
-            'panitia.surat.template-surat.surat-tugas-ujian-akhir.undangan',
+            'panitia.surat.template-surat.surat-tugas-ujian-akhir.undangan-d4',
             compact('data')
         );
 
@@ -237,8 +252,23 @@ class SuratTugasUjianAkhirController extends Controller
             'tanggal_selesai' => $tanggalSelesaiFormatted
         ];
 
+        if ($prodiPanitia == 1) {
+            // Jika Prodi Panitia D3
+            $pdf = Pdf::loadView(
+                'panitia.surat.template-surat.surat-tugas-ujian-akhir.undangan-d3',
+                compact('data')
+            );
+
+            $pdf->setOptions([
+                'isHtml5ParserEnabled' => true,
+                'isRemoteEnabled' => true
+            ]);
+
+            return $pdf->download('surat_tugas_ujian_akhir_tahap_' . $tahap->tahap . '.pdf');
+        }
+
         $pdf = Pdf::loadView(
-            'panitia.surat.template-surat.surat-tugas-ujian-akhir.undangan',
+            'panitia.surat.template-surat.surat-tugas-ujian-akhir.undangan-d4',
             compact('data')
         );
 

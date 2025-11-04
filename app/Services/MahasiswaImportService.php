@@ -34,7 +34,7 @@ class MahasiswaImportService
             for ($row = 3; $row <= $highestRow; $row++) {
                 $nim = (string) $sheet->getCell([$NIMColumnIndex, $row])->getValue();
                 Log::info("NIM: $nim");
-                
+
                 if (empty(trim($nim)))
                     continue;
 
@@ -45,7 +45,7 @@ class MahasiswaImportService
                     "prodi_id" => $prodi_id,
                     "periode_id" => $periode_id,
                     "kelas" => $sheet->getCell([$kelasColumnIndex, $row])->getValue(),
-                    "angkatan" => $sheet->getCell([ $angkatanColumnIndex, $row])->getValue()
+                    "angkatan" => $sheet->getCell([$angkatanColumnIndex, $row])->getValue()
                 ];
             }
 
@@ -72,5 +72,37 @@ class MahasiswaImportService
             Log::error("Impor Gagal. Gagal memproses file: " . $e->getMessage());
             throw new ImportDataException("Impor Gagal. Gagal memproses file!");
         }
+    }
+
+    public function getNimList(string $filepath, string $filename): array
+    {
+        $filePath = Storage::path($filepath . $filename);
+        $nimList = [];
+
+        try {
+            $reader = new Xlsx();
+            $reader->setReadDataOnly(true);
+            $spreadsheet = $reader->load($filePath);
+            $sheet = $spreadsheet->getSheetByName("Sheet1");
+            $highestRow = $sheet->getHighestDataRow();
+
+            // Index Kolom NIM
+            $NIMColumnIndex = 2;
+
+            for ($row = 3; $row <= $highestRow; $row++) {
+                $nim = (string) $sheet->getCell([$NIMColumnIndex, $row])->getValue();
+                Log::info("NIM: $nim");
+
+                if (empty(trim($nim)))
+                    continue;
+
+                $nimList[] = $nim;
+            }
+        } catch (\Exception $e) {
+            Log::error("Impor Gagal. Gagal memproses file: " . $e->getMessage());
+            throw new ImportDataException("Impor Gagal. Gagal memproses file!");
+        }
+
+        return $nimList;
     }
 }

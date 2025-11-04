@@ -103,4 +103,37 @@ class DosenImportService
             throw new ImportDataException("Impor Gagal. Gagal memproses file!");
         }
     }
+
+    public function getNidnList(string $filepath, string $filename): array
+    {
+        $filePath = Storage::path($filepath . $filename);
+        $nidnList = [];
+
+        try {
+            $reader = new Xlsx();
+            $reader->setReadDataOnly(true);
+            $spreadsheet = $reader->load($filePath);
+            $sheet = $spreadsheet->getSheetByName("Sheet1");
+            $highestRow = $sheet->getHighestDataRow();
+
+            // Index Kolom NIDN
+            $NIDNColumnIndex = 2;
+
+            for ($row = 3; $row <= $highestRow; $row++) {
+                $nidn = (string) $sheet->getCell([$NIDNColumnIndex, $row])->getValue();
+
+                Log::info("NIDN: $nidn");
+
+                if (empty(trim($nidn)))
+                    continue;
+
+                $nidnList[] = $nidn;
+            }
+        } catch (\Exception $e) {
+            Log::error("Impor Gagal. Gagal memproses file: " . $e->getMessage());
+            throw new ImportDataException("Impor Gagal. Gagal memproses file!");
+        }
+
+        return $nidnList;
+    }
 }

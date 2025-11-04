@@ -6,6 +6,15 @@
     </a>
 
     <div class="sidebar">
+        <div class="user-panel">
+            <ul class="nav nav-pills nav-sidebar flex-column">
+                <li class="nav-item">
+                    <a href="#" class="nav-link text-center" id="dashboard-item">
+                        DOSEN
+                    </a>
+                </li>
+            </ul>
+        </div>
         <div class="user-panel mt-3 pb-3 mb-3 d-flex">
             <div class="image">
                 @if (is_null(auth('dosen')->user()->foto_profil))

@@ -97,4 +97,24 @@ class Dosen extends Authenticatable
     {
         return $this->hasMany(Logbook::class, 'dosen_id');
     }
+
+    public function nilaiAkhirPengujiSidangTA1(): HasMany
+    {
+        return $this->hasMany(NilaiAkhirMahasiswa::class, 'penguji_1_id');
+    }
+
+    public function nilaiAkhirPengujiSidangTA2(): HasMany
+    {
+        return $this->hasMany(NilaiAkhirMahasiswa::class, 'penguji_2_id');
+    }
+
+    public function nilaiAkhirPembimbing1(): HasMany
+    {
+        return $this->hasMany(NilaiAkhirMahasiswa::class, 'pembimbing_1_id');
+    }
+
+    public function nilaiAkhirPembimbing2(): HasMany
+    {
+        return $this->hasMany(NilaiAkhirMahasiswa::class, 'pembimbing_2_id');
+    }
 }

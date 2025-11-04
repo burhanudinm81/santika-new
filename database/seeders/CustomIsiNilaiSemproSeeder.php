@@ -17,19 +17,25 @@ class CustomIsiNilaiSemproSeeder extends Seeder
      */
     public function run(): void
     {
-        // $this->nilaiSamaRata();  
-        $this->nilaiBervariasi();
+        $this->nilaiSamaRata();  
+        // $this->nilaiBervariasi();
     }
 
     public function nilaiSamaRata(): void
     {
         $prodiId = 1;       // Ganti dengan prodi_id yang diinginkan
-        $tahapId = 1;       // Ganti dengan tahap_id yang diinginkan 
+        $tahapId = 2;       // Ganti dengan tahap_id yang diinginkan 
         $periodeId = 1;     // Ganti dengan periode_id yang diinginkan
 
-        Proposal::where("tahap_id", $tahapId)
+        Proposal::whereHas('pendaftaranSempro', function ($query) {
+            $query->where('status_daftar_sempro_id', 1);
+        })
+            ->where("tahap_id", $tahapId)
             ->where("periode_id", $periodeId)
             ->where("prodi_id", $prodiId)
+            ->whereNotNull("dosen_pembimbing_1_id")
+            ->whereNotNull("penguji_sempro_1_id")
+            ->whereNotNull("penguji_sempro_2_id")
             ->whereNotBetween("id", [218, 219])         // Aktifkan jika ingin mengecualikan beberapa proposal
             ->update([
                 "status_sempro_penguji_1_id" => 1,
@@ -46,9 +52,15 @@ class CustomIsiNilaiSemproSeeder extends Seeder
         $tahapId = 1;       // Ganti dengan tahap_id yang diinginkan 
         $periodeId = 1;     // Ganti dengan periode_id yang diinginkan
 
-        $daftarProposal = Proposal::where("tahap_id", $tahapId)
+        $daftarProposal = Proposal::whereHas('pendaftaranSempro', function ($query) {
+            $query->where('status_daftar_sempro_id', 1);
+        })
+            ->where("tahap_id", $tahapId)
             ->where("periode_id", $periodeId)
             ->where("prodi_id", $prodiId)
+            ->whereNotNull("dosen_pembimbing_1_id")
+            ->whereNotNull("penguji_sempro_1_id")
+            ->whereNotNull("penguji_sempro_2_id")
             ->whereNotBetween("id", [220, 221])             // Aktifkan jika ingin mengecualikan beberapa proposal
             ->get();
 

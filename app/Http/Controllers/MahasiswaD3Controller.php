@@ -98,18 +98,50 @@ class MahasiswaD3Controller extends Controller implements MahasiswaControllerInt
             ], 422);
         }
 
-        try {
-            $fileExcel = $request->file("file_excel");                    // Mengambil file
-            $filename = time() . "_" . $fileExcel->getClientOriginalName();    // Membuat nama file
+        $fileExcel = $request->file("file_excel");             // Mengambil file
+        $filename = time() . "_" . $fileExcel->getClientOriginalName();    // Membuat nama file
 
-            // Menyimpan file
-            $fileExcel->storeAs(
+        // Menyimpan file
+        $fileExcel->storeAs(
+            $this->excelFilePath,
+            $filename
+        );
+
+        try {
+            $nimList = $this->mahasiswaImportService->getNimList(
                 $this->excelFilePath,
                 $filename
             );
 
-            // Dispatch (kirim) Job ke ProcessMahasiswaImport
-            ProcessMahasiswaImport::dispatch(
+            if ($nimList) {
+                $nimDuplikat = Mahasiswa::whereIn('nim', $nimList)->pluck("nim");
+
+                if ($nimDuplikat->isNotEmpty()) {
+                    $nimDuplikatStr = $nimDuplikat->implode(", ");
+
+                    return response()->json([
+                        "success" => false,
+                        "message" => "Tidak dapat mengimpor data! Terdapat NIM Duplikat: $nimDuplikatStr"
+                    ], 422);
+                }
+            } else {
+                return response()->json([
+                    "success" => false,
+                    "message" => "Data NIM tidak ditemukan."
+                ], 422);
+            }
+        } catch (Exception $e) {
+            // Tangkap error tak terduga lainnya
+            Log::error("Gagal Membaca NIM di File Excel: " . $e->getMessage());
+            return response()->json([
+                "success" => false,
+                "message" => "Terjadi kesalahan server saat mengimpor file."
+            ], 500);
+        }
+
+        try {
+            // Panggil mahasiswaImportService untuk Upload Data Mhs ke Database
+            $this->mahasiswaImportService->import(
                 $this->excelFilePath,
                 $filename,
                 $this->prodi->id,
@@ -118,14 +150,22 @@ class MahasiswaD3Controller extends Controller implements MahasiswaControllerInt
 
             return response()->json([
                 "success" => true,
-                "message" => "Data Mahasiswa Sedang Diimpor! Refresh secara berkala untuk melihat perubahan!"
+                "message" => "Data mahasiswa berhasil diimpor!"
             ]);
+
+        } catch (ImportDataException $e) {
+            // Tangkap error spesifik dari mahasiswaImportService
+            return response()->json([
+                "success" => false,
+                "message" => $e->getMessage()
+            ], 422); // 422 Unprocessable Entity
+
         } catch (Exception $e) {
             // Tangkap error tak terduga lainnya
             Log::error("Import Gagal Total: " . $e->getMessage());
             return response()->json([
                 "success" => false,
-                "message" => "Terjadi kesalahan pada server saat mengimpor file."
+                "message" => "Terjadi kesalahan server saat mengimpor file."
             ], 500);
         }
     }
@@ -175,7 +215,7 @@ class MahasiswaD3Controller extends Controller implements MahasiswaControllerInt
         $mahasiswa->password = Hash::make($data["new_password"]);
         $savedMahasiswa = $mahasiswa->save();
 
-        if(!$savedMahasiswa){
+        if (!$savedMahasiswa) {
             return response()->json([
                 "success" => false,
                 "message" => "Server Gagal mengganti Password Mahasiswa!"

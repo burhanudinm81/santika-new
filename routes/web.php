@@ -307,6 +307,12 @@ Route::middleware(["auth:mahasiswa", "auth.session", "password.changed"])->group
 
         Route::get('/revisi-proposal-sempro/Mhs/{id}', 'serveRevisiProposalSempro')
             ->name('revisi-proposal-sempro-mhs.show');
+
+        Route::get("/revisi-semhas/lembarRevisi/Mhs/{id}", "serveRevisiLembarRevisiSemhas")
+            ->name('revisi-lembarRevisi-semhas-mhs.show');
+
+        Route::get('/revisi-proposal-semhas/Mhs/{id}', 'serveRevisiProposalSemhas')
+            ->name('revisi-proposal-semhas-mhs.show');
     });
 
     Route::get('/mahasiswa/profile', [MahasiswaController::class, 'showProfile'])->name('mahasiswa.profile');

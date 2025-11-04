@@ -33,7 +33,7 @@
                                 <p>Hasil seminar proposal Anda belum dipublish oleh panitia. Silahkan menunggu informasi selanjutnya dari Panitia.</p>
                             </div>
                         </div>
-                    @else
+                    @elseif(!is_null($statusKelulusanSempro))
                         @if ($statusKelulusanSempro == 1)
                             <div class="alert alert-success m-4" role="alert">
                                 <h4 class="alert-heading">Selamat!</h4>
@@ -75,7 +75,7 @@
                                                 </label>
                                             </div>
                                         </div>
-                                        @if (!is_null($revisiPenguji1->file_lembar_revisi_dosen))
+                                        @if (!is_null($revisiPenguji1?->file_lembar_revisi_dosen))
                                             <iframe src="{{ $revisiPenguji1->getPathLembarRevisiSemproForMhs() }}" frameborder="2"
                                                 width="100%" height="700px" scrolling="yes"></iframe>
                                         @endif
@@ -95,7 +95,7 @@
                                                 </label>
                                             </div>
                                         </div>
-                                        @if (!is_null($revisiPenguji2->file_lembar_revisi_dosen))
+                                        @if (!is_null($revisiPenguji2?->file_lembar_revisi_dosen))
                                             <iframe src="{{ $revisiPenguji2->getPathLembarRevisiSemproForMhs() }}" frameborder="2"
                                                 width="100%" height="700px" scrolling="yes"></iframe>
                                         @endif
@@ -115,7 +115,7 @@
                                                 </label>
                                             </div>
                                         </div>
-                                        @if (!is_null($revisiPenguji1->file_proposal_revisi))
+                                        @if (!is_null($revisiPenguji1?->file_proposal_revisi))
                                             <iframe src="{{ $revisiPenguji1->getPathRevisiProposalSemproForMhs() }}" frameborder="2"
                                                 width="100%" height="700px" scrolling="yes"></iframe>
                                         @endif
@@ -136,7 +136,10 @@
                             </form>
                             <!--end::Form-->
                         @endif
-                        
+                    @else
+                        <div class="card-body">
+                            <p>Status Kelulusan Anda Belum Ditentukan</p>
+                        </div>
                     @endif
                 </div>
 

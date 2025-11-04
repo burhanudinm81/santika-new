@@ -6,6 +6,7 @@ use App\Http\Controllers\Controller;
 use App\Models\JadwalSeminarProposal;
 use App\Models\Panitia;
 use App\Models\Periode;
+use App\Models\Prodi;
 use App\Models\Proposal;
 use App\Models\Tahap;
 use Barryvdh\DomPDF\Facade\Pdf;
@@ -101,6 +102,7 @@ class UndanganSemproController extends Controller
         $tahap = Tahap::find($request->integer("tahap"));
         $periode = Periode::find($request->integer("periode"));
         $prodiPanitia = Panitia::firstWhere("dosen_id", auth("dosen")->id())->prodi_id;
+        $prodi = Prodi::find($prodiPanitia);
 
         $jadwalSempro = JadwalSeminarProposal::whereHas('proposal', function ($q) use ($tahap, $periode, $prodiPanitia) {
             $q->where('tahap_id', $tahap->id)
@@ -128,7 +130,8 @@ class UndanganSemproController extends Controller
             'tahun_akademik' => $periode->tahun,
             'hari_tanggal' => $request->get('hari_tanggal', ''),
             'waktu_pelaksanaan' => $request->get("waktu_pelaksanaan", ""),
-            'tempat' => $request->get("tempat", "")
+            'tempat' => $request->get("tempat", ""),
+            'prodi' => $prodi->prodi
         ];
 
         $pdf = Pdf::loadView('panitia.surat.template-surat.undangan-sempro.undangan', compact('data'));
@@ -204,6 +207,7 @@ class UndanganSemproController extends Controller
         $tahap = Tahap::find($request->integer("tahap"));
         $periode = Periode::find($request->integer("periode"));
         $prodiPanitia = Panitia::firstWhere("dosen_id", auth("dosen")->id())->prodi_id;
+        $prodi = Prodi::find($prodiPanitia);
 
         $jadwalSempro = JadwalSeminarProposal::whereHas('proposal', function ($q) use ($tahap, $periode, $prodiPanitia) {
             $q->where('tahap_id', $tahap->id)
@@ -231,7 +235,8 @@ class UndanganSemproController extends Controller
             'tahun_akademik' => $periode->tahun,
             'hari_tanggal' => $request->get('hari_tanggal', ''),
             'waktu_pelaksanaan' => $request->get("waktu_pelaksanaan", ""),
-            'tempat' => $request->get("tempat", "")
+            'tempat' => $request->get("tempat", ""),
+            'prodi' => $prodi->prodi
         ];
 
         $pdf = Pdf::loadView('panitia.surat.template-surat.undangan-sempro.undangan', compact('data'));

@@ -36,4 +36,9 @@ class Mahasiswa extends Authenticatable
     {
         return $this->hasMany(LogBook::class, 'mahasiswa_id');
     }
+
+    public function nilaiAkhirMahasiswa(): HasMany
+    {
+        return $this->hasMany(NilaiAkhirMahasiswa::class, 'mahasiswa_id');
+    }
 }

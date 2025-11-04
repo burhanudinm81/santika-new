@@ -53,12 +53,13 @@
                                             <th scope="col" class="text-center">Dosen Penguji 1</th>
                                             <th scope="col" class="text-center">Dosen Penguji 2</th>
                                             <th scope="col" class="text-center">Aksi</th>
+                                            <th scope="col" class="text-center">Status</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @if (is_null($jadwalSeminarHasilD3) || $jadwalSeminarHasilD3->isEmpty())
                                             <tr>
-                                                <td colspan="12" class="text-center">Tidak ada Jadwal Sidang Ujian Akhir
+                                                <td colspan="13" class="text-center">Tidak ada Jadwal Sidang Ujian Akhir
                                                     yang tersedia</td>
                                             </tr>
                                         @else
@@ -87,6 +88,19 @@
                                                             class="btn btn-primary mt-1" style="width: 150px">Input Nilai
                                                             Akhir</a>
                                                     </td>
+                                                    <td>
+                                                        @if ($jadwal->belumNilaiSementara)
+                                                            <span class="badge badge-warning">Nilai Sementara Belum Diberikan</span>
+                                                        @else
+                                                            <span class="badge badge-success">Nilai Sementara Sudah Diberikan</span>
+                                                        @endif
+
+                                                        @if ($jadwal->sudahNilaiAkhir)
+                                                            <span class="badge badge-success">Nilai Akhir Sudah Diberikan</span>
+                                                        @else
+                                                            <span class="badge badge-warning">Nilai Akhir Belum Diberikan</span>
+                                                        @endif
+                                                    </td>
                                                 </tr>
                                             @endforeach
                                         @endif
@@ -110,12 +124,13 @@
                                             <th scope="col" class="text-center">Dosen Penguji 1</th>
                                             <th scope="col" class="text-center">Dosen Penguji 2</th>
                                             <th scope="col" class="text-center">Aksi</th>
+                                            <th scope="col" class="text-center">Status</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         @if (is_null($jadwalSeminarHasilD4) || $jadwalSeminarHasilD4->isEmpty())
                                             <tr>
-                                                <td colspan="11" class="text-center">Tidak ada Jadwal Ujian Akhir
+                                                <td colspan="12" class="text-center">Tidak ada Jadwal Ujian Akhir
                                                     yang tersedia</td>
                                             </tr>
                                         @else
@@ -141,6 +156,13 @@
                                                         <a href="{{ route('dosen.penilaian-semhas-akhir', ['proposal_id' => $jadwal->proposal_id]) }}"
                                                             class="btn btn-primary mt-1" style="width: 150px">Input Nilai
                                                             Akhir</a>
+                                                    </td>
+                                                    <td>
+                                                        @if ($jadwal->belumNilaiSementara)
+                                                            <span class="badge badge-warning">Nilai Sementara Belum Diberikan</span>
+                                                        @else
+                                                            <span class="badge badge-success">Nilai Sementara Sudah Diberikan</span>
+                                                        @endif
                                                     </td>
                                                 </tr>
                                             @endforeach
